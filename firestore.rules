@@ -1,0 +1,171 @@
+rules_version = '2';
+
+// =============================================================================
+// Robux Box — Firestore Security Rules
+// =============================================================================
+// Security model:
+//   * The economy is server-authoritative. Clients can NEVER write balances,
+//     transactions, redemptions status, tiers, VIP or fraud data — only Cloud
+//     Functions (running with the Admin SDK, which bypasses these rules) may.
+//   * Clients get read access only to their own data and to public catalogue
+//     collections (rewards, offers, banners, leaderboards).
+//   * A custom claim `admin == true` (set by a Cloud Function) unlocks the admin
+//     dashboard collections.
+//   * App Check is enforced at the API layer; these rules add row-level
+//     authorization on top.
+// =============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------- Helpers ---------------------------------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isUser(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+    // True only for changes coming through the Admin SDK (Cloud Functions),
+    // which are exempt from rules; used to make client-write intent explicit.
+    function clientCannotWrite() {
+      return false;
+    }
+
+    // ------------------------------ Users ----------------------------------
+    // Profile is readable by owner + admins. Clients may update ONLY a safe
+    // allow-list of profile fields; everything economic is function-only.
+    match /users/{uid} {
+      allow read: if isUser(uid) || isAdmin();
+      allow create: if isUser(uid)
+                    && request.resource.data.keys().hasOnly([
+                         'displayName','photoUrl','locale','robloxUsername',
+                         'referredBy','createdAt','lastActiveAt','email',
+                         'phoneNumber'
+                       ]);
+      allow update: if (isUser(uid)
+                    && request.resource.data.diff(resource.data).affectedKeys()
+                         .hasOnly([
+                           'displayName','photoUrl','locale','robloxUsername',
+                           'lastActiveAt'
+                         ]))
+                    || isAdmin();
+      allow delete: if isAdmin();
+
+      // Private per-user subcollections (function-written, owner-readable).
+      match /transactions/{txId} {
+        allow read: if isUser(uid) || isAdmin();
+        allow write: if clientCannotWrite();
+      }
+      match /notifications/{nId} {
+        allow read: if isUser(uid) || isAdmin();
+        // Owner may only flip isRead; content is function-written.
+        allow update: if isUser(uid)
+                      && request.resource.data.diff(resource.data)
+                           .affectedKeys().hasOnly(['isRead']);
+        allow create, delete: if clientCannotWrite();
+      }
+      match /devices/{deviceId} {
+        allow read: if isUser(uid) || isAdmin();
+        // Client may register/refresh its own FCM token + device metadata.
+        allow write: if isUser(uid);
+      }
+      match /achievements/{aId} {
+        allow read: if isUser(uid) || isAdmin();
+        allow write: if clientCannotWrite();
+      }
+    }
+
+    // ----------------------------- Wallets ---------------------------------
+    // Strictly read-only for the owner; only Cloud Functions mutate balances.
+    match /wallets/{uid} {
+      allow read: if isUser(uid) || isAdmin();
+      allow write: if clientCannotWrite();
+    }
+
+    // ------------------------- Public catalogues ---------------------------
+    match /rewards/{rewardId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /offers/{offerId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /banners/{bannerId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /events/{eventId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // --------------------------- Leaderboards ------------------------------
+    match /leaderboards/{period} {
+      allow read: if isSignedIn();
+      allow write: if clientCannotWrite();
+      match /entries/{uid} {
+        allow read: if isSignedIn();
+        allow write: if clientCannotWrite();
+      }
+    }
+
+    // ---------------------------- Redemptions ------------------------------
+    // Created + transitioned only by functions/admins; owner can read own.
+    match /redemptions/{redemptionId} {
+      allow read: if isSignedIn()
+                  && (isAdmin() || resource.data.uid == request.auth.uid);
+      allow write: if isAdmin() || clientCannotWrite();
+    }
+
+    // ---------------------------- Promocodes -------------------------------
+    // Never client-readable (would leak valid codes); redeemed via function.
+    match /promocodes/{code} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // ------------------------------ Config ---------------------------------
+    // Read-only remote config (economy, tiers, feature flags, maintenance).
+    match /config/{doc} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /geo_tiers/{doc} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // --------------------- Admin-only / internal ---------------------------
+    match /transactions/{txId}        { allow read, write: if isAdmin(); }
+    match /offer_completions/{id}     { allow read, write: if isAdmin(); }
+    match /ad_impressions/{id}        { allow read, write: if isAdmin(); }
+    match /fraud_flags/{id}           { allow read, write: if isAdmin(); }
+    match /audit_logs/{id}            { allow read: if isAdmin();
+                                        allow write: if clientCannotWrite(); }
+    match /referrals/{id} {
+      allow read: if isSignedIn()
+                  && (isAdmin()
+                      || resource.data.referrerUid == request.auth.uid
+                      || resource.data.refereeUid == request.auth.uid);
+      allow write: if clientCannotWrite();
+    }
+    match /devices/{id}               { allow read, write: if isAdmin(); }
+
+    // ------------------------------ Reports --------------------------------
+    // Users can file a report; only admins can read/triage.
+    match /reports/{reportId} {
+      allow create: if isSignedIn()
+                    && request.resource.data.uid == request.auth.uid;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Default deny — anything not matched above is inaccessible.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,40 @@
+rules_version = '2';
+
+// Cloud Storage rules for Robux Box.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isUser(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    function underMaxSize() {
+      return request.resource.size < 5 * 1024 * 1024; // 5 MB
+    }
+
+    // User avatars: owner can upload their own; everyone signed-in can read.
+    match /avatars/{uid}/{fileName} {
+      allow read: if isSignedIn();
+      allow write: if isUser(uid) && isImage() && underMaxSize();
+    }
+
+    // Admin-managed public assets (reward art, banners, offer icons).
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Everything else denied.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
