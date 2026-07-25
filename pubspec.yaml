@@ -1,0 +1,100 @@
+name: robux_box
+description: "Robux Box — earn app points by watching rewarded ads and completing offerwall tasks, then redeem for Robux, gift cards and digital rewards."
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State management & DI
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Navigation
+  go_router: ^14.6.2
+
+  # Firebase
+  firebase_core: ^3.8.0
+  firebase_auth: ^5.3.4
+  cloud_firestore: ^5.6.0
+  cloud_functions: ^5.1.5
+  firebase_storage: ^12.3.7
+  firebase_messaging: ^15.1.6
+  firebase_app_check: ^0.3.1+7
+  firebase_analytics: ^11.3.6
+  firebase_crashlytics: ^4.1.5
+
+  # Auth providers
+  google_sign_in: ^6.2.2
+
+  # Ads & monetization
+  google_mobile_ads: ^5.2.0
+
+  # Location (ad tier detection)
+  geolocator: ^13.0.2
+  geocoding: ^3.0.0
+
+  # Security & storage
+  flutter_secure_storage: ^9.2.4
+  shared_preferences: ^2.3.3
+  crypto: ^3.0.6
+
+  # Permissions & device
+  permission_handler: ^11.3.1
+  app_tracking_transparency: ^2.0.6
+  device_info_plus: ^11.2.0
+  package_info_plus: ^8.1.2
+  connectivity_plus: ^6.1.0
+
+  # Notifications
+  flutter_local_notifications: ^18.0.1
+
+  # UI / UX
+  google_fonts: ^6.2.1
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+  lottie: ^3.1.3
+  flutter_animate: ^4.5.0
+  flutter_svg: ^2.0.16
+
+  # Utils
+  intl: ^0.19.0
+  uuid: ^4.5.1
+  url_launcher: ^6.3.1
+  logger: ^2.5.0
+  equatable: ^2.0.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  mocktail: ^1.0.4
+  fake_cloud_firestore: ^3.1.0
+  firebase_auth_mocks: ^0.14.1
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/animations/
+
+  fonts:
+    - family: Clash
+      fonts:
+        - asset: assets/fonts/ClashDisplay-Regular.otf
+        - asset: assets/fonts/ClashDisplay-Medium.otf
+          weight: 500
+        - asset: assets/fonts/ClashDisplay-Semibold.otf
+          weight: 600
+        - asset: assets/fonts/ClashDisplay-Bold.otf
+          weight: 700
