@@ -36,8 +36,8 @@ ios/Flutter/Flutter.framework
 ios/Flutter/Flutter.podspec
 **/GoogleService-Info.plist
 
-# Firebase — real config is generated per project, never commit secrets
-lib/firebase_options.dart
+# Firebase — firebase_options.dart holds non-secret client identifiers and is
+# committed as a template; regenerate it per-project with `flutterfire configure`.
 .firebaserc
 functions/node_modules/
 functions/lib/
