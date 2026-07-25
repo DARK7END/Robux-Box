@@ -1,0 +1,188 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/error/failure.dart';
+import '../../../../core/error/result.dart';
+import '../../../../core/extensions/context_extensions.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/utils/validators.dart';
+import '../../../../core/widgets/widgets.dart';
+import '../../../../models/reward.dart';
+import '../../../profile/data/user_repository.dart';
+import '../../data/redemption_repository.dart';
+
+/// Bottom sheet to confirm a redemption and collect the delivery target.
+Future<void> showRedeemSheet(
+  BuildContext context, {
+  required Reward reward,
+  required int coins,
+}) {
+  return showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    builder: (_) => _RedeemSheet(reward: reward, coins: coins),
+  );
+}
+
+class _RedeemSheet extends ConsumerStatefulWidget {
+  const _RedeemSheet({required this.reward, required this.coins});
+  final Reward reward;
+  final int coins;
+
+  @override
+  ConsumerState<_RedeemSheet> createState() => _RedeemSheetState();
+}
+
+class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
+  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _target;
+  bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final user = ref.read(currentUserProvider).valueOrNull;
+    _target = TextEditingController(text: user?.robloxUsername ?? '');
+  }
+
+  @override
+  void dispose() {
+    _target.dispose();
+    super.dispose();
+  }
+
+  (String, String?, TextInputType, String? Function(String?)) get _fieldSpec {
+    switch (widget.reward.kind) {
+      case RewardKind.robux:
+        return (
+          context.l10n.rewardsEnterRoblox,
+          'RobloxPlayer123',
+          TextInputType.text,
+          Validators.robloxUsername,
+        );
+      case RewardKind.giftCard:
+      case RewardKind.digitalCode:
+        return (
+          context.l10n.authEmail,
+          'you@example.com',
+          TextInputType.emailAddress,
+          Validators.email,
+        );
+    }
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (widget.coins < widget.reward.coinCost) {
+      AppToast.error(context, context.l10n.rewardsInsufficient);
+      return;
+    }
+    setState(() => _busy = true);
+    final result = await ref.read(redemptionRepositoryProvider).requestRedemption(
+          rewardId: widget.reward.id,
+          deliveryTarget: _target.text,
+        );
+    if (!mounted) return;
+    setState(() => _busy = false);
+    switch (result) {
+      case Success():
+        Navigator.of(context).pop();
+        AppToast.success(context, context.l10n.rewardsRequestSubmitted);
+      case Err(:final Failure failure):
+        AppToast.error(context, failure.message);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final (label, hint, keyboard, validator) = _fieldSpec;
+    final affordable = widget.coins >= widget.reward.coinCost;
+
+    return Padding(
+      padding: EdgeInsets.only(
+        left: AppSpacing.lg,
+        right: AppSpacing.lg,
+        top: AppSpacing.lg,
+        bottom: context.viewInsets.bottom + AppSpacing.xl,
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(context.l10n.rewardsConfirmTitle,
+                style: context.text.titleLarge),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              context.l10n.rewardsConfirmBody(
+                  widget.reward.title, widget.reward.coinCost),
+              style: context.text.bodyMedium,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            TextFormField(
+              controller: _target,
+              keyboardType: keyboard,
+              decoration: InputDecoration(labelText: label, hintText: hint),
+              validator: validator,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            _CostRow(
+                cost: widget.reward.coinCost,
+                balance: widget.coins,
+                affordable: affordable),
+            const SizedBox(height: AppSpacing.lg),
+            GradientButton(
+              label: context.l10n.rewardsRedeem,
+              icon: Icons.redeem_rounded,
+              loading: _busy,
+              enabled: affordable,
+              onPressed: affordable && !_busy ? _submit : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CostRow extends StatelessWidget {
+  const _CostRow({
+    required this.cost,
+    required this.balance,
+    required this.affordable,
+  });
+  final int cost;
+  final int balance;
+  final bool affordable;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: context.surfaces.surfaceHigh,
+        borderRadius: AppRadius.cardRadius,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Cost', style: context.text.bodyMedium),
+          Row(
+            children: [
+              const Icon(Icons.bolt_rounded, color: AppColors.coin, size: 18),
+              const SizedBox(width: 4),
+              Text('$cost',
+                  style: context.text.titleSmall?.copyWith(
+                    color: affordable ? null : AppColors.danger,
+                  )),
+              const SizedBox(width: AppSpacing.sm),
+              Text('(balance $balance)', style: context.text.bodySmall),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
