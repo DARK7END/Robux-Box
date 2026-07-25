@@ -5,10 +5,10 @@ import 'app_colors.dart';
 
 /// Premium typography scale.
 ///
-/// Display/headline styles use a distinctive geometric font (Clash Display,
-/// bundled as an asset with a Google Fonts "Sora" fallback so the app renders
-/// correctly even before the branded font is added). Body/label styles use
-/// "Plus Jakarta Sans" for excellent legibility across age groups and scripts.
+/// Display/headline styles use "Sora" — a distinctive geometric font — while
+/// body/label styles use "Plus Jakarta Sans" for excellent legibility across age
+/// groups and scripts. Both are provided by [GoogleFonts] (cached at runtime, or
+/// bundle them for offline-first via `google_fonts`' asset workflow).
 ///
 /// Arabic falls back automatically to the platform Arabic font through
 /// [GoogleFonts]'s built-in fallback chain; sizing/spacing tokens stay identical
@@ -16,11 +16,8 @@ import 'app_colors.dart';
 abstract final class AppTypography {
   const AppTypography._();
 
-  static const String _displayFamily = 'Clash';
-
   static TextStyle _display(double size, FontWeight weight, {double? height}) {
     return GoogleFonts.sora(
-      fontFamily: _displayFamily,
       fontSize: size,
       fontWeight: weight,
       height: height,
@@ -62,7 +59,6 @@ abstract final class AppTypography {
   /// while animating.
   static TextStyle counter(double size, Color color) {
     return GoogleFonts.sora(
-      fontFamily: _displayFamily,
       fontSize: size,
       fontWeight: FontWeight.w700,
       color: color,

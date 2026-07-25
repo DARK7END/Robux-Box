@@ -90,13 +90,7 @@ flutter:
     - assets/icons/
     - assets/animations/
 
-  fonts:
-    - family: Clash
-      fonts:
-        - asset: assets/fonts/ClashDisplay-Regular.otf
-        - asset: assets/fonts/ClashDisplay-Medium.otf
-          weight: 500
-        - asset: assets/fonts/ClashDisplay-Semibold.otf
-          weight: 600
-        - asset: assets/fonts/ClashDisplay-Bold.otf
-          weight: 700
+  # Display + body fonts are provided at runtime via the `google_fonts` package
+  # (Sora + Plus Jakarta Sans). To ship them as bundled assets for offline-first
+  # rendering, download the .ttf files into assets/fonts/ and declare a `fonts:`
+  # section here — no code changes are required.
