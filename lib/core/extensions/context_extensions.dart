@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../l10n/gen/app_localizations.dart';
 
+// Re-export the theme's custom surface tokens so any file importing
+// context_extensions gets `context.surfaces` (glass fills, tertiary text, etc.)
+// alongside `context.theme` / `context.l10n`.
+export '../theme/app_theme.dart' show AppSurfaces, AppSurfacesX;
+
 /// Ergonomic accessors on [BuildContext] for theme, text styles, sizing,
 /// localisation and directionality.
 extension ContextX on BuildContext {
