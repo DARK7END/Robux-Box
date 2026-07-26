@@ -140,13 +140,43 @@ class _ProfileHeader extends StatelessWidget {
             style: context.text.bodySmall?.copyWith(color: Colors.white70),
           ),
           const SizedBox(height: AppSpacing.lg),
+          // Level + XP progress.
+          Row(
+            children: [
+              Text('Lv ${user.level}',
+                  style: context.text.labelMedium
+                      ?.copyWith(color: AppColors.black, fontWeight: FontWeight.w800)),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: AppRadius.pillRadius,
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0, end: user.levelProgress),
+                    duration: AppDuration.slow,
+                    curve: AppCurves.standard,
+                    builder: (context, value, _) => LinearProgressIndicator(
+                      value: value,
+                      minHeight: 8,
+                      backgroundColor: Colors.black.withValues(alpha: 0.25),
+                      valueColor:
+                          const AlwaysStoppedAnimation(AppColors.black),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text('${user.xp}/${user.xpForNextLevel}',
+                  style: context.text.labelSmall?.copyWith(
+                      color: Colors.black.withValues(alpha: 0.7))),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.lg),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _HeaderStat(label: context.l10n.homeCoins, value: '$coins'),
               _HeaderStat(
-                  label: context.l10n.homeLevel(user.level).split(' ').last,
-                  value: 'Lv ${user.level}'),
+                  label: context.l10n.profileXp, value: '${user.xp}'),
               _HeaderStat(
                   label: context.l10n.profileReferrals,
                   value: '${user.referralCount}'),
