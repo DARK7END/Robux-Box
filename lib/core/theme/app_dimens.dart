@@ -87,5 +87,21 @@ abstract final class AppShadows {
     ),
   ];
 
+  /// Two-layer elevation (soft ambient + tight contact) for premium, tactile
+  /// depth on cards and sheets.
+  static const List<BoxShadow> elevated = [
+    BoxShadow(
+      color: Color(0x59000000),
+      blurRadius: 28,
+      spreadRadius: -10,
+      offset: Offset(0, 18),
+    ),
+    BoxShadow(
+      color: Color(0x24000000),
+      blurRadius: 6,
+      offset: Offset(0, 2),
+    ),
+  ];
+
   static List<BoxShadow> brandGlow = glow(AppColors.brand);
 }
