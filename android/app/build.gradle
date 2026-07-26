@@ -24,7 +24,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "app.robuxbox.robux_box"
+    namespace = "com.robuxbox.app"
     compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
@@ -39,7 +39,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "app.robuxbox.robux_box"
+        applicationId = "com.robuxbox.app"
         minSdk = 23
         targetSdk = 35
         versionCode = flutterVersionCode.toInteger()

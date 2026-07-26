@@ -1,4 +1,4 @@
-package app.robuxbox.robux_box
+package com.robuxbox.app
 
 import io.flutter.embedding.android.FlutterActivity
 

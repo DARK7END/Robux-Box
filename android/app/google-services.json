@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "218872107846",
+    "project_id": "robux-box",
+    "storage_bucket": "robux-box.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218872107846:android:2098c1145b2fe12b0fcb47",
+        "android_client_info": {
+          "package_name": "com.robuxbox.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218872107846-kde74a6aokv8mjtsuh39hi98ier0j87n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.robuxbox.app",
+            "certificate_hash": "f272579f5b899f297b67e8ed41b9f94a8fb8051e"
+          }
+        },
+        {
+          "client_id": "218872107846-hig6n5o1sl60vgfipe17tb9gqhuniohm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDldo6qSLZI-JS-2Mmx8O_Tw43EJaJ1jm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218872107846-hig6n5o1sl60vgfipe17tb9gqhuniohm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

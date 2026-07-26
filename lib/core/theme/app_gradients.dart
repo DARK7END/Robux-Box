@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
 /// Reusable gradients used across cards, buttons and backgrounds.
+///
+/// Built from the green + gold brand kit: brand actions are green, coins/rewards
+/// are gold, and the ambient background glows green over near-black.
 abstract final class AppGradients {
   const AppGradients._();
 
@@ -13,6 +16,7 @@ abstract final class AppGradients {
     stops: [0.0, 0.55, 1.0],
   );
 
+  // Gold → green premium sweep (used on secondary CTAs / offerwall).
   static const LinearGradient neon = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -28,7 +32,7 @@ abstract final class AppGradients {
   static const LinearGradient robux = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF17E88F), AppColors.robux],
+    colors: [AppColors.brandBright, AppColors.brandDeep],
   );
 
   static const LinearGradient success = LinearGradient(
@@ -49,25 +53,25 @@ abstract final class AppGradients {
     colors: [Color(0xFFFFE178), AppColors.vip, Color(0xFFF6A609)],
   );
 
-  /// Ambient full-screen background for the dark theme — a subtle multi-stop
-  /// mesh built from radial glows layered over the base background.
+  /// Ambient full-screen background for the dark theme — green glows over the
+  /// near-black base.
   static const RadialGradient ambientDark = RadialGradient(
     center: Alignment(-0.8, -1.0),
     radius: 1.6,
-    colors: [Color(0x336C5CE7), Color(0x0000D1FF), Color(0x00000000)],
+    colors: [Color(0x3300E65C), Color(0x1A00A344), Color(0x00000000)],
     stops: [0.0, 0.5, 1.0],
   );
 
   static const RadialGradient ambientDarkSecondary = RadialGradient(
-    center: Alignment(1.0, -0.4),
+    center: Alignment(1.0, -0.3),
     radius: 1.3,
-    colors: [Color(0x2600D1FF), Color(0x00000000)],
+    colors: [Color(0x2200E676), Color(0x00000000)],
   );
 
   static const RadialGradient ambientLight = RadialGradient(
     center: Alignment(-0.8, -1.0),
     radius: 1.6,
-    colors: [Color(0x1F6C5CE7), Color(0x0000D1FF), Color(0x00000000)],
+    colors: [Color(0x1F00E65C), Color(0x1400E676), Color(0x00000000)],
   );
 
   /// A shimmering sweep used for premium/VIP highlights and loading states.

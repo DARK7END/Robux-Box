@@ -5,10 +5,10 @@ import 'app_colors.dart';
 
 /// Premium typography scale.
 ///
-/// Display/headline styles use "Sora" — a distinctive geometric font — while
-/// body/label styles use "Plus Jakarta Sans" for excellent legibility across age
-/// groups and scripts. Both are provided by [GoogleFonts] (cached at runtime, or
-/// bundle them for offline-first via `google_fonts`' asset workflow).
+/// The brand font is **Poppins** (per the official reference) — a geometric,
+/// friendly sans that reads well for all ages and across scripts. Provided by
+/// [GoogleFonts] (cached at runtime, or bundle it for offline-first via
+/// `google_fonts`' asset workflow).
 ///
 /// Arabic falls back automatically to the platform Arabic font through
 /// [GoogleFonts]'s built-in fallback chain; sizing/spacing tokens stay identical
@@ -17,16 +17,16 @@ abstract final class AppTypography {
   const AppTypography._();
 
   static TextStyle _display(double size, FontWeight weight, {double? height}) {
-    return GoogleFonts.sora(
+    return GoogleFonts.poppins(
       fontSize: size,
       fontWeight: weight,
       height: height,
-      letterSpacing: -0.5,
+      letterSpacing: -0.4,
     );
   }
 
   static TextStyle _body(double size, FontWeight weight, {double? height}) {
-    return GoogleFonts.plusJakartaSans(
+    return GoogleFonts.poppins(
       fontSize: size,
       fontWeight: weight,
       height: height,
@@ -58,11 +58,11 @@ abstract final class AppTypography {
   /// A tabular-figure style for coin/currency counters so digits don't jitter
   /// while animating.
   static TextStyle counter(double size, Color color) {
-    return GoogleFonts.sora(
+    return GoogleFonts.poppins(
       fontSize: size,
       fontWeight: FontWeight.w700,
       color: color,
-      letterSpacing: -0.5,
+      letterSpacing: -0.4,
       fontFeatures: const [FontFeature.tabularFigures()],
     );
   }

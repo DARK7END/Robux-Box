@@ -19,31 +19,45 @@ class _SplashLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 92,
-          height: 92,
+          width: 96,
+          height: 96,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF8B7CFF), Color(0xFF6C5CE7)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF4DFF91), Color(0xFF00E65C), Color(0xFF00A344)],
             ),
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF6C5CE7).withValues(alpha: 0.5),
-                blurRadius: 30,
+                color: const Color(0xFF00E65C).withValues(alpha: 0.55),
+                blurRadius: 34,
                 spreadRadius: -4,
               ),
             ],
           ),
-          child: const Icon(Icons.card_giftcard_rounded,
-              size: 46, color: Colors.white),
+          child: const Icon(Icons.inventory_2_rounded,
+              size: 46, color: Color(0xFF0D0D0D)),
         ),
         const SizedBox(height: 24),
-        Text('Robux Box', style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: 24),
+        RichText(
+          text: TextSpan(
+            style: theme.textTheme.headlineMedium,
+            children: const [
+              TextSpan(text: 'Robux '),
+              TextSpan(text: 'Box', style: TextStyle(color: Color(0xFF00E65C))),
+            ],
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text('Play. Earn. Redeem.',
+            style: theme.textTheme.bodyMedium),
+        const SizedBox(height: 28),
         const SizedBox(
           width: 26,
           height: 26,

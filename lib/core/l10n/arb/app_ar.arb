@@ -1,6 +1,7 @@
 {
   "@@locale": "ar",
   "appName": "روبوكس بوكس",
+  "tagline": "العب. اربح. استبدل.",
 
   "commonContinue": "متابعة",
   "commonCancel": "إلغاء",
@@ -23,7 +24,7 @@
 
   "navHome": "الرئيسية",
   "navEarn": "اربح",
-  "navRewards": "المكافآت",
+  "navRewards": "استبدال",
   "navLeaderboard": "المتصدرون",
   "navProfile": "حسابي",
 

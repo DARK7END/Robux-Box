@@ -23,11 +23,14 @@ flutter_*.png
 android/.gradle/
 android/captures/
 android/local.properties
+# Signing secrets — NEVER commit these.
 android/key.properties
 android/app/upload-keystore.jks
 android/app/*.jks
-**/google-services.json
-!android/app/src/main/google-services.json.sample
+*.keystore
+# google-services.json holds non-secret client identifiers (same key as
+# firebase_options.dart) and is committed so the Android build works out of the
+# box. Remove this project's file and gitignore it again if the repo is public.
 
 # iOS
 ios/Pods/

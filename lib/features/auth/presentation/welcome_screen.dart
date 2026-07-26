@@ -41,7 +41,13 @@ class WelcomeScreen extends ConsumerWidget {
                 curve: AppCurves.spring,
                 duration: AppDuration.slow,
               ),
-          const SizedBox(height: AppSpacing.xl),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            context.l10n.tagline,
+            style: context.text.labelLarge
+                ?.copyWith(color: context.colors.primary, letterSpacing: 1),
+          ).animate().fadeIn(delay: 100.ms),
+          const SizedBox(height: AppSpacing.lg),
           Text(
             context.l10n.authWelcomeTitle,
             style: context.text.headlineMedium,
@@ -98,8 +104,8 @@ class _Logo extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.xxl),
         boxShadow: AppShadows.brandGlow,
       ),
-      child: const Icon(Icons.card_giftcard_rounded,
-          size: 48, color: AppColors.white),
+      child: const Icon(Icons.inventory_2_rounded,
+          size: 48, color: AppColors.black),
     );
   }
 }
