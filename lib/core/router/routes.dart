@@ -41,6 +41,8 @@ abstract final class AppRoutes {
   static const String adminBroadcast = '/admin/broadcast';
   static const String adminRewards = '/admin/rewards';
   static const String adminReports = '/admin/reports';
+  static const String adminManage = '/admin/admins';
+  static const String adminAnalytics = '/admin/analytics';
 
   static String redemption(String id) => '/redemptions/$id';
 }

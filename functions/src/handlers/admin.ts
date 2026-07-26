@@ -1,8 +1,9 @@
 import {onCall, HttpsError} from "firebase-functions/v2/https";
-import {auth, cols, userDoc, Timestamp} from "../lib/admin";
+import {auth, db, cols, userDoc, Timestamp} from "../lib/admin";
 import {requireAdmin, requireAuth} from "../lib/security";
 import {creditWallet, debitWallet} from "../lib/wallet";
 import {sendTopic, sendUserNotification} from "../lib/notify";
+import {computeAnalytics} from "../lib/analytics";
 
 const opts = {enforceAppCheck: true, region: "us-central1"} as const;
 
@@ -29,11 +30,27 @@ export const setAdminClaim = onCall(opts, async (req) => {
 
   const target = await auth.getUserByEmail(targetEmail);
   await auth.setCustomUserClaims(target.uid, {admin: makeAdmin});
+  // Mirror to an `admins` collection so the dashboard can list current admins
+  // (custom claims aren't queryable).
+  await db.doc(`admins/${target.uid}`).set({
+    email: target.email ?? targetEmail,
+    displayName: target.displayName ?? "",
+    active: makeAdmin,
+    grantedBy: callerUid,
+    updatedAt: Timestamp.now(),
+  }, {merge: true});
   await cols.auditLogs.add({
     actor: callerUid, action: makeAdmin ? "grant_admin" : "revoke_admin",
     target: target.uid, createdAt: Timestamp.now(),
   });
   return {ok: true, uid: target.uid};
+});
+
+/** Admin-triggered analytics refresh (also runs hourly on a schedule). */
+export const refreshAnalytics = onCall(opts, async (req) => {
+  requireAdmin(req);
+  const summary = await computeAnalytics();
+  return summary;
 });
 
 /** Admin credit/debit adjustment with an audit trail. */

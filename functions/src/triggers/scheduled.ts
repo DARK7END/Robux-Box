@@ -1,8 +1,17 @@
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {db, cols, Timestamp} from "../lib/admin";
 import {sendTopic} from "../lib/notify";
+import {computeAnalytics} from "../lib/analytics";
 
 const region = "us-central1";
+
+/** Hourly analytics rollup for the admin dashboard. */
+export const analyticsAggregate = onSchedule(
+  {schedule: "0 * * * *", timeZone: "Etc/UTC", region},
+  async () => {
+    await computeAnalytics();
+  },
+);
 
 /**
  * Midnight UTC: reset per-day counters (ads watched today) in batches. Keeps the

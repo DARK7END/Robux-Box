@@ -155,6 +155,17 @@ service cloud.firestore {
     }
     match /devices/{id}               { allow read, write: if isAdmin(); }
 
+    // Admin registry + analytics rollup — readable by admins, written only by
+    // Cloud Functions (setAdminClaim / computeAnalytics via the Admin SDK).
+    match /admins/{uid} {
+      allow read: if isAdmin();
+      allow write: if clientCannotWrite();
+    }
+    match /analytics/{doc} {
+      allow read: if isAdmin();
+      allow write: if clientCannotWrite();
+    }
+
     // ------------------------------ Reports --------------------------------
     // Users can file a report; only admins can read/triage.
     match /reports/{reportId} {

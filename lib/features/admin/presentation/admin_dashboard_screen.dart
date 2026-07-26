@@ -30,8 +30,12 @@ class AdminDashboardScreen extends ConsumerWidget {
           AppColors.coin, AppRoutes.adminPromocodes),
       _AdminSection('Broadcast', Icons.campaign_rounded, AppColors.accent,
           AppRoutes.adminBroadcast),
+      _AdminSection('Analytics', Icons.insights_rounded, AppColors.info,
+          AppRoutes.adminAnalytics),
       _AdminSection('Reports', Icons.flag_rounded, AppColors.danger,
           AppRoutes.adminReports),
+      _AdminSection('Manage admins', Icons.admin_panel_settings_rounded,
+          AppColors.brandBright, AppRoutes.adminManage),
     ];
 
     return AppScaffold(

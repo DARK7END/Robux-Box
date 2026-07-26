@@ -171,6 +171,28 @@ class AdminRepository {
         'deeplink': deeplink,
       });
 
+  // ---------------------------------------------------------------------- admins
+  Stream<List<Map<String, dynamic>>> watchAdmins() {
+    return _db
+        .collection('admins')
+        .where('active', isEqualTo: true)
+        .snapshots()
+        .map((s) => s.docs.map((d) => {'uid': d.id, ...d.data()}).toList());
+  }
+
+  Future<Result<void>> setAdmin(String email, bool makeAdmin) =>
+      _call('setAdminClaim', {'email': email.trim(), 'admin': makeAdmin});
+
+  // ------------------------------------------------------------------- analytics
+  Stream<Map<String, dynamic>?> watchAnalytics() {
+    return _db
+        .doc('analytics/summary')
+        .snapshots()
+        .map((d) => d.exists ? d.data() : null);
+  }
+
+  Future<Result<void>> refreshAnalytics() => _call('refreshAnalytics', {});
+
   // --------------------------------------------------------------------- reports
   Stream<List<Map<String, dynamic>>> watchReports() {
     return _db

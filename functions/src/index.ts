@@ -43,6 +43,7 @@ export {
 // Callable: admin dashboard
 export {
   setAdminClaim,
+  refreshAnalytics,
   adjustCoins,
   setAccountStatus,
   setVipLevel,
@@ -61,6 +62,7 @@ export {
 export {
   resetDailyCounters,
   aggregateLeaderboards,
+  analyticsAggregate,
   dailyReminder,
   rewardReminder,
   vipReminder,

@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/achievements/presentation/achievements_screen.dart';
+import '../../features/admin/presentation/admin_analytics_screen.dart';
 import '../../features/admin/presentation/admin_broadcast_screen.dart';
 import '../../features/admin/presentation/admin_dashboard_screen.dart';
+import '../../features/admin/presentation/admin_manage_admins_screen.dart';
 import '../../features/admin/presentation/admin_promocodes_screen.dart';
 import '../../features/admin/presentation/admin_redemptions_screen.dart';
 import '../../features/admin/presentation/admin_reports_screen.dart';
@@ -166,6 +168,16 @@ final routerProvider = Provider<GoRouter>((ref) {
           parentNavigatorKey: _rootKey,
           pageBuilder: (c, s) =>
               _fadePage(s, const AdminGate(child: AdminReportsScreen()))),
+      GoRoute(
+          path: AppRoutes.adminManage,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) =>
+              _fadePage(s, const AdminGate(child: AdminManageAdminsScreen()))),
+      GoRoute(
+          path: AppRoutes.adminAnalytics,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) =>
+              _fadePage(s, const AdminGate(child: AdminAnalyticsScreen()))),
 
       // Bottom-nav shell: Home · Earn · Redeem · Tasks · Profile.
       StatefulShellRoute.indexedStack(

@@ -39,6 +39,14 @@ final adminReportsProvider =
   return ref.watch(adminRepositoryProvider).watchReports();
 });
 
+final adminsProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
+  return ref.watch(adminRepositoryProvider).watchAdmins();
+});
+
+final analyticsProvider = StreamProvider<Map<String, dynamic>?>((ref) {
+  return ref.watch(adminRepositoryProvider).watchAnalytics();
+});
+
 /// Live count of pending redemptions — surfaced as a badge on the dashboard.
 final pendingRedemptionsCountProvider = Provider<int>((ref) {
   return ref
