@@ -17,6 +17,7 @@ import '../../../core/widgets/widgets.dart';
 import '../../admin/domain/admin_providers.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../profile/presentation/widgets/profile_menu_tile.dart';
+import 'report_sheet.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -100,6 +101,12 @@ class SettingsScreen extends ConsumerWidget {
             label: context.l10n.settingsSupport,
             color: AppColors.success,
             onTap: () => _open('mailto:${config.supportEmail}'),
+          ),
+          ProfileMenuTile(
+            icon: Icons.bug_report_rounded,
+            label: context.l10n.settingsReport,
+            color: AppColors.warning,
+            onTap: () => showReportSheet(context),
           ),
           ProfileMenuTile(
             icon: Icons.info_rounded,
