@@ -21,14 +21,20 @@ Future<void> showRedeemSheet(
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    builder: (_) => _RedeemSheet(reward: reward, coins: coins),
+    builder: (_) =>
+        _RedeemSheet(reward: reward, coins: coins, hostContext: context),
   );
 }
 
 class _RedeemSheet extends ConsumerStatefulWidget {
-  const _RedeemSheet({required this.reward, required this.coins});
+  const _RedeemSheet({
+    required this.reward,
+    required this.coins,
+    required this.hostContext,
+  });
   final Reward reward;
   final int coins;
+  final BuildContext hostContext;
 
   @override
   ConsumerState<_RedeemSheet> createState() => _RedeemSheetState();
@@ -87,8 +93,17 @@ class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
     setState(() => _busy = false);
     switch (result) {
       case Success():
+        final host = widget.hostContext;
+        final message = context.l10n.rewardsRequestSubmitted;
         Navigator.of(context).pop();
-        AppToast.success(context, context.l10n.rewardsRequestSubmitted);
+        if (host.mounted) {
+          await showCelebration(
+            host,
+            title: 'Redemption submitted!',
+            message: message,
+            icon: Icons.card_giftcard_rounded,
+          );
+        }
       case Err(:final Failure failure):
         AppToast.error(context, failure.message);
     }
