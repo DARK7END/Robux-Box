@@ -3,6 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/achievements/presentation/achievements_screen.dart';
+import '../../features/admin/presentation/admin_broadcast_screen.dart';
+import '../../features/admin/presentation/admin_dashboard_screen.dart';
+import '../../features/admin/presentation/admin_promocodes_screen.dart';
+import '../../features/admin/presentation/admin_redemptions_screen.dart';
+import '../../features/admin/presentation/admin_reports_screen.dart';
+import '../../features/admin/presentation/admin_rewards_screen.dart';
+import '../../features/admin/presentation/admin_users_screen.dart';
+import '../../features/admin/presentation/widgets/admin_gate.dart';
 import '../../features/auth/presentation/email_auth_screen.dart';
 import '../../features/auth/presentation/onboarding_screen.dart';
 import '../../features/auth/presentation/phone_auth_screen.dart';
@@ -121,6 +129,43 @@ final routerProvider = Provider<GoRouter>((ref) {
           path: AppRoutes.leaderboard,
           parentNavigatorKey: _rootKey,
           pageBuilder: (c, s) => _fadePage(s, const LeaderboardScreen())),
+
+      // Admin dashboard — every screen wrapped in AdminGate (claim check).
+      GoRoute(
+          path: AppRoutes.admin,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) =>
+              _fadePage(s, const AdminGate(child: AdminDashboardScreen()))),
+      GoRoute(
+          path: AppRoutes.adminRedemptions,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) =>
+              _fadePage(s, const AdminGate(child: AdminRedemptionsScreen()))),
+      GoRoute(
+          path: AppRoutes.adminUsers,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) =>
+              _fadePage(s, const AdminGate(child: AdminUsersScreen()))),
+      GoRoute(
+          path: AppRoutes.adminPromocodes,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) =>
+              _fadePage(s, const AdminGate(child: AdminPromocodesScreen()))),
+      GoRoute(
+          path: AppRoutes.adminBroadcast,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) =>
+              _fadePage(s, const AdminGate(child: AdminBroadcastScreen()))),
+      GoRoute(
+          path: AppRoutes.adminRewards,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) =>
+              _fadePage(s, const AdminGate(child: AdminRewardsScreen()))),
+      GoRoute(
+          path: AppRoutes.adminReports,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) =>
+              _fadePage(s, const AdminGate(child: AdminReportsScreen()))),
 
       // Bottom-nav shell: Home · Earn · Redeem · Tasks · Profile.
       StatefulShellRoute.indexedStack(

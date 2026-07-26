@@ -14,6 +14,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/theme/theme_controller.dart';
 import '../../../core/widgets/widgets.dart';
+import '../../admin/domain/admin_providers.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../profile/presentation/widgets/profile_menu_tile.dart';
 
@@ -30,12 +31,23 @@ class SettingsScreen extends ConsumerWidget {
     final themeMode = ref.watch(themeControllerProvider);
     final locale = ref.watch(localeControllerProvider);
     final config = ref.watch(appConfigProvider);
+    final isAdmin = ref.watch(isAdminProvider).valueOrNull ?? false;
 
     return AppScaffold(
       title: context.l10n.settingsTitle,
       body: ListView(
         padding: const EdgeInsets.only(top: kToolbarHeight + AppSpacing.lg),
         children: [
+          if (isAdmin) ...[
+            ProfileMenuTile(
+              icon: Icons.shield_rounded,
+              label: 'Admin dashboard',
+              color: AppColors.brand,
+              subtitle: 'Manage payouts, users, rewards',
+              onTap: () => context.push(AppRoutes.admin),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+          ],
           _SectionLabel(label: context.l10n.settingsTitle),
           GlassCard(
             padding: EdgeInsets.zero,
