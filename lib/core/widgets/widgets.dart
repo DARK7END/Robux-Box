@@ -7,6 +7,7 @@ export 'app_scaffold.dart';
 export 'app_toast.dart';
 export 'celebration.dart';
 export 'coin_badge.dart';
+export 'connectivity_banner.dart';
 export 'coin_particles.dart';
 export 'game_feature_card.dart';
 export 'glass_card.dart';

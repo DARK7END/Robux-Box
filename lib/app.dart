@@ -7,6 +7,7 @@ import 'core/l10n/locale_controller.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
+import 'core/widgets/connectivity_banner.dart';
 
 /// Root widget. Wires the router, themes and localisation to their Riverpod
 /// controllers so theme/locale changes rebuild the whole app reactively.
@@ -41,7 +42,7 @@ class RobuxBoxApp extends ConsumerWidget {
         final scale = mq.textScaler.clamp(minScaleFactor: 0.9, maxScaleFactor: 1.3);
         return MediaQuery(
           data: mq.copyWith(textScaler: scale),
-          child: child!,
+          child: ConnectivityBanner(child: child!),
         );
       },
     );

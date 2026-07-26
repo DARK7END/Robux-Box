@@ -196,7 +196,9 @@ class _RedemptionCardState extends ConsumerState<_RedemptionCard> {
                   size: 14, color: context.surfaces.textTertiary),
               const SizedBox(width: 4),
               Expanded(
-                child: Text('${r.deliveryTarget}  •  ${r.uid.substring(0, 6)}…',
+                child: Text(
+                    '${r.deliveryTarget}  •  '
+                    '${r.uid.length >= 6 ? r.uid.substring(0, 6) : r.uid}…',
                     style: context.text.bodySmall,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis),

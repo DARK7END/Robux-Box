@@ -14,6 +14,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../models/app_user.dart';
 import '../../../models/wallet.dart';
+import '../../notifications/data/notification_repository.dart';
 import '../../profile/data/user_repository.dart';
 import 'widgets/balance_hero_card.dart';
 import 'widgets/daily_reward_card.dart';
@@ -162,6 +163,7 @@ class _Header extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final unread = ref.watch(unreadCountProvider).valueOrNull ?? 0;
     return Row(
       children: [
         CircleAvatar(
@@ -195,9 +197,14 @@ class _Header extends ConsumerWidget {
             ],
           ),
         ),
-        IconButton(
-          onPressed: () => context.push(AppRoutes.notifications),
-          icon: const Icon(Icons.notifications_none_rounded),
+        Badge.count(
+          count: unread,
+          isLabelVisible: unread > 0,
+          backgroundColor: AppColors.danger,
+          child: IconButton(
+            onPressed: () => context.push(AppRoutes.notifications),
+            icon: const Icon(Icons.notifications_none_rounded),
+          ),
         ),
       ],
     );
