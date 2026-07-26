@@ -36,7 +36,7 @@ class RedemptionsScreen extends ConsumerWidget {
             ),
             Expanded(
               child: async.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const PremiumLoadingView(),
                 error: (e, _) =>
                     ErrorStateView(message: context.l10n.errorGeneric),
                 data: (items) => TabBarView(

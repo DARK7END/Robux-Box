@@ -4,6 +4,7 @@ import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/glass_card.dart';
+import '../../../../core/widgets/premium_loader.dart';
 
 /// A glassmorphic full-width auth provider button.
 class SocialAuthButton extends StatelessWidget {
@@ -36,11 +37,7 @@ class SocialAuthButton extends StatelessWidget {
             child: Text(label, style: context.text.titleSmall),
           ),
           if (loading)
-            const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2.2),
-            )
+            const PremiumLoader(size: 22, strokeWidth: 2.4)
           else
             Icon(Icons.arrow_forward_ios_rounded,
                 size: 15, color: context.surfaces.textTertiary),

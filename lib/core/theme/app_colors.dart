@@ -13,41 +13,45 @@ abstract final class AppColors {
   const AppColors._();
 
   // ---------------------------------------------------------------------------
-  // Brand core — green
+  // Brand core — neon green
   // ---------------------------------------------------------------------------
-  static const Color brand = Color(0xFF00E65C); // signature green
-  static const Color brandBright = Color(0xFF4DFF91);
-  static const Color brandDeep = Color(0xFF00A344);
+  static const Color brand = Color(0xFF00FF6A); // signature neon green
+  static const Color brandBright = Color(0xFF5BFFA0);
+  static const Color brandDeep = Color(0xFF00C853);
 
   // Gold is the secondary accent (coins pair with the green).
-  static const Color secondary = Color(0xFFFFD700); // gold
+  static const Color secondary = Color(0xFFFFD84D); // gold
   static const Color secondaryDeep = Color(0xFFF5B800);
 
+  // Purple accent (missions, XP, "play games" category).
+  static const Color accent = Color(0xFF8B5CF6);
+  static const Color accentDeep = Color(0xFF6D3EE8);
+
   // ---------------------------------------------------------------------------
-  // Accent / semantic
+  // Semantic
   // ---------------------------------------------------------------------------
-  static const Color success = Color(0xFF00E676);
-  static const Color successDeep = Color(0xFF00B85C);
+  static const Color success = Color(0xFF00FF6A);
+  static const Color successDeep = Color(0xFF00C853);
   static const Color warning = Color(0xFFFFB020);
   static const Color danger = Color(0xFFFF4D5E);
   static const Color dangerDeep = Color(0xFFE23350);
   static const Color info = Color(0xFF2ED0FF);
 
   // Reward accents
-  static const Color coin = Color(0xFFFFD700); // gold
+  static const Color coin = Color(0xFFFFD84D); // gold
   static const Color coinDeep = Color(0xFFF5A600);
-  static const Color robux = Color(0xFF00E65C); // robux green
+  static const Color robux = Color(0xFF00FF6A); // robux green
   static const Color vip = Color(0xFFFFD54A);
-  static const Color xp = Color(0xFF4DFF91);
+  static const Color xp = Color(0xFF8B5CF6);
 
   // ---------------------------------------------------------------------------
-  // Dark theme surfaces (default) — near-black
+  // Dark theme surfaces (default) — pure premium black
   // ---------------------------------------------------------------------------
-  static const Color darkBg = Color(0xFF0D0D0D);
-  static const Color darkBgElevated = Color(0xFF121212);
-  static const Color darkSurface = Color(0xFF1A1A1A);
-  static const Color darkSurfaceHigh = Color(0xFF242424);
-  static const Color darkCard = Color(0xFF161616);
+  static const Color darkBg = Color(0xFF090909);
+  static const Color darkBgElevated = Color(0xFF101010);
+  static const Color darkSurface = Color(0xFF141414);
+  static const Color darkSurfaceHigh = Color(0xFF1D1D1D);
+  static const Color darkCard = Color(0xFF141414);
   static const Color darkBorder = Color(0x1FFFFFFF);
   static const Color darkDivider = Color(0x14FFFFFF);
 

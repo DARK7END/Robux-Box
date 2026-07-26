@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_dimens.dart';
 import '../theme/app_gradients.dart';
+import 'premium_loader.dart';
 
 /// A tactile, gradient-filled primary button with a press "squish" micro
 /// interaction, an optional leading icon, a loading state and a glow.
@@ -76,14 +77,10 @@ class _GradientButtonState extends State<GradientButton> {
                 : null,
           ),
           child: widget.loading
-              ? SizedBox(
-                  width: 22,
-                  height: 22,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.4,
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(widget.foregroundColor),
-                  ),
+              ? PremiumLoader(
+                  size: 24,
+                  strokeWidth: 2.6,
+                  color: widget.foregroundColor,
                 )
               : Row(
                   mainAxisSize: MainAxisSize.min,

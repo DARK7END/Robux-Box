@@ -58,11 +58,7 @@ class _SplashLogo extends StatelessWidget {
         Text('Play. Earn. Redeem.',
             style: theme.textTheme.bodyMedium),
         const SizedBox(height: 28),
-        const SizedBox(
-          width: 26,
-          height: 26,
-          child: CircularProgressIndicator(strokeWidth: 2.4),
-        ),
+        const PremiumLoader(size: 30),
       ],
     );
   }

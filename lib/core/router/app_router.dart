@@ -23,6 +23,7 @@ import '../../features/wallet/presentation/wallet_screen.dart';
 import '../config/providers.dart';
 import '../services/preferences_service.dart';
 import '../widgets/app_scaffold.dart';
+import '../widgets/premium_loader.dart';
 import 'routes.dart';
 
 part 'splash_screen.dart';

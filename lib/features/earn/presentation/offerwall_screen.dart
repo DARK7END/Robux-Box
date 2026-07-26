@@ -111,7 +111,7 @@ class _OfferwallScreenState extends ConsumerState<OfferwallScreen> {
       return ErrorStateView(message: _error!.message, onRetry: _bootstrap);
     }
     if (_webController == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const PremiumLoadingView(label: 'Loading offers…');
     }
     return WebViewWidget(controller: _webController!);
   }

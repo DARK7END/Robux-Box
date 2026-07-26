@@ -23,6 +23,13 @@ abstract final class AppGradients {
     colors: [AppColors.secondary, AppColors.brand],
   );
 
+  // Purple accent sweep (missions / play-games / XP).
+  static const LinearGradient accent = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFA78BFA), AppColors.accent, AppColors.accentDeep],
+  );
+
   static const LinearGradient coin = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -54,24 +61,24 @@ abstract final class AppGradients {
   );
 
   /// Ambient full-screen background for the dark theme — green glows over the
-  /// near-black base.
+  /// pure-black base.
   static const RadialGradient ambientDark = RadialGradient(
     center: Alignment(-0.8, -1.0),
     radius: 1.6,
-    colors: [Color(0x3300E65C), Color(0x1A00A344), Color(0x00000000)],
+    colors: [Color(0x3300FF6A), Color(0x1A00C853), Color(0x00000000)],
     stops: [0.0, 0.5, 1.0],
   );
 
   static const RadialGradient ambientDarkSecondary = RadialGradient(
     center: Alignment(1.0, -0.3),
     radius: 1.3,
-    colors: [Color(0x2200E676), Color(0x00000000)],
+    colors: [Color(0x228B5CF6), Color(0x00000000)],
   );
 
   static const RadialGradient ambientLight = RadialGradient(
     center: Alignment(-0.8, -1.0),
     radius: 1.6,
-    colors: [Color(0x1F00E65C), Color(0x1400E676), Color(0x00000000)],
+    colors: [Color(0x1F00FF6A), Color(0x148B5CF6), Color(0x00000000)],
   );
 
   /// A shimmering sweep used for premium/VIP highlights and loading states.

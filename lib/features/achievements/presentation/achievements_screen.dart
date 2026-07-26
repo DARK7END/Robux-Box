@@ -27,7 +27,7 @@ class AchievementsScreen extends ConsumerWidget {
     return AppScaffold(
       title: context.l10n.achievementsTitle,
       body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const PremiumLoadingView(),
         error: (e, _) => ErrorStateView(message: context.l10n.errorGeneric),
         data: (items) {
           if (items.isEmpty) {
