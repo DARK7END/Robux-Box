@@ -62,3 +62,7 @@ serviceAccountKey.json
 # Coverage / test
 coverage/
 test/.test_coverage.dart
+
+# Python cache
+__pycache__/
+*.pyc
