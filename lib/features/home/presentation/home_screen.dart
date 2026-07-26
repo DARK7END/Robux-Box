@@ -18,6 +18,8 @@ import '../../earn/domain/earn_controller.dart';
 import '../../profile/data/user_repository.dart';
 import 'widgets/balance_hero_card.dart';
 import 'widgets/daily_reward_card.dart';
+import 'widgets/game_feature_card.dart';
+import 'widgets/missions_section.dart';
 import 'widgets/quick_action_grid.dart';
 import 'widgets/tier_card.dart';
 
@@ -73,10 +75,18 @@ class _HomeContent extends ConsumerWidget {
       children: [
         _Header(user: user),
         const SizedBox(height: AppSpacing.lg),
-        BalanceHeroCard(user: user, wallet: wallet)
-            .animate()
-            .fadeIn()
-            .slideY(begin: 0.1, curve: AppCurves.standard),
+        // Balance hero with an ambient floating-coin field behind it.
+        Stack(
+          children: [
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppRadius.xl),
+                child: const IgnorePointer(child: CoinParticles(count: 10)),
+              ),
+            ),
+            BalanceHeroCard(user: user, wallet: wallet),
+          ],
+        ).animate().fadeIn().slideY(begin: 0.1, curve: AppCurves.standard),
         const SizedBox(height: AppSpacing.lg),
         Row(
           children: [
@@ -97,6 +107,44 @@ class _HomeContent extends ConsumerWidget {
         SectionHeader(title: context.l10n.homeQuickActions),
         const QuickActionGrid().animate().fadeIn(delay: 160.ms),
         const SizedBox(height: AppSpacing.xl),
+        SectionHeader(
+          title: 'Daily games',
+          subtitle: 'Free plays every day',
+          icon: Icons.casino_rounded,
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: GameFeatureCard(
+                title: 'Spin Wheel',
+                subtitle: 'Win up to 1000',
+                icon: Icons.casino_rounded,
+                gradient: AppGradients.accent,
+                badge: 'FREE',
+                onTap: () => context.go(AppRoutes.earn),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: GameFeatureCard(
+                title: 'Lucky Chest',
+                subtitle: 'Open for coins',
+                icon: Icons.inventory_2_rounded,
+                gradient: AppGradients.coin,
+                badge: 'HOT',
+                onTap: () => context.go(AppRoutes.earn),
+              ),
+            ),
+          ],
+        ).animate().fadeIn(delay: 200.ms),
+        const SizedBox(height: AppSpacing.xl),
+        SectionHeader(
+          title: 'Daily missions',
+          subtitle: 'Finish to earn bonus coins',
+          icon: Icons.flag_rounded,
+        ),
+        const MissionsSection(),
+        const SizedBox(height: AppSpacing.md),
         SectionHeader(
           title: context.l10n.rewardsTitle,
           actionLabel: context.l10n.commonSeeAll,
