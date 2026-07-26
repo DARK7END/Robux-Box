@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../extensions/context_extensions.dart';
-import '../theme/app_colors.dart';
 import '../theme/app_dimens.dart';
 
 /// A premium "daily game" tile (Spin Wheel / Lucky Chest) with a gradient body,

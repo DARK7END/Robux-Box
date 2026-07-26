@@ -14,7 +14,6 @@ import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../models/app_user.dart';
 import '../../../models/wallet.dart';
-import '../../earn/domain/earn_controller.dart';
 import '../../profile/data/user_repository.dart';
 import 'widgets/balance_hero_card.dart';
 import 'widgets/daily_reward_card.dart';

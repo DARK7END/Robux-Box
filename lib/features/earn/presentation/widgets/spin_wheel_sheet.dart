@@ -8,7 +8,6 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/error/result.dart';
 import '../../../../core/extensions/context_extensions.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../../domain/earn_controller.dart';
