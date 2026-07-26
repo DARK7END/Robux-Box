@@ -36,7 +36,9 @@ class RewardCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Stack(
+          Hero(
+            tag: 'reward_${reward.id}',
+            child: Stack(
             children: [
               Container(
                 height: 96,
@@ -82,6 +84,7 @@ class RewardCard extends StatelessWidget {
                   ),
                 ),
             ],
+          ),
           ),
           Padding(
             padding: const EdgeInsets.all(AppSpacing.md),

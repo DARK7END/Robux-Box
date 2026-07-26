@@ -6,6 +6,7 @@ import '../../../../core/error/result.dart';
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_gradients.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../../../../models/reward.dart';
@@ -127,6 +128,30 @@ class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Hero(
+              tag: 'reward_${widget.reward.id}',
+              child: Container(
+                height: 96,
+                decoration: BoxDecoration(
+                  gradient: switch (widget.reward.kind) {
+                    RewardKind.robux => AppGradients.robux,
+                    RewardKind.giftCard => AppGradients.neon,
+                    RewardKind.digitalCode => AppGradients.vip,
+                  },
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
+                ),
+                child: Icon(
+                  switch (widget.reward.kind) {
+                    RewardKind.robux => Icons.paid_rounded,
+                    RewardKind.giftCard => Icons.card_giftcard_rounded,
+                    RewardKind.digitalCode => Icons.vpn_key_rounded,
+                  },
+                  color: AppColors.white,
+                  size: 44,
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
             Text(context.l10n.rewardsConfirmTitle,
                 style: context.text.titleLarge),
             const SizedBox(height: AppSpacing.xs),

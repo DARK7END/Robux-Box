@@ -122,8 +122,11 @@
   "walletTitle": "المحفظة",
   "walletBalance": "الرصيد",
   "walletTransactions": "المعاملات",
+  "walletAll": "الكل",
   "walletEarned": "مكتسبة",
   "walletSpent": "مصروفة",
+  "badgesTitle": "الأوسمة",
+  "badgesLocked": "مقفل",
   "walletNoTransactions": "لا توجد معاملات بعد",
   "walletNoTransactionsDesc": "ستظهر أرباحك وعمليات الاستبدال هنا",
 

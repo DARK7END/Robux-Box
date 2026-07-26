@@ -123,8 +123,11 @@
   "walletTitle": "Wallet",
   "walletBalance": "Balance",
   "walletTransactions": "Transactions",
+  "walletAll": "All",
   "walletEarned": "Earned",
   "walletSpent": "Spent",
+  "badgesTitle": "Badges",
+  "badgesLocked": "Locked",
   "walletNoTransactions": "No transactions yet",
   "walletNoTransactionsDesc": "Your earnings and redemptions will appear here",
 

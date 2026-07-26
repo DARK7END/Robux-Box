@@ -83,7 +83,10 @@ class _BrandCategoryCardState extends State<BrandCategoryCard> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(b.icon, color: onColor, size: 30),
+                    Hero(
+                      tag: 'brand_${b.id}',
+                      child: Icon(b.icon, color: onColor, size: 30),
+                    ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       b.name,

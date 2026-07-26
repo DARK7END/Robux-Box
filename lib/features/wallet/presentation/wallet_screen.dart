@@ -1,54 +1,81 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/constants/app_constants.dart';
 import '../../../core/extensions/context_extensions.dart';
 import '../../../core/extensions/format_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
+import '../../../core/theme/app_gradients.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../models/transaction.dart';
+import '../../../models/wallet.dart';
 import '../../profile/data/user_repository.dart';
 import '../data/wallet_repository.dart';
 
-/// Wallet: current balance summary and the transaction ledger.
-class WalletScreen extends ConsumerWidget {
+enum _TxFilter { all, earned, spent }
+
+/// Wallet: premium balance hero + filterable transaction ledger.
+class WalletScreen extends ConsumerStatefulWidget {
   const WalletScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final wallet = ref.watch(currentWalletProvider).valueOrNull;
+  ConsumerState<WalletScreen> createState() => _WalletScreenState();
+}
+
+class _WalletScreenState extends ConsumerState<WalletScreen> {
+  _TxFilter _filter = _TxFilter.all;
+
+  @override
+  Widget build(BuildContext context) {
+    final wallet = ref.watch(currentWalletProvider).valueOrNull ??
+        Wallet.empty('');
     final txAsync = ref.watch(transactionsProvider);
 
     return AppScaffold(
       title: context.l10n.walletTitle,
       body: ListView(
         padding: const EdgeInsets.only(
-            top: kToolbarHeight + AppSpacing.lg, bottom: 40),
+            top: kToolbarHeight + AppSpacing.md, bottom: 40),
         children: [
-          if (wallet != null)
-            Row(
-              children: [
-                Expanded(
-                  child: _StatCard(
-                    label: context.l10n.walletEarned,
-                    value: wallet.lifetimeEarned,
-                    color: AppColors.success,
-                    icon: Icons.trending_up_rounded,
-                  ),
+          _BalanceHero(wallet: wallet)
+              .animate()
+              .fadeIn()
+              .slideY(begin: 0.1, curve: AppCurves.standard),
+          const SizedBox(height: AppSpacing.lg),
+          Row(
+            children: [
+              Expanded(
+                child: _StatCard(
+                  label: context.l10n.walletEarned,
+                  value: wallet.lifetimeEarned,
+                  color: AppColors.brand,
+                  icon: Icons.trending_up_rounded,
                 ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: _StatCard(
-                    label: context.l10n.walletSpent,
-                    value: wallet.lifetimeSpent,
-                    color: AppColors.danger,
-                    icon: Icons.trending_down_rounded,
-                  ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: _StatCard(
+                  label: context.l10n.walletSpent,
+                  value: wallet.lifetimeSpent,
+                  color: AppColors.danger,
+                  icon: Icons.trending_down_rounded,
                 ),
-              ],
-            ),
+              ),
+            ],
+          ).animate().fadeIn(delay: 80.ms),
           const SizedBox(height: AppSpacing.xl),
-          SectionHeader(title: context.l10n.walletTransactions),
+          Row(
+            children: [
+              Expanded(child: SectionHeader(title: context.l10n.walletTransactions)),
+              _FilterChips(
+                filter: _filter,
+                onChanged: (f) => setState(() => _filter = f),
+              ),
+            ],
+          ),
           txAsync.when(
             loading: () => Column(
               children: List.generate(
@@ -61,7 +88,14 @@ class WalletScreen extends ConsumerWidget {
             ),
             error: (e, _) => ErrorStateView(message: context.l10n.errorGeneric),
             data: (txs) {
-              if (txs.isEmpty) {
+              final filtered = switch (_filter) {
+                _TxFilter.all => txs,
+                _TxFilter.earned =>
+                  txs.where((t) => t.isCredit).toList(),
+                _TxFilter.spent =>
+                  txs.where((t) => !t.isCredit).toList(),
+              };
+              if (filtered.isEmpty) {
                 return EmptyStateView(
                   icon: Icons.receipt_long_rounded,
                   title: context.l10n.walletNoTransactions,
@@ -69,10 +103,15 @@ class WalletScreen extends ConsumerWidget {
                 );
               }
               return Column(
-                children: txs
-                    .map((tx) => Padding(
+                children: filtered
+                    .asMap()
+                    .entries
+                    .map((e) => Padding(
                           padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                          child: TransactionTile(tx: tx),
+                          child: TransactionTile(tx: e.value)
+                              .animate()
+                              .fadeIn(delay: (30 * e.key).ms)
+                              .slideX(begin: 0.06),
                         ))
                     .toList(),
               );
@@ -80,6 +119,75 @@ class WalletScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _BalanceHero extends StatelessWidget {
+  const _BalanceHero({required this.wallet});
+  final Wallet wallet;
+
+  @override
+  Widget build(BuildContext context) {
+    final robux = wallet.coins.asRobux(AppConstants.coinsPerRobux);
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.xl),
+            child: const IgnorePointer(child: CoinParticles(count: 10)),
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(AppSpacing.xl),
+          decoration: BoxDecoration(
+            gradient: AppGradients.brand,
+            borderRadius: BorderRadius.circular(AppRadius.xl),
+            boxShadow: AppShadows.glow(AppColors.brand),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(context.l10n.walletBalance,
+                  style: context.text.bodyMedium
+                      ?.copyWith(color: Colors.black.withValues(alpha: 0.7))),
+              const SizedBox(height: 2),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(Icons.monetization_on_rounded,
+                      color: AppColors.black, size: 34),
+                  const SizedBox(width: AppSpacing.sm),
+                  AnimatedCounter(
+                    value: wallet.coins,
+                    style: AppTypography.counter(38, AppColors.black),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.18),
+                      borderRadius: AppRadius.pillRadius,
+                    ),
+                    child: Text('≈ $robux Robux',
+                        style: context.text.labelMedium?.copyWith(
+                            color: AppColors.black,
+                            fontWeight: FontWeight.w700)),
+                  ),
+                ],
+              ),
+              if (wallet.pendingCoins > 0) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Text('${wallet.pendingCoins} coins pending redemption',
+                    style: context.text.bodySmall?.copyWith(
+                        color: Colors.black.withValues(alpha: 0.65))),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -102,7 +210,15 @@ class _StatCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 22),
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.16),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
+            ),
+            child: Icon(icon, color: color, size: 20),
+          ),
           const SizedBox(height: AppSpacing.sm),
           AnimatedCounter(
             value: value,
@@ -110,6 +226,54 @@ class _StatCard extends StatelessWidget {
           ),
           Text(label, style: context.text.bodySmall),
         ],
+      ),
+    );
+  }
+}
+
+class _FilterChips extends StatelessWidget {
+  const _FilterChips({required this.filter, required this.onChanged});
+  final _TxFilter filter;
+  final ValueChanged<_TxFilter> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final labels = {
+      _TxFilter.all: context.l10n.walletAll,
+      _TxFilter.earned: context.l10n.walletEarned,
+      _TxFilter.spent: context.l10n.walletSpent,
+    };
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: context.surfaces.surfaceHigh,
+        borderRadius: AppRadius.pillRadius,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: _TxFilter.values.map((f) {
+          final active = f == filter;
+          return GestureDetector(
+            onTap: () => onChanged(f),
+            child: AnimatedContainer(
+              duration: AppDuration.fast,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md, vertical: 6),
+              decoration: BoxDecoration(
+                gradient: active ? AppGradients.brand : null,
+                borderRadius: AppRadius.pillRadius,
+              ),
+              child: Text(
+                labels[f]!,
+                style: context.text.labelSmall?.copyWith(
+                  color:
+                      active ? AppColors.black : context.surfaces.textTertiary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -135,7 +299,7 @@ class TransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = tx.isCredit ? AppColors.success : AppColors.danger;
+    final color = tx.isCredit ? AppColors.brand : AppColors.danger;
     return GlassCard(
       padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md, vertical: AppSpacing.md),
@@ -167,7 +331,7 @@ class TransactionTile extends StatelessWidget {
           ),
           Text(
             '${tx.isCredit ? '+' : '-'}${tx.amount}',
-            style: context.text.titleSmall?.copyWith(color: color),
+            style: AppTypography.counter(16, color),
           ),
         ],
       ),

@@ -50,7 +50,10 @@ class _BrandSheet extends ConsumerWidget {
                   gradient: brand.gradient,
                   borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
-                child: Icon(brand.icon, color: Colors.white, size: 24),
+                child: Hero(
+                  tag: 'brand_${brand.id}',
+                  child: Icon(brand.icon, color: Colors.white, size: 24),
+                ),
               ),
               const SizedBox(width: AppSpacing.md),
               Text('${brand.name} rewards',
