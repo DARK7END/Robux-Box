@@ -18,7 +18,6 @@ import '../../earn/domain/earn_controller.dart';
 import '../../profile/data/user_repository.dart';
 import 'widgets/balance_hero_card.dart';
 import 'widgets/daily_reward_card.dart';
-import 'widgets/game_feature_card.dart';
 import 'widgets/missions_section.dart';
 import 'widgets/quick_action_grid.dart';
 import 'widgets/tier_card.dart';

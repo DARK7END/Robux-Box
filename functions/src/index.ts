@@ -23,6 +23,9 @@ export {
   resolveTier,
 } from "./handlers/earn";
 
+// Callable: daily games (spin wheel / lucky chest)
+export {playDailyGame} from "./handlers/games";
+
 // Callable: redemption
 export {
   requestRedemption,

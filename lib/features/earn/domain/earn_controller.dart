@@ -64,6 +64,12 @@ class EarnController extends AsyncNotifier<EarnResult?> {
   Future<Result<EarnResult>> redeemPromocode(String code) =>
       _wrap(() => ref.read(earnRepositoryProvider).redeemPromocode(code));
 
+  Future<Result<EarnResult>> playSpin() =>
+      _wrap(() => ref.read(earnRepositoryProvider).playDailyGame('spin'));
+
+  Future<Result<EarnResult>> playChest() =>
+      _wrap(() => ref.read(earnRepositoryProvider).playDailyGame('chest'));
+
   Future<Result<EarnResult>> _wrap(
       Future<Result<EarnResult>> Function() action) async {
     state = const AsyncLoading();

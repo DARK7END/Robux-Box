@@ -48,6 +48,14 @@ abstract final class AppConstants {
 
   static const int leaderboardPageSize = 50;
   static const int transactionsPageSize = 25;
+
+  /// Spin-wheel segment prizes (coins). Order MUST match the server
+  /// (`functions/src/lib/economy.ts` → spinPrizes) so the wheel lands on the
+  /// exact segment the backend awarded.
+  static const List<int> spinWheelPrizes = [25, 50, 10, 100, 250, 15, 500, 75];
+
+  /// Lucky-chest prizes (coins), mirroring the server chestPrizes.
+  static const List<int> chestPrizes = [30, 60, 120, 300];
 }
 
 /// The four monetisation tiers derived from the user's country. T1 pays the

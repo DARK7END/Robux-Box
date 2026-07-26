@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/error/failure.dart';
 import '../../../core/error/result.dart';
 import '../../../core/extensions/context_extensions.dart';
-import '../../../core/router/routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/theme/app_gradients.dart';
@@ -16,8 +15,10 @@ import '../../../core/widgets/widgets.dart';
 import '../../profile/data/user_repository.dart';
 import '../domain/earn_controller.dart';
 import 'widgets/earn_reward_dialog.dart';
+import 'widgets/lucky_chest_sheet.dart';
+import 'widgets/spin_wheel_sheet.dart';
 
-/// The Earn hub: watch rewarded ads and open the offerwall.
+/// The Earn hub: daily games (Spin Wheel, Lucky Chest), rewarded ads, promo.
 class EarnScreen extends ConsumerStatefulWidget {
   const EarnScreen({super.key});
 
@@ -59,18 +60,49 @@ class _EarnScreenState extends ConsumerState<EarnScreen> {
         padding: const EdgeInsets.only(
             top: kToolbarHeight + AppSpacing.lg, bottom: 110),
         children: [
+          SectionHeader(
+            title: 'Daily games',
+            subtitle: 'One free play each — win big',
+            icon: Icons.casino_rounded,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: GameFeatureCard(
+                  title: 'Spin Wheel',
+                  subtitle: 'Win up to 500',
+                  icon: Icons.casino_rounded,
+                  gradient: AppGradients.accent,
+                  badge: 'FREE',
+                  onTap: () => showSpinWheelSheet(context),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: GameFeatureCard(
+                  title: 'Lucky Chest',
+                  subtitle: 'Open for coins',
+                  icon: Icons.inventory_2_rounded,
+                  gradient: AppGradients.coin,
+                  badge: 'HOT',
+                  onTap: () => showLuckyChestSheet(context),
+                ),
+              ),
+            ],
+          ).animate().fadeIn().slideY(begin: 0.1),
+          const SizedBox(height: AppSpacing.xl),
+          SectionHeader(
+            title: context.l10n.earnWatchAds,
+            icon: Icons.play_circle_fill_rounded,
+          ),
           _WatchAdCard(
             ready: adReady,
             watching: _watching,
             adsLeft: adsLeft,
-            maxCoins: (AppConstants.baseRewardedAdCoins *
-                    (wallet == null ? 1 : 1))
-                .toInt(),
+            maxCoins: AppConstants.baseRewardedAdCoins,
             onWatch: adsLeft > 0 ? _watchAd : null,
           ),
-          const SizedBox(height: AppSpacing.lg),
-          _OfferwallCard(onOpen: () => context.push(AppRoutes.offerwall)),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.xl),
           _PromoCodeCard(),
         ],
       ),
@@ -157,45 +189,6 @@ class _WatchAdCard extends StatelessWidget {
             enabled: !limitReached && onWatch != null,
             onPressed: onWatch,
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _OfferwallCard extends StatelessWidget {
-  const _OfferwallCard({required this.onOpen});
-  final VoidCallback onOpen;
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassCard(
-      onTap: onOpen,
-      child: Row(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              gradient: AppGradients.neon,
-              borderRadius: BorderRadius.circular(AppRadius.md),
-            ),
-            child: const Icon(Icons.assignment_turned_in_rounded,
-                color: AppColors.white, size: 30),
-          ),
-          const SizedBox(width: AppSpacing.lg),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(context.l10n.earnOfferwall,
-                    style: context.text.titleMedium),
-                Text(context.l10n.earnOfferwallDesc,
-                    style: context.text.bodySmall),
-              ],
-            ),
-          ),
-          const Icon(Icons.arrow_forward_ios_rounded, size: 16),
         ],
       ),
     );

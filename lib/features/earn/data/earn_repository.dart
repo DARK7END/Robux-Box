@@ -16,6 +16,7 @@ class EarnResult {
     required this.newBalance,
     required this.xpGained,
     required this.message,
+    this.prizeIndex,
   });
 
   final int coinsCredited;
@@ -23,11 +24,15 @@ class EarnResult {
   final int xpGained;
   final String message;
 
+  /// For daily games: the winning segment index the wheel/chest should land on.
+  final int? prizeIndex;
+
   factory EarnResult.fromMap(Map<String, dynamic> map) => EarnResult(
         coinsCredited: (map['coinsCredited'] as num?)?.toInt() ?? 0,
         newBalance: (map['newBalance'] as num?)?.toInt() ?? 0,
         xpGained: (map['xpGained'] as num?)?.toInt() ?? 0,
         message: (map['message'] ?? '').toString(),
+        prizeIndex: (map['prizeIndex'] as num?)?.toInt(),
       );
 }
 
@@ -104,6 +109,20 @@ class EarnRepository {
       return Result.success(EarnResult.fromMap(res.data));
     } catch (e, s) {
       log.e('redeemPromocode failed', e, s);
+      return Result.failure(FirebaseErrorMapper.map(e, s));
+    }
+  }
+
+  /// Plays a daily free game ('spin' or 'chest'); the backend awards the prize
+  /// and returns the winning segment index for the animation.
+  Future<Result<EarnResult>> playDailyGame(String game) async {
+    try {
+      final res = await _functions
+          .httpsCallable('playDailyGame')
+          .call<Map<String, dynamic>>({'game': game});
+      return Result.success(EarnResult.fromMap(res.data));
+    } catch (e, s) {
+      log.e('playDailyGame failed', e, s);
       return Result.failure(FirebaseErrorMapper.map(e, s));
     }
   }

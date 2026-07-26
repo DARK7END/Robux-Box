@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../../../core/extensions/context_extensions.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_dimens.dart';
+import '../extensions/context_extensions.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_dimens.dart';
 
 /// A premium "daily game" tile (Spin Wheel / Lucky Chest) with a gradient body,
 /// a soft glow, a floating/pulsing emblem and a press micro-interaction.

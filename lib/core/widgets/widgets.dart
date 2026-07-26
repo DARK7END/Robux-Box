@@ -8,6 +8,7 @@ export 'app_toast.dart';
 export 'celebration.dart';
 export 'coin_badge.dart';
 export 'coin_particles.dart';
+export 'game_feature_card.dart';
 export 'glass_card.dart';
 export 'gradient_button.dart';
 export 'premium_loader.dart';
