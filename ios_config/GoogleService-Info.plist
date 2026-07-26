@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>218872107846-csphovmpqp9rfgj3i3er0m5suesropvs.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.218872107846-csphovmpqp9rfgj3i3er0m5suesropvs</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>218872107846-kde74a6aokv8mjtsuh39hi98ier0j87n.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDQVXGiMS8NukkWzO_itTpU8JCcMqiCm8c</string>
+	<key>GCM_SENDER_ID</key>
+	<string>218872107846</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.robuxbox.app</string>
+	<key>PROJECT_ID</key>
+	<string>robux-box</string>
+	<key>STORAGE_BUCKET</key>
+	<string>robux-box.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:218872107846:ios:0239ae994e936ee20fcb47</string>
+</dict>
+</plist>

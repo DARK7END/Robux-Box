@@ -1,0 +1,50 @@
+name: iOS unsigned IPA
+
+# Builds an UNSIGNED .ipa for sideloading (iLoader / Sideloadly / AltStore).
+# No Apple Developer account or secrets required — the sideloading tool re-signs
+# with your free Apple ID. Trigger manually from the Actions tab.
+on:
+  workflow_dispatch:
+    inputs:
+      flavor:
+        description: "Build flavor (dev uses AdMob TEST ads)"
+        required: true
+        default: "dev"
+        type: choice
+        options: [dev, staging, prod]
+
+jobs:
+  build:
+    name: Build unsigned IPA
+    runs-on: macos-14
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.x"
+          channel: stable
+          cache: true
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Generate iOS project + overlay config
+        run: bash tool/setup_ios.sh
+
+      - name: Build unsigned .app
+        run: |
+          flutter build ios --release --no-codesign \
+            --dart-define=FLAVOR=${{ github.event.inputs.flavor }}
+
+      - name: Package unsigned IPA
+        run: bash tool/package_unsigned_ipa.sh
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RobuxBox-unsigned-ipa
+          path: build/ios/ipa/RobuxBox-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 14

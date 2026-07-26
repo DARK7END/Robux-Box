@@ -10,8 +10,10 @@ exports:
 
 Run: python3 tool/generate_icon.py
 """
+import json
 import math
 import os
+import sys
 from PIL import Image, ImageDraw, ImageFilter
 
 RES = os.path.join(os.path.dirname(__file__), "..", "android", "app", "src", "main", "res")
@@ -167,6 +169,54 @@ def save(img, path, px):
 
 DENSITIES = {"mdpi": 1, "hdpi": 1.5, "xhdpi": 2, "xxhdpi": 3, "xxxhdpi": 4}
 
+# iOS AppIcon sizes (pt, scale, idiom). iOS applies its own corner mask, so the
+# source must be an OPAQUE square with no alpha and no rounding.
+IOS_SPECS = [
+    (20, 2, "iphone"), (20, 3, "iphone"),
+    (29, 2, "iphone"), (29, 3, "iphone"),
+    (40, 2, "iphone"), (40, 3, "iphone"),
+    (60, 2, "iphone"), (60, 3, "iphone"),
+    (20, 1, "ipad"), (20, 2, "ipad"),
+    (29, 1, "ipad"), (29, 2, "ipad"),
+    (40, 1, "ipad"), (40, 2, "ipad"),
+    (76, 1, "ipad"), (76, 2, "ipad"),
+    (83.5, 2, "ipad"),
+    (1024, 1, "ios-marketing"),
+]
+
+
+def _ios_square():
+    """Opaque, square (no rounding, no alpha) master for iOS."""
+    base = Image.new("RGBA", (M, M), (9, 9, 9, 255))
+    base = Image.alpha_composite(base, background(M, rounded=False))
+    base = Image.alpha_composite(base, draw_chest(M, scale=0.62))
+    return base.convert("RGB")
+
+
+def generate_ios():
+    out = os.path.join(os.path.dirname(__file__), "..", "ios", "Runner",
+                       "Assets.xcassets", "AppIcon.appiconset")
+    if not os.path.isdir(os.path.dirname(out)):
+        print("  ios/ not generated yet — run flutter create first; skipping.")
+        return
+    os.makedirs(out, exist_ok=True)
+    master = _ios_square()
+    images = []
+    for (size, scale, idiom) in IOS_SPECS:
+        px = round(size * scale)
+        name = f"Icon-{size}@{scale}x.png"
+        master.resize((px, px), Image.LANCZOS).save(os.path.join(out, name))
+        images.append({
+            "size": f"{size}x{size}",
+            "idiom": idiom,
+            "filename": name,
+            "scale": f"{scale}x",
+        })
+    with open(os.path.join(out, "Contents.json"), "w") as f:
+        json.dump({"images": images, "info": {"version": 1, "author": "xcode"}},
+                  f, indent=2)
+    print(f"  iOS AppIcon set generated ({len(images)} sizes).")
+
 
 def main():
     full = compose_full(M)
@@ -184,8 +234,11 @@ def main():
 
     os.makedirs(STORE, exist_ok=True)
     full.resize((512, 512), Image.LANCZOS).save(f"{STORE}/play_store_icon.png")
-    print("Icon set generated.")
+    print("Android + store icon set generated.")
 
 
 if __name__ == "__main__":
-    main()
+    if "--ios" in sys.argv:
+        generate_ios()
+    else:
+        main()

@@ -39,14 +39,15 @@ class DefaultFirebaseOptions {
     storageBucket: 'robux-box.firebasestorage.app',
   );
 
-  // iOS not registered yet — replace appId/apiKey via `flutterfire configure`.
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'REPLACE_WITH_IOS_API_KEY',
-    appId: 'REPLACE_WITH_IOS_APP_ID',
+    apiKey: 'AIzaSyDQVXGiMS8NukkWzO_itTpU8JCcMqiCm8c',
+    appId: '1:218872107846:ios:0239ae994e936ee20fcb47',
     messagingSenderId: '218872107846',
     projectId: 'robux-box',
     storageBucket: 'robux-box.firebasestorage.app',
     iosBundleId: 'com.robuxbox.app',
+    iosClientId:
+        '218872107846-csphovmpqp9rfgj3i3er0m5suesropvs.apps.googleusercontent.com',
   );
 
   // Web not registered yet — replace appId/apiKey via `flutterfire configure`.

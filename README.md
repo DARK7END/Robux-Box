@@ -155,6 +155,7 @@ and positive across every tier. Coins convert to Robux at `coinsPerRobux`.
 - [`docs/SECURITY.md`](docs/SECURITY.md) — anti-cheat / anti-fraud model
 - [`docs/FIRESTORE_SCHEMA.md`](docs/FIRESTORE_SCHEMA.md) — collections & relationships
 - [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) — end-to-end deploy guide
+- [`docs/IOS_SIDELOAD.md`](docs/IOS_SIDELOAD.md) — build an unsigned IPA & sideload (no paid Apple account)
 - [`docs/STORE_PREP.md`](docs/STORE_PREP.md) — Google Play & App Store prep
 - [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md) · [`docs/TERMS_OF_SERVICE.md`](docs/TERMS_OF_SERVICE.md)
 
