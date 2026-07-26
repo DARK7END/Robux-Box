@@ -56,6 +56,12 @@ class ProfileScreen extends ConsumerWidget {
             onTap: () => context.push(AppRoutes.achievements),
           ),
           ProfileMenuTile(
+            icon: Icons.leaderboard_rounded,
+            label: context.l10n.leaderboardTitle,
+            color: AppColors.accent,
+            onTap: () => context.push(AppRoutes.leaderboard),
+          ),
+          ProfileMenuTile(
             icon: Icons.group_rounded,
             label: context.l10n.profileReferrals,
             color: AppColors.secondary,

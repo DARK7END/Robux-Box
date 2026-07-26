@@ -16,8 +16,8 @@ class QuickActionGrid extends StatelessWidget {
     final actions = [
       _Action(Icons.play_circle_fill_rounded, context.l10n.homeWatchAd,
           AppColors.brand, () => context.go(AppRoutes.earn)),
-      _Action(Icons.assignment_turned_in_rounded, context.l10n.homeOffers,
-          AppColors.secondary, () => context.go(AppRoutes.earn)),
+      _Action(Icons.checklist_rounded, context.l10n.homeOffers,
+          AppColors.accent, () => context.go(AppRoutes.tasks)),
       _Action(Icons.card_giftcard_rounded, context.l10n.homeRedeem,
           AppColors.robux, () => context.go(AppRoutes.rewards)),
       _Action(Icons.group_add_rounded, context.l10n.homeInvite,

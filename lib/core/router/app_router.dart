@@ -18,6 +18,7 @@ import '../../features/redemption/presentation/redemptions_screen.dart';
 import '../../features/redemption/presentation/rewards_screen.dart';
 import '../../features/referrals/presentation/referrals_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/tasks/presentation/tasks_screen.dart';
 import '../../features/vip/presentation/vip_screen.dart';
 import '../../features/wallet/presentation/wallet_screen.dart';
 import '../config/providers.dart';
@@ -115,8 +116,12 @@ final routerProvider = Provider<GoRouter>((ref) {
           path: AppRoutes.settings,
           parentNavigatorKey: _rootKey,
           builder: (_, __) => const SettingsScreen()),
+      GoRoute(
+          path: AppRoutes.leaderboard,
+          parentNavigatorKey: _rootKey,
+          builder: (_, __) => const LeaderboardScreen()),
 
-      // Bottom-nav shell.
+      // Bottom-nav shell: Home · Earn · Redeem · Tasks · Profile.
       StatefulShellRoute.indexedStack(
         parentNavigatorKey: _rootKey,
         builder: (context, state, navigationShell) =>
@@ -135,8 +140,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
-                path: AppRoutes.leaderboard,
-                builder: (_, __) => const LeaderboardScreen()),
+                path: AppRoutes.tasks, builder: (_, __) => const TasksScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(

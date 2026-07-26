@@ -10,12 +10,15 @@ abstract final class AppRoutes {
   static const String emailAuth = '/auth/email';
   static const String phoneAuth = '/auth/phone';
 
-  // Shell tabs
+  // Shell tabs: Home · Earn · Redeem · Tasks · Profile
   static const String home = '/home';
   static const String earn = '/earn';
-  static const String rewards = '/rewards';
-  static const String leaderboard = '/leaderboard';
+  static const String rewards = '/rewards'; // "Redeem" tab
+  static const String tasks = '/tasks';
   static const String profile = '/profile';
+
+  // Leaderboard is reached from Home/Profile (not a bottom tab).
+  static const String leaderboard = '/leaderboard';
 
   // Detail routes
   static const String offerwall = '/earn/offerwall';

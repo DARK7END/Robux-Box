@@ -16,11 +16,12 @@ class MainShell extends StatelessWidget {
 
   final StatefulNavigationShell navigationShell;
 
+  // Home · Earn · Redeem · Tasks · Profile
   static const _items = [
     (_NavItem(Icons.home_rounded, Icons.home_outlined)),
     (_NavItem(Icons.bolt_rounded, Icons.bolt_outlined)),
     (_NavItem(Icons.card_giftcard_rounded, Icons.card_giftcard_outlined)),
-    (_NavItem(Icons.leaderboard_rounded, Icons.leaderboard_outlined)),
+    (_NavItem(Icons.checklist_rounded, Icons.checklist_outlined)),
     (_NavItem(Icons.person_rounded, Icons.person_outline_rounded)),
   ];
 
@@ -37,8 +38,8 @@ class MainShell extends StatelessWidget {
     final labels = [
       context.l10n.navHome,
       context.l10n.navEarn,
-      context.l10n.navRewards,
-      context.l10n.navLeaderboard,
+      context.l10n.navRewards, // "Redeem"
+      context.l10n.navTasks,
       context.l10n.navProfile,
     ];
 
