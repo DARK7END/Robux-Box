@@ -17,6 +17,7 @@ class GameFeatureCard extends StatefulWidget {
     required this.gradient,
     required this.onTap,
     this.badge,
+    this.dimmed = false,
   });
 
   final String title;
@@ -25,6 +26,10 @@ class GameFeatureCard extends StatefulWidget {
   final Gradient gradient;
   final VoidCallback onTap;
   final String? badge;
+
+  /// When true (e.g. daily play already used), the card is desaturated with a
+  /// small lock — still tappable so the caller can show a "come back" message.
+  final bool dimmed;
 
   @override
   State<GameFeatureCard> createState() => _GameFeatureCardState();
@@ -117,6 +122,19 @@ class _GameFeatureCardState extends State<GameFeatureCard> {
                   ),
                 ],
               ),
+              if (widget.dimmed)
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.42),
+                      borderRadius: BorderRadius.circular(AppRadius.lg),
+                    ),
+                    child: const Center(
+                      child: Icon(Icons.lock_clock_rounded,
+                          color: Colors.white, size: 30),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

@@ -30,6 +30,8 @@ class AppUser extends Equatable {
     required this.level,
     required this.streakCount,
     required this.lastDailyClaim,
+    this.lastSpinAt,
+    this.lastChestAt,
     required this.referralCode,
     required this.referredBy,
     required this.referralCount,
@@ -57,6 +59,8 @@ class AppUser extends Equatable {
   final int level;
   final int streakCount;
   final DateTime? lastDailyClaim;
+  final DateTime? lastSpinAt;
+  final DateTime? lastChestAt;
 
   final String referralCode;
   final String? referredBy;
@@ -84,14 +88,15 @@ class AppUser extends Equatable {
     return ((xp - currentFloor) / span).clamp(0.0, 1.0);
   }
 
-  bool get canClaimDaily {
-    if (lastDailyClaim == null) return true;
+  static bool _isToday(DateTime? d) {
+    if (d == null) return false;
     final now = DateTime.now();
-    final last = lastDailyClaim!;
-    return now.year != last.year ||
-        now.month != last.month ||
-        now.day != last.day;
+    return now.year == d.year && now.month == d.month && now.day == d.day;
   }
+
+  bool get canClaimDaily => !_isToday(lastDailyClaim);
+  bool get canSpinToday => !_isToday(lastSpinAt);
+  bool get canOpenChestToday => !_isToday(lastChestAt);
 
   factory AppUser.fromMap(String uid, Map<String, dynamic> map) {
     return AppUser(
@@ -109,6 +114,8 @@ class AppUser extends Equatable {
       level: Parse.toInt(map['level']),
       streakCount: Parse.toInt(map['streakCount']),
       lastDailyClaim: Parse.toDate(map['lastDailyClaim']),
+      lastSpinAt: Parse.toDate(map['lastSpinAt']),
+      lastChestAt: Parse.toDate(map['lastChestAt']),
       referralCode: Parse.toStr(map['referralCode']),
       referredBy: map['referredBy'] as String?,
       referralCount: Parse.toInt(map['referralCount']),
@@ -160,6 +167,8 @@ class AppUser extends Equatable {
       level: level ?? this.level,
       streakCount: streakCount ?? this.streakCount,
       lastDailyClaim: lastDailyClaim ?? this.lastDailyClaim,
+      lastSpinAt: lastSpinAt,
+      lastChestAt: lastChestAt,
       referralCode: referralCode,
       referredBy: referredBy,
       referralCount: referralCount,

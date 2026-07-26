@@ -15,6 +15,16 @@ extension NumFormatX on num {
       (this / coinsPerRobux).toStringAsFixed(2);
 }
 
+/// Short "in Xh / in Ym" string until the next local midnight — used for daily
+/// game (spin/chest) cooldown badges.
+String timeUntilMidnight() {
+  final now = DateTime.now();
+  final next = DateTime(now.year, now.month, now.day + 1);
+  final d = next.difference(now);
+  if (d.inHours >= 1) return 'in ${d.inHours}h';
+  return 'in ${d.inMinutes.clamp(1, 59)}m';
+}
+
 extension DateFormatX on DateTime {
   String relative([DateTime? now]) {
     final reference = now ?? DateTime.now();

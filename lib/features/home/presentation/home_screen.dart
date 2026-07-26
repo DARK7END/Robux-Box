@@ -116,10 +116,11 @@ class _HomeContent extends ConsumerWidget {
             Expanded(
               child: GameFeatureCard(
                 title: 'Spin Wheel',
-                subtitle: 'Win up to 1000',
+                subtitle: user.canSpinToday ? 'Win up to 500' : 'Played today',
                 icon: Icons.casino_rounded,
                 gradient: AppGradients.accent,
-                badge: 'FREE',
+                badge: user.canSpinToday ? 'FREE' : timeUntilMidnight(),
+                dimmed: !user.canSpinToday,
                 onTap: () => context.go(AppRoutes.earn),
               ),
             ),
@@ -127,10 +128,11 @@ class _HomeContent extends ConsumerWidget {
             Expanded(
               child: GameFeatureCard(
                 title: 'Lucky Chest',
-                subtitle: 'Open for coins',
+                subtitle: user.canOpenChestToday ? 'Open for coins' : 'Opened today',
                 icon: Icons.inventory_2_rounded,
                 gradient: AppGradients.coin,
-                badge: 'HOT',
+                badge: user.canOpenChestToday ? 'HOT' : timeUntilMidnight(),
+                dimmed: !user.canOpenChestToday,
                 onTap: () => context.go(AppRoutes.earn),
               ),
             ),

@@ -6,6 +6,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/error/failure.dart';
 import '../../../core/error/result.dart';
 import '../../../core/extensions/context_extensions.dart';
+import '../../../core/extensions/format_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/theme/app_gradients.dart';
@@ -45,8 +46,11 @@ class _EarnScreenState extends ConsumerState<EarnScreen> {
   @override
   Widget build(BuildContext context) {
     final walletAsync = ref.watch(currentWalletProvider);
+    final user = ref.watch(currentUserProvider).valueOrNull;
     final adReady = ref.watch(adReadyProvider).valueOrNull ?? false;
     final wallet = walletAsync.valueOrNull;
+    final canSpin = user?.canSpinToday ?? true;
+    final canChest = user?.canOpenChestToday ?? true;
     final adsLeft = wallet == null
         ? AppConstants.maxRewardedAdsPerDay
         : (AppConstants.maxRewardedAdsPerDay - wallet.adsWatchedToday)
@@ -68,22 +72,30 @@ class _EarnScreenState extends ConsumerState<EarnScreen> {
               Expanded(
                 child: GameFeatureCard(
                   title: 'Spin Wheel',
-                  subtitle: 'Win up to 500',
+                  subtitle: canSpin ? 'Win up to 500' : 'Played today',
                   icon: Icons.casino_rounded,
                   gradient: AppGradients.accent,
-                  badge: 'FREE',
-                  onTap: () => showSpinWheelSheet(context),
+                  badge: canSpin ? 'FREE' : timeUntilMidnight(),
+                  dimmed: !canSpin,
+                  onTap: () => canSpin
+                      ? showSpinWheelSheet(context)
+                      : AppToast.show(context,
+                          message: 'Come back tomorrow for your free spin!'),
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: GameFeatureCard(
                   title: 'Lucky Chest',
-                  subtitle: 'Open for coins',
+                  subtitle: canChest ? 'Open for coins' : 'Opened today',
                   icon: Icons.inventory_2_rounded,
                   gradient: AppGradients.coin,
-                  badge: 'HOT',
-                  onTap: () => showLuckyChestSheet(context),
+                  badge: canChest ? 'HOT' : timeUntilMidnight(),
+                  dimmed: !canChest,
+                  onTap: () => canChest
+                      ? showLuckyChestSheet(context)
+                      : AppToast.show(context,
+                          message: 'Your chest resets tomorrow!'),
                 ),
               ),
             ],

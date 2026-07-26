@@ -75,51 +75,52 @@ final routerProvider = Provider<GoRouter>((ref) {
           path: AppRoutes.onboarding,
           builder: (_, __) => const OnboardingScreen()),
       GoRoute(
-          path: AppRoutes.welcome, builder: (_, __) => const WelcomeScreen()),
+          path: AppRoutes.welcome,
+          pageBuilder: (c, s) => _fadePage(s, const WelcomeScreen())),
       GoRoute(
           path: AppRoutes.emailAuth,
-          builder: (_, __) => const EmailAuthScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const EmailAuthScreen())),
       GoRoute(
           path: AppRoutes.phoneAuth,
-          builder: (_, __) => const PhoneAuthScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const PhoneAuthScreen())),
 
-      // Detail routes (pushed over the shell).
+      // Detail routes (pushed over the shell) — fade+slide transitions.
       GoRoute(
           path: AppRoutes.offerwall,
           parentNavigatorKey: _rootKey,
-          builder: (_, __) => const OfferwallScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const OfferwallScreen())),
       GoRoute(
           path: AppRoutes.wallet,
           parentNavigatorKey: _rootKey,
-          builder: (_, __) => const WalletScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const WalletScreen())),
       GoRoute(
           path: AppRoutes.redemptions,
           parentNavigatorKey: _rootKey,
-          builder: (_, __) => const RedemptionsScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const RedemptionsScreen())),
       GoRoute(
           path: AppRoutes.referrals,
           parentNavigatorKey: _rootKey,
-          builder: (_, __) => const ReferralsScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const ReferralsScreen())),
       GoRoute(
           path: AppRoutes.vip,
           parentNavigatorKey: _rootKey,
-          builder: (_, __) => const VipScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const VipScreen())),
       GoRoute(
           path: AppRoutes.achievements,
           parentNavigatorKey: _rootKey,
-          builder: (_, __) => const AchievementsScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const AchievementsScreen())),
       GoRoute(
           path: AppRoutes.notifications,
           parentNavigatorKey: _rootKey,
-          builder: (_, __) => const NotificationsScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const NotificationsScreen())),
       GoRoute(
           path: AppRoutes.settings,
           parentNavigatorKey: _rootKey,
-          builder: (_, __) => const SettingsScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const SettingsScreen())),
       GoRoute(
           path: AppRoutes.leaderboard,
           parentNavigatorKey: _rootKey,
-          builder: (_, __) => const LeaderboardScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const LeaderboardScreen())),
 
       // Bottom-nav shell: Home · Earn · Redeem · Tasks · Profile.
       StatefulShellRoute.indexedStack(
@@ -156,6 +157,32 @@ final routerProvider = Provider<GoRouter>((ref) {
     ),
   );
 });
+
+/// Wraps [child] in a premium fade-through page transition (fade + subtle
+/// upward slide), used for all pushed detail and auth routes. Honours the
+/// platform "reduce motion" accessibility setting by dropping the slide.
+CustomTransitionPage<void> _fadePage(GoRouterState state, Widget child) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    transitionDuration: const Duration(milliseconds: 320),
+    reverseTransitionDuration: const Duration(milliseconds: 240),
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final reduceMotion = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+      final curved =
+          CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+      final fade = FadeTransition(opacity: curved, child: child);
+      if (reduceMotion) return fade;
+      return SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0, 0.035),
+          end: Offset.zero,
+        ).animate(curved),
+        child: fade,
+      );
+    },
+  );
+}
 
 /// Bridges Riverpod auth changes to go_router's [Listenable] refresh.
 class _AuthRefresh extends ChangeNotifier {
