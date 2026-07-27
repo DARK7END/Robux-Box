@@ -23,7 +23,7 @@ class GradientButton extends StatefulWidget {
     this.height = 54,
     this.expand = true,
     this.glow = true,
-    this.foregroundColor = AppColors.white,
+    this.foregroundColor,
   });
 
   final String label;
@@ -35,7 +35,11 @@ class GradientButton extends StatefulWidget {
   final double height;
   final bool expand;
   final bool glow;
-  final Color foregroundColor;
+
+  /// Text/icon colour. When null it is derived from the gradient's brightness
+  /// so labels stay legible on both bright (green/gold → dark ink) and deep
+  /// (purple/red → white ink) fills.
+  final Color? foregroundColor;
 
   @override
   State<GradientButton> createState() => _GradientButtonState();
@@ -52,10 +56,21 @@ class _GradientButtonState extends State<GradientButton> {
     setState(() => _pressed = value);
   }
 
+  /// Legible ink for the current gradient when no explicit colour is given:
+  /// dark on bright fills (green/gold/cyan), white on deep fills (purple/red).
+  Color get _foreground {
+    if (widget.foregroundColor != null) return widget.foregroundColor!;
+    final colors = widget.gradient.colors;
+    final mean = colors.fold<double>(0, (s, c) => s + c.computeLuminance()) /
+        colors.length;
+    return mean > 0.35 ? AppColors.black : AppColors.white;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final fg = _foreground;
     final textStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: widget.foregroundColor,
+          color: fg,
           fontSize: 15,
         );
 
@@ -80,14 +95,14 @@ class _GradientButtonState extends State<GradientButton> {
               ? PremiumLoader(
                   size: 24,
                   strokeWidth: 2.6,
-                  color: widget.foregroundColor,
+                  color: fg,
                 )
               : Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     if (widget.icon != null) ...[
-                      Icon(widget.icon, size: 20, color: widget.foregroundColor),
+                      Icon(widget.icon, size: 20, color: fg),
                       const SizedBox(width: AppSpacing.sm),
                     ],
                     Flexible(

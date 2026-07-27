@@ -23,7 +23,11 @@ class StatusPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = filled ? AppColors.black : color;
+    // On a filled pill, pick legible ink from the fill's brightness (dark on
+    // bright tiers/gold, white on deep red/purple); otherwise use the colour.
+    final fg = filled
+        ? (color.computeLuminance() > 0.35 ? AppColors.black : AppColors.white)
+        : color;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: dense ? AppSpacing.sm : AppSpacing.md,
