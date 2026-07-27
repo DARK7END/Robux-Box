@@ -8,15 +8,12 @@ allprojects {
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
-    project.evaluationDependsOn(":app")
-}
 
-// Some older Flutter plugins don't declare a compileSdk/namespace, which fails
-// under AGP 8 with "compileSdkVersion is not specified". Inject sane defaults
-// for any Android subproject that's missing them.
-subprojects {
+    // Some older Flutter plugins don't declare a compileSdk/namespace, which
+    // fails under AGP 8 with "compileSdkVersion is not specified". Inject sane
+    // defaults for any Android subproject missing them. Registered BEFORE
+    // evaluationDependsOn so the callback is in place before evaluation runs
+    // (otherwise Gradle throws "afterEvaluate ... already evaluated").
     afterEvaluate { project ->
         if (project.extensions.findByName("android") != null) {
             project.android {
@@ -27,6 +24,8 @@ subprojects {
             }
         }
     }
+
+    project.evaluationDependsOn(":app")
 }
 
 tasks.register("clean", Delete) {
