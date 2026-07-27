@@ -67,7 +67,7 @@ final authStateProvider = StreamProvider<User?>((ref) {
   );
 });
 
-Stream<T?> _firstEventBounded(Stream<T?> source, Duration timeout) {
+Stream<T?> _firstEventBounded<T>(Stream<T?> source, Duration timeout) {
   final controller = StreamController<T?>();
   var settled = false;
   Timer? timer;
