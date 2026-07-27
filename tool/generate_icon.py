@@ -1,61 +1,97 @@
 #!/usr/bin/env python3
-"""Generates the Robux Box launcher icon set from code (no external art).
+"""Generates the Robux Box brand emblem from code (no external art) and exports
+every size the app needs — Android launcher icons, the iOS AppIcon set, the
+Play Store listing icon and the splash-screen hero graphic.
 
-Draws a unique premium treasure chest (gold body, neon-green lock band, spilling
-gold coins) on a dark green-glow background, in the app's brand palette, then
-exports:
-  * legacy square + round mipmaps (mdpi..xxxhdpi) for API < 26
-  * adaptive foreground + background layers (108dp) for API 26+
-  * a 512x512 Google Play store icon
+Design: a dark, angular loot-crate with glowing green neon seams and a
+hexagonal "R$" badge on its face, spilling gold-and-green R$ coins, inside a
+glowing neon-green rounded-square frame on a near-black hex-textured backdrop.
 
-Run: python3 tool/generate_icon.py
+Run: python3 tool/generate_icon.py          # Android + Play Store + splash hero
+     python3 tool/generate_icon.py --ios     # iOS AppIcon set (needs ios/ to exist)
 """
 import json
 import math
 import os
 import sys
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-RES = os.path.join(os.path.dirname(__file__), "..", "android", "app", "src", "main", "res")
-STORE = os.path.join(os.path.dirname(__file__), "..", "assets", "images")
+ROOT = os.path.join(os.path.dirname(__file__), "..")
+RES = os.path.join(ROOT, "android", "app", "src", "main", "res")
+STORE = os.path.join(ROOT, "assets", "images")
 
+# ---- brand palette --------------------------------------------------------
 GREEN = (0, 255, 106)
+GREEN_BRIGHT = (120, 255, 180)
 GREEN_DEEP = (0, 163, 68)
+GREEN_DARK = (0, 60, 32)
 GOLD_L = (255, 232, 150)
 GOLD = (255, 216, 77)
 GOLD_D = (240, 160, 0)
-GOLD_DK = (150, 92, 0)
-BLACK = (13, 13, 13)
+GOLD_DK = (140, 86, 0)
+INK = (7, 9, 8)
+CRATE_HI = (72, 80, 76)
+CRATE_LO = (30, 33, 32)
+CRATE_EDGE = (4, 5, 5)
+CRATE_RIM = (140, 176, 156)
+WHITE = (255, 255, 255)
 
 M = 1024  # master render size
+
+FONT_PATH = os.path.join(os.path.dirname(__file__), "fonts", "Outfit-Bold.ttf")
+
+
+def font(size):
+    try:
+        return ImageFont.truetype(FONT_PATH, size)
+    except OSError:
+        return ImageFont.load_default()
 
 
 def lerp(a, b, t):
     return tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
 
 
-def rrect(draw, box, r, fill=None, outline=None, width=1):
-    draw.rounded_rectangle(box, radius=r, fill=fill, outline=outline, width=width)
+def centered_text(draw, cx, cy, text, fnt, fill):
+    bbox = draw.textbbox((0, 0), text, font=fnt)
+    w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    draw.text((cx - w / 2 - bbox[0], cy - h / 2 - bbox[1]), text, font=fnt, fill=fill)
 
 
-def background(size, rounded=True, circle=False):
-    """Dark vertical gradient with a soft green radial glow."""
+def hex_points(cx, cy, r, rotation=0.0):
+    return [
+        (cx + r * math.cos(rotation + i * math.pi / 3),
+         cy + r * math.sin(rotation + i * math.pi / 3))
+        for i in range(6)
+    ]
+
+
+def glow_layer(size, draw_fn, blur):
+    """Renders draw_fn onto a blank RGBA canvas then Gaussian-blurs it, giving a
+    cheap neon glow (used for seams, borders and the badge halo)."""
+    layer = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    draw_fn(ImageDraw.Draw(layer))
+    return layer.filter(ImageFilter.GaussianBlur(blur))
+
+
+# ---------------------------------------------------------------------------
+# Backgrounds
+# ---------------------------------------------------------------------------
+def plain_background(size, rounded=True, circle=False):
+    """Dark vertical gradient with a soft green radial glow (adaptive-icon bg /
+    legacy icon base)."""
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     grad = Image.new("RGBA", (size, size))
     gp = grad.load()
     for y in range(size):
         t = y / size
-        c = lerp((16, 28, 20), (9, 9, 9), t)
+        c = lerp((14, 24, 18), (8, 8, 8), t)
         for x in range(size):
             gp[x, y] = c + (255,)
-    # green radial glow
-    glow = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    gd = ImageDraw.Draw(glow)
-    gd.ellipse([size * 0.12, size * 0.05, size * 0.88, size * 0.8],
-               fill=GREEN + (70,))
-    glow = glow.filter(ImageFilter.GaussianBlur(size * 0.12))
+    glow = glow_layer(size, lambda d: d.ellipse(
+        [size * 0.12, size * 0.05, size * 0.88, size * 0.8], fill=GREEN + (65,)),
+        size * 0.12)
     grad = Image.alpha_composite(grad, glow)
-    # mask
     mask = Image.new("L", (size, size), 0)
     md = ImageDraw.Draw(mask)
     if circle:
@@ -68,98 +104,186 @@ def background(size, rounded=True, circle=False):
     return img
 
 
-def draw_chest(size, scale=0.62):
-    """Returns an RGBA image (size x size) with a centered treasure chest."""
+def hex_texture(size, cx, cy, spread, count=10, seed=7):
+    """A handful of faint hexagon outlines scattered behind the emblem."""
+    layer = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    rnd = [((seed * (i + 1) * 37) % 100) / 100 for i in range(count * 3)]
+    for i in range(count):
+        ang = rnd[i * 3] * 2 * math.pi
+        dist = (0.25 + rnd[i * 3 + 1] * 0.75) * spread
+        hx, hy = cx + math.cos(ang) * dist, cy + math.sin(ang) * dist
+        hr = size * (0.05 + rnd[i * 3 + 2] * 0.05)
+        d.polygon(hex_points(hx, hy, hr, rotation=math.pi / 6),
+                  outline=GREEN + (26,), width=max(1, int(size * 0.0025)))
+    return layer
+
+
+def sparkles(size, cx, cy, spread, count=9, seed=3):
+    layer = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    rnd = [((seed * (i + 1) * 53) % 100) / 100 for i in range(count * 4)]
+    for i in range(count):
+        ang = rnd[i * 4] * 2 * math.pi
+        dist = rnd[i * 4 + 1] * spread
+        sx, sy = cx + math.cos(ang) * dist, cy + math.sin(ang) * dist
+        sr = size * (0.006 + rnd[i * 4 + 2] * 0.012)
+        alpha = int(90 + rnd[i * 4 + 3] * 140)
+        col = (GOLD_L if i % 2 == 0 else GREEN_BRIGHT) + (alpha,)
+        d.line([sx - sr * 2, sy, sx + sr * 2, sy], fill=col, width=max(1, int(sr * 0.5)))
+        d.line([sx, sy - sr * 2, sx, sy + sr * 2], fill=col, width=max(1, int(sr * 0.5)))
+        d.ellipse([sx - sr, sy - sr, sx + sr, sy + sr], fill=col)
+    return layer
+
+
+# ---------------------------------------------------------------------------
+# The crate + coins emblem
+# ---------------------------------------------------------------------------
+def draw_coin(size, fill=True):
+    """One coin sprite (unrotated), transparent background: gold beveled ring
+    around a green face with a bold 'R$' mark."""
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-
-    w = size * scale
-    h = w * 0.86
-    cx = size / 2
-    x0 = cx - w / 2
-    y0 = size / 2 - h / 2 + h * 0.04
-    r = w * 0.10
-
-    seam = y0 + h * 0.42
-
-    # soft drop shadow
-    sh = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    sd = ImageDraw.Draw(sh)
-    sd.rounded_rectangle([x0, y0 + h * 0.1, x0 + w, y0 + h * 1.02],
-                         radius=r, fill=(0, 0, 0, 150))
-    sh = sh.filter(ImageFilter.GaussianBlur(size * 0.02))
-    img = Image.alpha_composite(img, sh)
+    cx = cy = size / 2
+    r = size * 0.46
+    # outer gold ring with a directional bevel (light top-left, dark bottom-right)
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=GOLD_DK)
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=GOLD_L, width=max(2, int(r * 0.05)))
+    ring_w = r * 0.16
+    d.ellipse([cx - r + ring_w, cy - r + ring_w, cx + r - ring_w, cy + r - ring_w],
+              fill=GREEN_DARK)
+    # bevel highlight arc (top-left) and shadow arc (bottom-right) on the ring
+    hi = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    hd = ImageDraw.Draw(hi)
+    hd.arc([cx - r, cy - r, cx + r, cy + r], 200, 340, fill=GOLD_L + (200,), width=int(ring_w))
+    hd.arc([cx - r, cy - r, cx + r, cy + r], 20, 160, fill=GOLD_DK + (200,), width=int(ring_w))
+    img = Image.alpha_composite(img, hi)
     d = ImageDraw.Draw(img)
-
-    # ---- body ----
-    rrect(d, [x0, seam - r, x0 + w, y0 + h], r, fill=GOLD)
-    # body shading
-    ov = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    od = ImageDraw.Draw(ov)
-    od.rounded_rectangle([x0, y0 + h * 0.78, x0 + w, y0 + h], radius=r,
-                         fill=GOLD_D + (120,))
-    img = Image.alpha_composite(img, ov)
-    d = ImageDraw.Draw(img)
-
-    # ---- lid (dome) ----
-    lid_bottom = seam + r
-    d.rounded_rectangle([x0, y0, x0 + w, lid_bottom], radius=r * 1.3, fill=GOLD_L)
-    d.rectangle([x0, seam, x0 + w, lid_bottom], fill=GOLD_L)
-    # lid highlight
-    d.rounded_rectangle([x0 + w * 0.06, y0 + h * 0.06, x0 + w * 0.94, y0 + h * 0.2],
-                        radius=r, fill=(255, 255, 255, 90))
-
-    # ---- vertical straps ----
-    for sx in (0.16, 0.84):
-        bx = x0 + w * sx
-        d.rounded_rectangle([bx - w * 0.05, y0, bx + w * 0.05, y0 + h],
-                            radius=w * 0.03, fill=GOLD_DK)
-        # rivets
-        for ry in (0.12, 0.5, 0.88):
-            cyr = y0 + h * ry
-            d.ellipse([bx - w * 0.018, cyr - w * 0.018,
-                       bx + w * 0.018, cyr + w * 0.018], fill=GOLD_L)
-
-    # ---- green seam band ----
-    d.rectangle([x0, seam - h * 0.06, x0 + w, seam + h * 0.06], fill=GREEN_DEEP)
-    d.rectangle([x0, seam - h * 0.06, x0 + w, seam - h * 0.02], fill=GREEN)
-
-    # ---- lock ----
-    ls = w * 0.20
-    lx0, ly0 = cx - ls / 2, seam - ls * 0.45
-    d.rounded_rectangle([lx0, ly0, lx0 + ls, ly0 + ls], radius=ls * 0.22,
-                        fill=GREEN, outline=GREEN_DEEP, width=int(w * 0.012))
-    # keyhole
-    kh = cx
-    d.ellipse([kh - ls * 0.12, ly0 + ls * 0.28, kh + ls * 0.12, ly0 + ls * 0.52],
-              fill=BLACK)
-    d.polygon([(kh - ls * 0.09, ly0 + ls * 0.44), (kh + ls * 0.09, ly0 + ls * 0.44),
-               (kh + ls * 0.05, ly0 + ls * 0.72), (kh - ls * 0.05, ly0 + ls * 0.72)],
-              fill=BLACK)
-
-    # chest outline
-    d.rounded_rectangle([x0, y0, x0 + w, y0 + h], radius=r,
-                        outline=GOLD_DK, width=int(w * 0.02))
-
-    # ---- coins spilling ----
-    coin_specs = [
-        (cx - w * 0.36, y0 + h * 1.02, w * 0.16),
-        (cx + w * 0.30, y0 + h * 1.06, w * 0.14),
-        (cx - w * 0.05, y0 + h * 1.12, w * 0.17),
-        (cx + w * 0.02, y0 + h * 0.9, w * 0.10),
-    ]
-    for (ccx, ccy, cr) in coin_specs:
-        d.ellipse([ccx - cr, ccy - cr * 0.9, ccx + cr, ccy + cr * 0.9],
-                  fill=GOLD, outline=GOLD_DK, width=max(2, int(cr * 0.14)))
-        d.ellipse([ccx - cr * 0.55, ccy - cr * 0.6, ccx + cr * 0.55, ccy + cr * 0.4],
-                  fill=GOLD_L + (150,))
+    # green face with a subtle highlight
+    fr = r - ring_w
+    d.ellipse([cx - fr, cy - fr, cx + fr, cy + fr], fill=GREEN_DEEP)
+    d.ellipse([cx - fr, cy - fr * 1.05, cx + fr, cy + fr * 0.3], fill=GREEN + (55,))
+    d.ellipse([cx - fr, cy - fr, cx + fr, cy + fr], outline=INK + (140,), width=max(1, int(fr * 0.04)))
+    centered_text(d, cx, cy + fr * 0.03, "R$", font(int(fr * 1.15)), GOLD_L)
     return img
 
 
-def compose_full(size, circle=False):
-    bg = background(size, rounded=not circle, circle=circle)
-    chest = draw_chest(size, scale=0.6)
-    return Image.alpha_composite(bg, chest)
+def paste_rotated(base, sprite, cx, cy, angle):
+    rot = sprite.rotate(angle, expand=True, resample=Image.BICUBIC)
+    base.alpha_composite(rot, (int(cx - rot.width / 2), int(cy - rot.height / 2)))
+
+
+def draw_crate(size, scale=0.6):
+    """A dark angular loot-crate with glowing green seams and a hex R$ badge,
+    with coins spilling out the top. Transparent background."""
+    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    cx = size / 2
+    w = size * scale
+    h = w * 0.82
+    x0, x1 = cx - w / 2, cx + w / 2
+    y0 = size / 2 - h / 2 + h * 0.10
+    y1 = y0 + h
+    r = w * 0.07
+    seam = y0 + h * 0.36
+
+    # drop shadow
+    sh = glow_layer(size, lambda d: d.rounded_rectangle(
+        [x0, y0 + h * 0.08, x1, y1 + h * 0.05], radius=r, fill=(0, 0, 0, 170)),
+        size * 0.018)
+    img = Image.alpha_composite(img, sh)
+
+    # ---- lower body ----
+    body = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    bd = ImageDraw.Draw(body)
+    bd.rounded_rectangle([x0, seam - r, x1, y1], radius=r, fill=CRATE_LO)
+    # bottom shading
+    bd.rounded_rectangle([x0, y1 - h * 0.16, x1, y1], radius=r, fill=CRATE_EDGE + (160,))
+    img = Image.alpha_composite(img, body)
+
+    # ---- lid ----
+    lid = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    ld = ImageDraw.Draw(lid)
+    ld.rounded_rectangle([x0, y0, x1, seam + r], radius=r * 1.2, fill=CRATE_HI)
+    ld.rounded_rectangle([x0 + w * 0.05, y0 + h * 0.05, x1 - w * 0.05, y0 + h * 0.16],
+                         radius=r * 0.6, fill=(255, 255, 255, 30))
+    img = Image.alpha_composite(img, lid)
+    d = ImageDraw.Draw(img)
+
+    # ---- glowing seam band (lid/body join) ----
+    seam_glow = glow_layer(size, lambda dd: dd.rectangle(
+        [x0, seam - h * 0.05, x1, seam + h * 0.05], fill=GREEN + (180,)), size * 0.012)
+    img = Image.alpha_composite(img, seam_glow)
+    d = ImageDraw.Draw(img)
+    d.rectangle([x0, seam - h * 0.018, x1, seam + h * 0.018], fill=GREEN_BRIGHT)
+
+    # ---- crisp rim outline so the crate reads as a distinct object ----
+    d.rounded_rectangle([x0, y0, x1, y1], radius=r, outline=CRATE_RIM, width=max(2, int(w * 0.010)))
+
+    # ---- hexagon R$ badge ----
+    hr = w * 0.24
+    hy = seam + h * 0.06
+    badge_glow = glow_layer(size, lambda dd: dd.polygon(
+        hex_points(cx, hy, hr * 1.15, rotation=math.pi / 6), fill=GREEN + (150,)),
+        size * 0.02)
+    img = Image.alpha_composite(img, badge_glow)
+    d = ImageDraw.Draw(img)
+    d.polygon(hex_points(cx, hy, hr, rotation=math.pi / 6), fill=INK,
+              outline=GREEN_BRIGHT, width=max(3, int(w * 0.016)))
+    d.polygon(hex_points(cx, hy, hr * 0.86, rotation=math.pi / 6),
+              outline=GREEN_DEEP + (150,), width=max(1, int(w * 0.006)))
+    centered_text(d, cx, hy + hr * 0.02, "R$", font(int(hr * 1.05)), GREEN_BRIGHT)
+
+    # ---- coins spilling out the top ----
+    # (dx, dy) are fractions of (w, h) from the crate centre/top; kept shallow so
+    # even the highest coin's own radius stays inside the frame at every size.
+    coin_specs = [
+        (-0.34, -0.16, 0.105, -16),
+        (0.30, -0.18, 0.095, 18),
+        (-0.05, -0.24, 0.100, -4),
+        (0.15, -0.08, 0.078, 14),
+        (-0.20, -0.01, 0.072, -22),
+    ]
+    for (dx, dy, rr, rot) in coin_specs:
+        r_px = int(size * rr)
+        coin = draw_coin(r_px * 2)
+        paste_rotated(img, coin, cx + w * dx, y0 + h * dy, rot)
+
+    return img
+
+
+def compose_emblem(size):
+    """Crate + coins only, transparent background — used for the Android
+    adaptive-icon foreground layer. Scaled down from the hero's 0.58 because
+    adaptive launchers crop roughly the outer third of the foreground canvas
+    (the "safe zone"), so the art must not extend that far out."""
+    return draw_crate(size, scale=0.46)
+
+
+def compose_hero(size, square_corners=False):
+    """The full branded emblem: dark rounded-square backdrop, green radial
+    glow, faint hex texture, a glowing neon border frame, sparkles, and the
+    crate+coins centered inside. This is the one true "logo" — used for the
+    legacy Android icon, the Play Store icon, the iOS AppIcon and the splash
+    screen hero graphic.
+    """
+    cx = cy = size / 2
+    img = plain_background(size, rounded=not square_corners, circle=False)
+    img = Image.alpha_composite(img, hex_texture(size, cx, cy, size * 0.42))
+    img = Image.alpha_composite(img, sparkles(size, cx, cy, size * 0.40))
+    img = Image.alpha_composite(img, draw_crate(size, scale=0.58))
+
+    # neon border frame, inset so OS/store corner-masking never clips it badly
+    inset = size * 0.045
+    radius = size * 0.20
+    width = max(3, int(size * 0.012))
+    border_glow = glow_layer(size, lambda d: d.rounded_rectangle(
+        [inset, inset, size - inset, size - inset], radius=radius,
+        outline=GREEN + (220,), width=width * 3), size * 0.016)
+    img = Image.alpha_composite(img, border_glow)
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle([inset, inset, size - inset, size - inset], radius=radius,
+                        outline=GREEN_BRIGHT, width=width)
+    return img
 
 
 def save(img, path, px):
@@ -187,15 +311,11 @@ IOS_SPECS = [
 
 def _ios_square():
     """Opaque, square (no rounding, no alpha) master for iOS."""
-    base = Image.new("RGBA", (M, M), (9, 9, 9, 255))
-    base = Image.alpha_composite(base, background(M, rounded=False))
-    base = Image.alpha_composite(base, draw_chest(M, scale=0.62))
-    return base.convert("RGB")
+    return compose_hero(M, square_corners=True).convert("RGB")
 
 
 def generate_ios():
-    out = os.path.join(os.path.dirname(__file__), "..", "ios", "Runner",
-                       "Assets.xcassets", "AppIcon.appiconset")
+    out = os.path.join(ROOT, "ios", "Runner", "Assets.xcassets", "AppIcon.appiconset")
     if not os.path.isdir(os.path.dirname(out)):
         print("  ios/ not generated yet — run flutter create first; skipping.")
         return
@@ -219,22 +339,33 @@ def generate_ios():
 
 
 def main():
-    full = compose_full(M)
-    rnd = compose_full(M, circle=True)
-    fg = draw_chest(M, scale=0.52)          # adaptive foreground (safe zone)
-    bg = background(M, rounded=False)        # adaptive background (masked by OS)
+    hero = compose_hero(M)
+    hero_round = Image.new("RGBA", (M, M), (0, 0, 0, 0))
+    mask = Image.new("L", (M, M), 0)
+    ImageDraw.Draw(mask).ellipse([0, 0, M, M], fill=255)
+    flat_hero = compose_hero(M, square_corners=True)
+    hero_round.paste(flat_hero, (0, 0), mask)
+
+    fg = compose_emblem(M)                    # adaptive foreground (safe zone)
+    bg = plain_background(M, rounded=False)    # adaptive background (OS-masked)
 
     for name, mult in DENSITIES.items():
         legacy = int(48 * mult)
         adaptive = int(108 * mult)
-        save(full, f"{RES}/mipmap-{name}/ic_launcher.png", legacy)
-        save(rnd, f"{RES}/mipmap-{name}/ic_launcher_round.png", legacy)
+        save(hero, f"{RES}/mipmap-{name}/ic_launcher.png", legacy)
+        save(hero_round, f"{RES}/mipmap-{name}/ic_launcher_round.png", legacy)
         save(fg, f"{RES}/mipmap-{name}/ic_launcher_foreground.png", adaptive)
         save(bg, f"{RES}/mipmap-{name}/ic_launcher_background.png", adaptive)
 
     os.makedirs(STORE, exist_ok=True)
-    full.resize((512, 512), Image.LANCZOS).save(f"{STORE}/play_store_icon.png")
-    print("Android + store icon set generated.")
+    hero.resize((512, 512), Image.LANCZOS).save(f"{STORE}/play_store_icon.png")
+
+    # Splash-screen hero: same emblem, larger and without the outer corner
+    # rounding cut so it sits cleanly on the app's own dark background.
+    splash = compose_hero(768)
+    splash.save(f"{STORE}/splash_logo.png")
+
+    print("Android + store + splash assets generated.")
 
 
 if __name__ == "__main__":
