@@ -36,6 +36,8 @@ jobs:
   build-android:
     name: Build Android APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -56,12 +58,28 @@ jobs:
       # for Play Store upload. Release mode still exercises R8/proguard.
       - name: Build release APK
         run: flutter build apk --release
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Rename APK with build number
+        run: |
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-release.apk \
+             "dist/robux-box-build${{ github.run_number }}.apk"
+      # Publishes to a single rolling "android-latest" release (updated in place
+      # on every push build) rather than a workflow artifact — artifacts expire
+      # and require a GitHub login to download; a release gives a stable,
+      # directly-downloadable link for sideloading onto a phone.
+      - name: Publish GitHub release
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
         with:
-          name: robux-box-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
-          if-no-files-found: error
+          tag_name: android-latest
+          name: "Robux Box (Android) — build ${{ github.run_number }}"
+          body: |
+            Automated build from `${{ github.sha }}` on `${{ github.ref_name }}`.
+
+            Debug-signed APK for sideload testing only — not signed for Play Store upload.
+          prerelease: true
+          make_latest: true
+          files: dist/robux-box-build${{ github.run_number }}.apk
 
   functions:
     name: Cloud Functions build & test
