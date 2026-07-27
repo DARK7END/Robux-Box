@@ -18,6 +18,8 @@ jobs:
     name: Build unsigned IPA
     runs-on: macos-14
     timeout-minutes: 40
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -41,10 +43,25 @@ jobs:
       - name: Package unsigned IPA
         run: bash tool/package_unsigned_ipa.sh
 
-      - name: Upload IPA artifact
-        uses: actions/upload-artifact@v4
+      - name: Rename IPA with build number
+        run: |
+          mkdir -p dist
+          cp build/ios/ipa/RobuxBox-unsigned.ipa \
+             "dist/RobuxBox-unsigned-${{ github.event.inputs.flavor }}-build${{ github.run_number }}.ipa"
+
+      # Publishes to a single rolling "ios-latest" release (updated in place on
+      # every manual run) instead of a workflow artifact — artifacts expire and
+      # require a GitHub login to download; a release gives a stable,
+      # directly-downloadable link for dropping into iLoader / Sideloadly / AltStore.
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
         with:
-          name: RobuxBox-unsigned-ipa
-          path: build/ios/ipa/RobuxBox-unsigned.ipa
-          if-no-files-found: error
-          retention-days: 14
+          tag_name: ios-latest
+          name: "Robux Box (iOS, unsigned) — build ${{ github.run_number }}"
+          body: |
+            Automated unsigned .ipa build from `${{ github.sha }}` (flavor: `${{ github.event.inputs.flavor }}`).
+
+            No Apple Developer account or code signing — sideload with iLoader, Sideloadly or AltStore using your free Apple ID.
+          prerelease: true
+          make_latest: true
+          files: dist/RobuxBox-unsigned-${{ github.event.inputs.flavor }}-build${{ github.run_number }}.ipa
