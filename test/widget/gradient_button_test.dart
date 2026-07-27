@@ -28,8 +28,8 @@ void main() {
       onPressed: () => taps++,
     )));
 
-    // Loading shows a spinner instead of the label.
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    // Loading replaces the label with a spinner.
+    expect(find.text('Redeem'), findsNothing);
     await tester.tap(find.byType(GradientButton));
     await tester.pump();
     expect(taps, 0);
