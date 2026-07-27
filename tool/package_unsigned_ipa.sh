@@ -20,8 +20,13 @@ fi
 
 rm -rf build/ios/_payload "$OUT"
 mkdir -p build/ios/_payload/Payload "$OUT_DIR"
-cp -R "$APP" build/ios/_payload/Payload/
-( cd build/ios/_payload && zip -qr "../ipa/RobuxBox-unsigned.ipa" Payload )
+# ditto (not cp -R) is Apple's recommended tool for copying an .app bundle —
+# it preserves the bundle structure/symlinks correctly. zip -X drops macOS
+# extended attributes/resource forks, which otherwise land in the archive as
+# junk files (__MACOSX/, ._* AppleDouble files) that can make re-signing
+# tools choke while iterating and signing every file in Payload/.
+ditto "$APP" "build/ios/_payload/Payload/$(basename "$APP")"
+( cd build/ios/_payload && zip -qr -X "../ipa/RobuxBox-unsigned.ipa" Payload )
 rm -rf build/ios/_payload
 
 echo "✅ Unsigned IPA: $OUT"
