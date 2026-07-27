@@ -1,5 +1,7 @@
 node_modules/
-lib/
+# Anchored so it only ignores the TypeScript build output (functions/lib),
+# NOT hand-written shared source under functions/src/lib.
+/lib/
 .env
 .env.*
 !.env.example
