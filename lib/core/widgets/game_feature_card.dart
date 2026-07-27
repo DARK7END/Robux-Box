@@ -48,8 +48,9 @@ class _GameFeatureCardState extends State<GameFeatureCard> {
         widget.onTap();
       },
       child: AnimatedScale(
-        scale: _pressed ? 0.95 : 1,
-        duration: AppDuration.instant,
+        scale: _pressed ? 0.96 : 1,
+        duration: _pressed ? AppDuration.instant : AppDuration.fast,
+        curve: _pressed ? Curves.easeOut : AppCurves.spring,
         child: Container(
           height: 128,
           padding: const EdgeInsets.all(AppSpacing.lg),
