@@ -68,7 +68,7 @@
   "authForgotPassword": "Forgot password?",
   "authResetPassword": "Reset password",
   "authResetSent": "Password reset email sent",
-  "authNoAccount": "Don't have an account?",
+  "authNoAccount": "Don''t have an account?",
   "authHaveAccount": "Already have an account?",
   "authPhoneNumber": "Phone number",
   "authSendCode": "Send code",
@@ -116,7 +116,7 @@
   "@earnCooldown": { "placeholders": { "seconds": { "type": "int" } } },
   "earnRewardCredited": "You earned {coins} coins!",
   "@earnRewardCredited": { "placeholders": { "coins": { "type": "int" } } },
-  "earnLimitReached": "You've reached today's ad limit. Come back tomorrow!",
+  "earnLimitReached": "You''ve reached today''s ad limit. Come back tomorrow!",
   "earnTrackingRequired": "Allow usage tracking to verify offerwall tasks and get paid",
   "earnGrantPermission": "Allow tracking",
 
@@ -185,7 +185,7 @@
   "@achievementsUnlocked": { "placeholders": { "count": { "type": "int" } } },
 
   "notificationsTitle": "Notifications",
-  "notificationsEmpty": "You're all caught up",
+  "notificationsEmpty": "You''re all caught up",
   "notificationsMarkAllRead": "Mark all as read",
 
   "profileTitle": "Profile",
@@ -227,7 +227,7 @@
   "errorGeneric": "Something went wrong. Please try again.",
   "errorNetwork": "No internet connection. Please check and try again.",
   "errorAuth": "Authentication failed. Please try again.",
-  "errorInsufficientCoins": "You don't have enough coins for this.",
+  "errorInsufficientCoins": "You don''t have enough coins for this.",
   "errorCooldown": "Please wait before trying again.",
   "errorFraud": "This action was blocked for security reasons.",
   "errorLocationDenied": "Location is needed to calculate your rewards tier."
