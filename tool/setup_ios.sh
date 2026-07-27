@@ -34,7 +34,12 @@ if command -v gem >/dev/null 2>&1; then
 fi
 
 echo "▶ Generating iOS app icons (best effort)…"
-python3 -m pip install --quiet Pillow >/dev/null 2>&1 || true
+# --break-system-packages: macOS/modern Linux ship a PEP-668 "externally
+# managed" system Python that refuses a plain `pip install`; the CI runner is
+# disposable so opting out of that guard is safe. Fall back without it for
+# older pip that doesn't recognise the flag.
+python3 -m pip install --quiet --break-system-packages Pillow 2>/dev/null || \
+  python3 -m pip install --quiet Pillow || true
 python3 tool/generate_icon.py --ios || echo "  (skipped — default icon kept)"
 
 echo "▶ Installing pods…"

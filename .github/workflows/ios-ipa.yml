@@ -16,7 +16,10 @@ on:
 jobs:
   build:
     name: Build unsigned IPA
-    runs-on: macos-14
+    # macos-14's default Xcode predates Swift 6 (the `sending` keyword),
+    # which recent Firebase iOS SDK pods (e.g. FirebaseSharedSwift) require to
+    # even parse. macos-15 ships Xcode 16+ by default.
+    runs-on: macos-15
     timeout-minutes: 40
     permissions:
       contents: write
@@ -29,8 +32,12 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode.app
+      - name: Select latest available Xcode
+        run: |
+          LATEST_XCODE=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
+          echo "Selecting $LATEST_XCODE"
+          sudo xcode-select -s "$LATEST_XCODE"
+          xcodebuild -version
 
       - name: Generate iOS project + overlay config
         run: bash tool/setup_ios.sh
