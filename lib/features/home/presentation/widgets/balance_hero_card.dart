@@ -9,92 +9,168 @@ import '../../../../core/widgets/animated_counter.dart';
 import '../../../../models/app_user.dart';
 import '../../../../models/wallet.dart';
 
-/// The hero balance card: large animated coin counter, level progress and
-/// lifetime stats over a brand gradient with a soft glow.
+/// The hero balance card: a bright brand-green "currency" panel with a large
+/// animated coin counter, level progress and lifetime stats.
+///
+/// Because the fill is vivid neon green, all ink is near-black — this reads as a
+/// premium reward card (think in-game currency vault) instead of a low-contrast
+/// gradient. A soft top-left light and an oversized coin watermark add depth.
 class BalanceHeroCard extends StatelessWidget {
   const BalanceHeroCard({super.key, required this.user, required this.wallet});
 
   final AppUser user;
   final Wallet wallet;
 
+  // Rich, slightly green-tinted black so ink feels part of the card, not pasted.
+  static const Color _ink = Color(0xFF06230F);
+  static Color get _inkSoft => _ink.withValues(alpha: 0.62);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.xl),
+    return DecoratedBox(
       decoration: BoxDecoration(
         gradient: AppGradients.brand,
         borderRadius: BorderRadius.circular(AppRadius.xl),
         boxShadow: AppShadows.glow(AppColors.brand),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                context.l10n.homeYourBalance,
-                style: context.text.bodyMedium?.copyWith(color: Colors.white70),
-              ),
-              const Spacer(),
-              _StreakChip(streak: user.streakCount),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Icon(Icons.bolt_rounded, color: AppColors.coin, size: 34),
-              const SizedBox(width: AppSpacing.sm),
-              AnimatedCounter(
-                value: wallet.coins,
-                style: AppTypography.counter(40, AppColors.white),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  context.l10n.homeCoins,
-                  style:
-                      context.text.bodyMedium?.copyWith(color: Colors.white70),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        child: Stack(
+          children: [
+            // Top-left "lit" highlight for a glossy, dimensional surface.
+            Positioned(
+              top: -70,
+              left: -50,
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.white.withValues(alpha: 0.32),
+                      Colors.white.withValues(alpha: 0.0),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          _LevelProgress(user: user),
-          const SizedBox(height: AppSpacing.md),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _Stat(
-                label: context.l10n.walletEarned,
-                value: wallet.lifetimeEarned,
+            ),
+            // Oversized coin watermark bottom-right.
+            Positioned(
+              right: -28,
+              bottom: -34,
+              child: Icon(
+                Icons.monetization_on_rounded,
+                size: 168,
+                color: _ink.withValues(alpha: 0.10),
               ),
-              Container(
-                width: 1,
-                height: 28,
-                color: Colors.white24,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.xl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        context.l10n.homeYourBalance,
+                        style: context.text.labelMedium?.copyWith(
+                          color: _inkSoft,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      const Spacer(),
+                      _StreakChip(streak: user.streakCount),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.bolt_rounded, color: _ink, size: 36),
+                      const SizedBox(width: 4),
+                      AnimatedCounter(
+                        value: wallet.coins,
+                        style: AppTypography.counter(44, _ink),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 14),
+                        child: Text(
+                          context.l10n.homeCoins,
+                          style: context.text.bodyMedium?.copyWith(
+                            color: _inkSoft,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  _LevelProgress(user: user, ink: _ink, inkSoft: _inkSoft),
+                  const SizedBox(height: AppSpacing.lg),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+                    decoration: BoxDecoration(
+                      color: _ink.withValues(alpha: 0.14),
+                      borderRadius: AppRadius.cardRadius,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _Stat(
+                          label: context.l10n.walletEarned,
+                          value: wallet.lifetimeEarned,
+                          ink: _ink,
+                          inkSoft: _inkSoft,
+                        ),
+                        _Divider(color: _ink),
+                        _Stat(
+                          label: 'Multiplier',
+                          valueText:
+                              '${user.earningMultiplier.toStringAsFixed(2)}x',
+                          ink: _ink,
+                          inkSoft: _inkSoft,
+                        ),
+                        _Divider(color: _ink),
+                        _Stat(
+                          label: context.l10n.profileXp,
+                          value: user.xp,
+                          ink: _ink,
+                          inkSoft: _inkSoft,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              _Stat(
-                label: 'Multiplier',
-                valueText: '${user.earningMultiplier.toStringAsFixed(2)}x',
-              ),
-              Container(width: 1, height: 28, color: Colors.white24),
-              _Stat(
-                label: context.l10n.profileXp,
-                value: user.xp,
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
+class _Divider extends StatelessWidget {
+  const _Divider({required this.color});
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: 1, height: 26, color: color.withValues(alpha: 0.18));
+  }
+}
+
 class _LevelProgress extends StatelessWidget {
-  const _LevelProgress({required this.user});
+  const _LevelProgress(
+      {required this.user, required this.ink, required this.inkSoft});
   final AppUser user;
+  final Color ink;
+  final Color inkSoft;
 
   @override
   Widget build(BuildContext context) {
@@ -103,17 +179,25 @@ class _LevelProgress extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: AppRadius.pillRadius,
-          child: LinearProgressIndicator(
-            value: user.levelProgress,
-            minHeight: 8,
-            backgroundColor: Colors.white24,
-            valueColor: const AlwaysStoppedAnimation(AppColors.coin),
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: user.levelProgress.clamp(0.0, 1.0)),
+            duration: AppDuration.slow,
+            curve: AppCurves.standard,
+            builder: (context, value, _) => LinearProgressIndicator(
+              value: value,
+              minHeight: 8,
+              backgroundColor: ink.withValues(alpha: 0.16),
+              valueColor: AlwaysStoppedAnimation(ink.withValues(alpha: 0.88)),
+            ),
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 7),
         Text(
           'Level ${user.level} • ${user.xp}/${user.xpForNextLevel} XP',
-          style: context.text.labelSmall?.copyWith(color: Colors.white70),
+          style: context.text.labelSmall?.copyWith(
+            color: inkSoft,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ],
     );
@@ -130,20 +214,20 @@ class _StreakChip extends StatelessWidget {
       padding:
           const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.18),
+        color: BalanceHeroCard._ink.withValues(alpha: 0.16),
         borderRadius: AppRadius.pillRadius,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.local_fire_department_rounded,
-              color: AppColors.warning, size: 16),
+              color: Color(0xFFFF7A1A), size: 17),
           const SizedBox(width: 4),
           Text(
             '$streak',
             style: context.text.labelMedium?.copyWith(
-              color: AppColors.white,
-              fontWeight: FontWeight.w700,
+              color: BalanceHeroCard._ink,
+              fontWeight: FontWeight.w800,
             ),
           ),
         ],
@@ -153,8 +237,16 @@ class _StreakChip extends StatelessWidget {
 }
 
 class _Stat extends StatelessWidget {
-  const _Stat({required this.label, this.value, this.valueText});
+  const _Stat({
+    required this.label,
+    required this.ink,
+    required this.inkSoft,
+    this.value,
+    this.valueText,
+  });
   final String label;
+  final Color ink;
+  final Color inkSoft;
   final int? value;
   final String? valueText;
 
@@ -163,14 +255,17 @@ class _Stat extends StatelessWidget {
     return Column(
       children: [
         valueText != null
-            ? Text(valueText!,
-                style: AppTypography.counter(16, AppColors.white))
+            ? Text(valueText!, style: AppTypography.counter(16, ink))
             : AnimatedCounter(
                 value: value ?? 0,
-                style: AppTypography.counter(16, AppColors.white),
+                style: AppTypography.counter(16, ink),
               ),
+        const SizedBox(height: 1),
         Text(label,
-            style: context.text.labelSmall?.copyWith(color: Colors.white60)),
+            style: context.text.labelSmall?.copyWith(
+              color: inkSoft,
+              fontWeight: FontWeight.w600,
+            )),
       ],
     );
   }

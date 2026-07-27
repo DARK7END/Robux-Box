@@ -166,19 +166,29 @@ class _Header extends ConsumerWidget {
     final unread = ref.watch(unreadCountProvider).valueOrNull ?? 0;
     return Row(
       children: [
-        CircleAvatar(
-          radius: 24,
-          backgroundColor: context.colors.primary.withValues(alpha: 0.2),
-          backgroundImage:
-              user.photoUrl.isNotEmpty ? NetworkImage(user.photoUrl) : null,
-          child: user.photoUrl.isEmpty
-              ? Text(
-                  user.displayName.isNotEmpty
-                      ? user.displayName[0].toUpperCase()
-                      : '?',
-                  style: context.text.titleMedium,
-                )
-              : null,
+        // Avatar inside a brand-gradient ring for a premium "profile" accent.
+        Container(
+          padding: const EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: AppGradients.brand,
+            boxShadow: AppShadows.glow(AppColors.brand),
+          ),
+          child: CircleAvatar(
+            radius: 23,
+            backgroundColor: context.surfaces.surfaceHigh,
+            backgroundImage:
+                user.photoUrl.isNotEmpty ? NetworkImage(user.photoUrl) : null,
+            child: user.photoUrl.isEmpty
+                ? Text(
+                    user.displayName.isNotEmpty
+                        ? user.displayName[0].toUpperCase()
+                        : '?',
+                    style: context.text.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w800),
+                  )
+                : null,
+          ),
         ),
         const SizedBox(width: AppSpacing.md),
         Expanded(
@@ -187,23 +197,62 @@ class _Header extends ConsumerWidget {
             children: [
               Text(
                 context.l10n.homeGreeting(user.displayName),
-                style: context.text.titleMedium,
+                style: context.text.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w700),
                 overflow: TextOverflow.ellipsis,
               ),
-              Text(
-                context.l10n.homeLevel(user.level),
-                style: context.text.bodySmall,
+              Row(
+                children: [
+                  Container(
+                    width: 7,
+                    height: 7,
+                    decoration: const BoxDecoration(
+                      color: AppColors.brand,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    context.l10n.homeLevel(user.level),
+                    style: context.text.bodySmall,
+                  ),
+                ],
               ),
             ],
           ),
         ),
-        Badge.count(
-          count: unread,
-          isLabelVisible: unread > 0,
-          backgroundColor: AppColors.danger,
-          child: IconButton(
-            onPressed: () => context.push(AppRoutes.notifications),
-            icon: const Icon(Icons.notifications_none_rounded),
+        // Notification bell in a tappable glass circle with an unread dot.
+        Pressable(
+          onTap: () => context.push(AppRoutes.notifications),
+          child: Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              color: context.surfaces.glassFill,
+              shape: BoxShape.circle,
+              border: Border.all(color: context.surfaces.glassBorder),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                const Icon(Icons.notifications_none_rounded, size: 22),
+                if (unread > 0)
+                  Positioned(
+                    top: 11,
+                    right: 12,
+                    child: Container(
+                      width: 9,
+                      height: 9,
+                      decoration: BoxDecoration(
+                        color: AppColors.danger,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: context.surfaces.card, width: 1.5),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ],
@@ -253,12 +302,22 @@ class _RedeemPromptCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Gold "cash out" banner — dark ink for legibility on the bright fill.
+    const ink = Color(0xFF3A2600);
     return GlassCard(
-      gradient: AppGradients.brand,
+      gradient: AppGradients.coin,
       onTap: () => context.go(AppRoutes.rewards),
       child: Row(
         children: [
-          const Icon(Icons.redeem_rounded, color: AppColors.white, size: 34),
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              color: ink.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(AppRadius.md),
+            ),
+            child: const Icon(Icons.redeem_rounded, color: ink, size: 26),
+          ),
           const SizedBox(width: AppSpacing.lg),
           Expanded(
             child: Column(
@@ -266,19 +325,27 @@ class _RedeemPromptCard extends StatelessWidget {
               children: [
                 Text(
                   context.l10n.rewardsRedeem,
-                  style: context.text.titleMedium
-                      ?.copyWith(color: AppColors.white),
+                  style: context.text.titleMedium?.copyWith(
+                      color: ink, fontWeight: FontWeight.w800),
                 ),
                 Text(
                   'Turn your coins into Robux & gift cards',
                   style: context.text.bodySmall
-                      ?.copyWith(color: Colors.white70),
+                      ?.copyWith(color: ink.withValues(alpha: 0.72)),
                 ),
               ],
             ),
           ),
-          const Icon(Icons.arrow_forward_ios_rounded,
-              color: AppColors.white, size: 16),
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              color: ink.withValues(alpha: 0.14),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.arrow_forward_rounded,
+                color: ink, size: 18),
+          ),
         ],
       ),
     );
