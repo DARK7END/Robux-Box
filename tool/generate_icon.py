@@ -173,9 +173,13 @@ def paste_rotated(base, sprite, cx, cy, angle):
     base.alpha_composite(rot, (int(cx - rot.width / 2), int(cy - rot.height / 2)))
 
 
-def draw_crate(size, scale=0.6):
+def draw_crate(size, scale=0.6, coins=True):
     """A dark angular loot-crate with glowing green seams and a hex R$ badge,
-    with coins spilling out the top. Transparent background."""
+    with coins spilling out the top. Transparent background.
+
+    `coins=False` renders the crate + badge alone (no coins baked in) — used
+    for the splash screen, where the coins are separate, independently
+    animated Flutter widgets instead of static pixels."""
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     cx = size / 2
     w = size * scale
@@ -234,19 +238,20 @@ def draw_crate(size, scale=0.6):
     centered_text(d, cx, hy + hr * 0.02, "R$", font(int(hr * 1.05)), GREEN_BRIGHT)
 
     # ---- coins spilling out the top ----
-    # (dx, dy) are fractions of (w, h) from the crate centre/top; kept shallow so
-    # even the highest coin's own radius stays inside the frame at every size.
-    coin_specs = [
-        (-0.34, -0.16, 0.105, -16),
-        (0.30, -0.18, 0.095, 18),
-        (-0.05, -0.24, 0.100, -4),
-        (0.15, -0.08, 0.078, 14),
-        (-0.20, -0.01, 0.072, -22),
-    ]
-    for (dx, dy, rr, rot) in coin_specs:
-        r_px = int(size * rr)
-        coin = draw_coin(r_px * 2)
-        paste_rotated(img, coin, cx + w * dx, y0 + h * dy, rot)
+    if coins:
+        # (dx, dy) are fractions of (w, h) from the crate centre/top; kept
+        # shallow so even the highest coin's radius stays inside the frame.
+        coin_specs = [
+            (-0.34, -0.16, 0.105, -16),
+            (0.30, -0.18, 0.095, 18),
+            (-0.05, -0.24, 0.100, -4),
+            (0.15, -0.08, 0.078, 14),
+            (-0.20, -0.01, 0.072, -22),
+        ]
+        for (dx, dy, rr, rot) in coin_specs:
+            r_px = int(size * rr)
+            coin = draw_coin(r_px * 2)
+            paste_rotated(img, coin, cx + w * dx, y0 + h * dy, rot)
 
     return img
 
@@ -364,6 +369,14 @@ def main():
     # rounding cut so it sits cleanly on the app's own dark background.
     splash = compose_hero(768)
     splash.save(f"{STORE}/splash_logo.png")
+
+    # Splash-screen ANIMATED variant: crate + badge alone (no frame, no baked
+    # coins, generous transparent padding for shadow/glow bleed) so Flutter can
+    # place independently moving coin widgets and light rays around it.
+    badge = draw_crate(900, scale=0.66, coins=False)
+    badge.save(f"{STORE}/crate_badge.png")
+    coin_sprite = draw_coin(320)
+    coin_sprite.save(f"{STORE}/coin.png")
 
     print("Android + store + splash assets generated.")
 
