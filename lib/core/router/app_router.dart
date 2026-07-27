@@ -34,10 +34,8 @@ import '../../features/wallet/presentation/wallet_screen.dart';
 import '../config/providers.dart';
 import '../services/preferences_service.dart';
 import '../widgets/app_scaffold.dart';
-import '../widgets/premium_loader.dart';
 import 'routes.dart';
-
-part 'splash_screen.dart';
+import 'splash_screen.dart';
 
 final _rootKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final _shellKey = GlobalKey<NavigatorState>(debugLabel: 'shell');

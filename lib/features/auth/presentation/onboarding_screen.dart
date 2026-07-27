@@ -60,8 +60,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     return AppScaffold(
       showAppBar: false,
       padded: false,
-      body: Column(
+      body: Stack(
         children: [
+          const Positioned.fill(
+            child: IgnorePointer(child: CoinParticles(count: 12, speed: 0.6)),
+          ),
+          Column(
+            children: [
           Align(
             alignment: AlignmentDirectional.centerEnd,
             child: Padding(
@@ -157,6 +162,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 }
               },
             ),
+          ),
+            ],
           ),
         ],
       ),

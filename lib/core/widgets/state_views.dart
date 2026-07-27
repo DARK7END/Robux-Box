@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../theme/app_colors.dart';
@@ -27,36 +28,71 @@ class EmptyStateView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xxl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 84,
-              height: 84,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, size: 38, color: theme.colorScheme.primary),
-            ),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                // Soft glow ring behind the emblem.
+                Container(
+                  width: 116,
+                  height: 116,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        primary.withValues(alpha: 0.16),
+                        primary.withValues(alpha: 0.0),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 84,
+                  height: 84,
+                  decoration: BoxDecoration(
+                    color: primary.withValues(alpha: 0.12),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: primary.withValues(alpha: 0.22)),
+                  ),
+                  child: Icon(icon, size: 38, color: primary),
+                )
+                    .animate(onPlay: (c) => c.repeat(reverse: true))
+                    .moveY(
+                        begin: 0,
+                        end: -6,
+                        duration: 2200.ms,
+                        curve: Curves.easeInOut),
+              ],
+            )
+                .animate()
+                .fadeIn(duration: 400.ms)
+                .scale(begin: const Offset(0.85, 0.85), curve: AppCurves.spring),
             const SizedBox(height: AppSpacing.lg),
-            Text(title, style: theme.textTheme.titleMedium, textAlign: TextAlign.center),
+            Text(title,
+                    style: theme.textTheme.titleMedium,
+                    textAlign: TextAlign.center)
+                .animate()
+                .fadeIn(delay: 120.ms)
+                .slideY(begin: 0.2, curve: AppCurves.standard),
             const SizedBox(height: AppSpacing.sm),
             Text(
               message,
               style: theme.textTheme.bodyMedium,
               textAlign: TextAlign.center,
-            ),
+            ).animate().fadeIn(delay: 200.ms),
             if (actionLabel != null && onAction != null) ...[
               const SizedBox(height: AppSpacing.xl),
               GradientButton(
                 label: actionLabel!,
                 onPressed: onAction,
                 expand: false,
-              ),
+              ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.3),
             ],
           ],
         ),
@@ -85,13 +121,28 @@ class ErrorStateView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.wifi_off_rounded, size: 44, color: AppColors.danger),
+            Container(
+              width: 84,
+              height: 84,
+              decoration: BoxDecoration(
+                color: AppColors.danger.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+                border:
+                    Border.all(color: AppColors.danger.withValues(alpha: 0.24)),
+              ),
+              child: const Icon(Icons.wifi_off_rounded,
+                  size: 38, color: AppColors.danger),
+            )
+                .animate()
+                .fadeIn(duration: 400.ms)
+                .scale(begin: const Offset(0.85, 0.85), curve: AppCurves.spring)
+                .shakeX(hz: 3, amount: 2, delay: 300.ms),
             const SizedBox(height: AppSpacing.lg),
             Text(
               message,
               style: theme.textTheme.bodyMedium,
               textAlign: TextAlign.center,
-            ),
+            ).animate().fadeIn(delay: 140.ms),
             if (onRetry != null) ...[
               const SizedBox(height: AppSpacing.xl),
               GradientButton(
@@ -99,7 +150,7 @@ class ErrorStateView extends StatelessWidget {
                 icon: Icons.refresh_rounded,
                 onPressed: onRetry,
                 expand: false,
-              ),
+              ).animate().fadeIn(delay: 240.ms).slideY(begin: 0.3),
             ],
           ],
         ),
