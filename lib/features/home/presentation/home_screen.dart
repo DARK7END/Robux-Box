@@ -203,12 +203,14 @@ class _Header extends ConsumerWidget {
               ),
               Row(
                 children: [
-                  Container(
+                  const SizedBox(
                     width: 7,
                     height: 7,
-                    decoration: const BoxDecoration(
-                      color: AppColors.brand,
-                      shape: BoxShape.circle,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: AppColors.brand,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 6),

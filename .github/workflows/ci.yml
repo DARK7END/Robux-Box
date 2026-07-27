@@ -31,6 +31,36 @@ jobs:
           name: coverage
           path: coverage/lcov.info
 
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.x"
+          channel: stable
+          cache: true
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Generate localisations
+        run: flutter gen-l10n
+      # No key.properties in CI, so android/app/build.gradle falls back to
+      # debug signing — the APK is installable for sideload testing but not
+      # for Play Store upload. Release mode still exercises R8/proguard.
+      - name: Build release APK
+        run: flutter build apk --release
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: robux-box-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+
   functions:
     name: Cloud Functions build & test
     runs-on: ubuntu-latest

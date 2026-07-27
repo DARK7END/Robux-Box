@@ -126,7 +126,7 @@ class BalanceHeroCard extends StatelessWidget {
                           ink: _ink,
                           inkSoft: _inkSoft,
                         ),
-                        _Divider(color: _ink),
+                        const _Divider(color: _ink),
                         _Stat(
                           label: 'Multiplier',
                           valueText:
@@ -134,7 +134,7 @@ class BalanceHeroCard extends StatelessWidget {
                           ink: _ink,
                           inkSoft: _inkSoft,
                         ),
-                        _Divider(color: _ink),
+                        const _Divider(color: _ink),
                         _Stat(
                           label: context.l10n.profileXp,
                           value: user.xp,

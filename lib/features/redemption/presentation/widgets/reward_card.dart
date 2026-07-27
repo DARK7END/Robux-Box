@@ -28,16 +28,8 @@ class RewardCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final (Gradient art, Color accent, IconData glyph) = switch (reward.kind) {
       RewardKind.robux => (AppGradients.robux, AppColors.brand, Icons.paid_rounded),
-      RewardKind.giftCard => (
-          AppGradients.coin,
-          AppColors.coin,
-          Icons.card_giftcard_rounded
-        ),
-      RewardKind.digitalCode => (
-          AppGradients.vip,
-          AppColors.vip,
-          Icons.vpn_key_rounded
-        ),
+      RewardKind.giftCard => (AppGradients.coin, AppColors.coin, Icons.card_giftcard_rounded),
+      RewardKind.digitalCode => (AppGradients.vip, AppColors.vip, Icons.vpn_key_rounded),
     };
 
     return GlassCard(
