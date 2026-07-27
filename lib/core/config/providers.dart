@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -47,6 +49,48 @@ final analyticsProvider = Provider<FirebaseAnalytics>((ref) {
 });
 
 /// Streams the raw Firebase auth state (fires on sign-in/out/token refresh).
+///
+/// The *first* event is bounded by a timeout that falls back to "logged out":
+/// on some devices (Play Services issues, flaky network, a debug-signed build
+/// whose SHA-1 isn't registered) the very first `authStateChanges()` event can
+/// be delayed far longer than a splash screen should ever wait. Without this,
+/// the router's redirect — which only proceeds once this provider leaves
+/// `AsyncLoading` — would leave the user stuck on the splash screen
+/// indefinitely. Once the first event (real or fallback) has landed, every
+/// later event forwards untouched with no further timeout — a steady-state
+/// idle gap (e.g. a logged-in user just sitting on a screen) must never be
+/// mistaken for a hang and silently sign them out.
 final authStateProvider = StreamProvider<User?>((ref) {
-  return ref.watch(firebaseAuthProvider).authStateChanges();
+  return _firstEventBounded(
+    ref.watch(firebaseAuthProvider).authStateChanges(),
+    const Duration(seconds: 8),
+  );
 });
+
+Stream<T?> _firstEventBounded(Stream<T?> source, Duration timeout) {
+  final controller = StreamController<T?>();
+  var settled = false;
+  Timer? timer;
+  late final StreamSubscription<T?> sub;
+
+  sub = source.listen(
+    (event) {
+      settled = true;
+      timer?.cancel();
+      controller.add(event);
+    },
+    onError: controller.addError,
+    onDone: controller.close,
+  );
+  timer = Timer(timeout, () {
+    if (!settled) {
+      settled = true;
+      controller.add(null);
+    }
+  });
+  controller.onCancel = () {
+    timer?.cancel();
+    sub.cancel();
+  };
+  return controller.stream;
+}

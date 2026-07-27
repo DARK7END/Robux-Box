@@ -9,6 +9,7 @@ export 'celebration.dart';
 export 'coin_badge.dart';
 export 'connectivity_banner.dart';
 export 'coin_particles.dart';
+export 'coin_rain.dart';
 export 'game_feature_card.dart';
 export 'glass_card.dart';
 export 'gradient_button.dart';

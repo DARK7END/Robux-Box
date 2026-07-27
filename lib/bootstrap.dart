@@ -18,43 +18,71 @@ import 'core/services/preferences_service.dart';
 import 'core/utils/logger.dart';
 import 'firebase_options.dart';
 
+/// How long a single bootstrap network call may block the first frame. Chosen
+/// so a stalled device/network never leaves the user staring at the native
+/// (pre-Flutter) launch screen indefinitely — bootstrap always reaches
+/// `runApp()` well inside a normal user's patience, even in the worst case.
+const _bootTimeout = Duration(seconds: 10);
+
 /// Single, hardened entry point used by `main.dart`.
 ///
 /// Order matters: Firebase → App Check (before any Firestore/Functions call) →
 /// Crashlytics/error handlers → providers → services → runApp. Everything is
-/// wrapped in a guarded zone so no unhandled error can crash the launch.
+/// wrapped in a guarded zone so no unhandled error can crash the launch, and
+/// the two network-touching steps are time-bounded so a stall never blocks
+/// `runApp()` for longer than [_bootTimeout] each — a broken Firebase config
+/// then surfaces as a normal, debuggable in-app error state instead of an
+/// unrecoverable blank/hung screen.
 Future<void> bootstrap() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
 
     final config = AppConfig.fromEnvironment();
 
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      ).timeout(_bootTimeout);
+    } catch (e, s) {
+      log.e('Firebase.initializeApp timed out or failed', e, s);
+    }
 
     // App Check must be activated before Firestore/Functions traffic so the
     // backend can enforce that requests originate from a genuine app instance.
-    await FirebaseAppCheck.instance.activate(
-      androidProvider:
-          config.isProd ? AndroidProvider.playIntegrity : AndroidProvider.debug,
-      appleProvider:
-          config.isProd ? AppleProvider.appAttest : AppleProvider.debug,
-    );
+    // Best-effort: a stalled activation must not block first paint, and
+    // enforcement is intentionally off during sideload testing anyway.
+    try {
+      await FirebaseAppCheck.instance
+          .activate(
+            androidProvider: config.isProd
+                ? AndroidProvider.playIntegrity
+                : AndroidProvider.debug,
+            appleProvider:
+                config.isProd ? AppleProvider.appAttest : AppleProvider.debug,
+          )
+          .timeout(_bootTimeout);
+    } catch (e, s) {
+      log.w('App Check activation timed out or failed', e, s);
+    }
 
-    // Crash reporting (disabled in debug).
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(!kDebugMode);
-    FlutterError.onError = (details) {
-      FlutterError.presentError(details);
-      FirebaseCrashlytics.instance.recordFlutterError(details);
-    };
-    PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      return true;
-    };
-    FirebaseMessaging.onBackgroundMessage(
-        firebaseMessagingBackgroundHandler);
+    // Crash reporting (disabled in debug). Guarded like the steps above: if
+    // Firebase itself never came up, none of this must be able to stop
+    // bootstrap short of runApp().
+    try {
+      await FirebaseCrashlytics.instance
+          .setCrashlyticsCollectionEnabled(!kDebugMode);
+      FlutterError.onError = (details) {
+        FlutterError.presentError(details);
+        FirebaseCrashlytics.instance.recordFlutterError(details);
+      };
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
+      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    } catch (e, s) {
+      log.w('Crashlytics/error-handler setup failed', e, s);
+    }
 
     final prefs = await SharedPreferences.getInstance();
 

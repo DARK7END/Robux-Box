@@ -1,32 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_dimens.dart';
-import '../theme/app_gradients.dart';
 import '../widgets/app_scaffold.dart';
-import '../widgets/coin_particles.dart';
+import '../widgets/coin_rain.dart';
 import '../widgets/premium_loader.dart';
+import 'routes.dart';
 
 /// Branded splash shown while Firebase auth state resolves. The router's
 /// redirect moves the user on to onboarding, welcome or home once known.
 ///
-/// A treasure-box emblem springs in over a breathing glow, with an ambient
-/// coin field rising behind it — the app should feel alive before the first
-/// frame of content.
-class SplashScreen extends StatelessWidget {
+/// The Robux Box emblem springs in over a breathing glow, with a field of
+/// gold R$ coins raining gently behind it — the app should feel alive before
+/// the first frame of real content.
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  // Defence in depth against ever trapping a user here: authStateProvider
+  // already has its own timeout that forces the router to move on, but if
+  // some other future bug keeps this screen mounted, a manual way out
+  // appears after a while rather than leaving a dead end.
+  bool _showEscapeHatch = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 10), () {
+      if (mounted) setState(() => _showEscapeHatch = true);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const AppScaffold(
+    return AppScaffold(
       showAppBar: false,
       body: Stack(
         children: [
-          Positioned.fill(
-            child: IgnorePointer(child: CoinParticles(count: 16, speed: 0.7)),
+          const Positioned.fill(
+            child: CoinRain(count: 22, speed: 0.55),
           ),
-          Center(child: _SplashLogo()),
+          const Center(child: _SplashLogo()),
+          if (_showEscapeHatch)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 48,
+              child: Center(
+                child: TextButton(
+                  onPressed: () => context.go(AppRoutes.welcome),
+                  child: Text(
+                    'Taking longer than expected — Tap to continue',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.white70,
+                        ),
+                  ),
+                ).animate().fadeIn(duration: 400.ms),
+              ),
+            ),
         ],
       ),
     );
@@ -47,13 +84,13 @@ class _SplashLogo extends StatelessWidget {
           children: [
             // Breathing halo behind the emblem.
             Container(
-              width: 150,
-              height: 150,
+              width: 230,
+              height: 230,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    AppColors.brand.withOpacity(0.45),
+                    AppColors.brand.withOpacity(0.35),
                     AppColors.brand.withOpacity(0.0),
                   ],
                 ),
@@ -65,17 +102,12 @@ class _SplashLogo extends StatelessWidget {
                     end: 1.15,
                     duration: 1800.ms,
                     curve: Curves.easeInOut),
-            // The emblem.
-            Container(
-              width: 96,
-              height: 96,
-              decoration: BoxDecoration(
-                gradient: AppGradients.brand,
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: AppShadows.glow(AppColors.brand),
-              ),
-              child: const Icon(Icons.inventory_2_rounded,
-                  size: 46, color: AppColors.black),
+            // The brand emblem — treasure crate + spilling R$ coins inside a
+            // glowing frame, baked as one crisp image (see tool/generate_icon.py).
+            Image.asset(
+              'assets/images/splash_logo.png',
+              width: 176,
+              height: 176,
             )
                 .animate()
                 .scale(
@@ -85,7 +117,7 @@ class _SplashLogo extends StatelessWidget {
                 .fadeIn(duration: 400.ms),
           ],
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 20),
         RichText(
           text: TextSpan(
             style: theme.textTheme.headlineMedium,
