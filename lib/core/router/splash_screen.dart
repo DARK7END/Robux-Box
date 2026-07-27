@@ -53,8 +53,8 @@ class _SplashLogo extends StatelessWidget {
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    AppColors.brand.withValues(alpha: 0.45),
-                    AppColors.brand.withValues(alpha: 0.0),
+                    AppColors.brand.withOpacity(0.45),
+                    AppColors.brand.withOpacity(0.0),
                   ],
                 ),
               ),

@@ -65,7 +65,7 @@ class _MissionTile extends StatelessWidget {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: mission.color.withValues(alpha: 0.16),
+              color: mission.color.withOpacity(0.16),
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
             child: Icon(mission.icon, color: mission.color, size: 22),

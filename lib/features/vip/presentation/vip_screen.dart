@@ -49,7 +49,7 @@ class VipScreen extends ConsumerWidget {
                 Text(
                   context.l10n.vipCurrentTier(_label(current)),
                   style: context.text.bodyMedium
-                      ?.copyWith(color: Colors.black.withValues(alpha: 0.7)),
+                      ?.copyWith(color: Colors.black.withOpacity(0.7)),
                 ),
               ],
             ),
@@ -108,7 +108,7 @@ class _VipTierCard extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: _color.withValues(alpha: 0.16),
+              color: _color.withOpacity(0.16),
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
             child: Icon(Icons.military_tech_rounded, color: _color),

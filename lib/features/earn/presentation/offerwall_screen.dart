@@ -124,7 +124,7 @@ class _ConsentBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: context.colors.primary.withValues(alpha: 0.12),
+      color: context.colors.primary.withOpacity(0.12),
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Row(
         children: [

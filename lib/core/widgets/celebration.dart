@@ -26,7 +26,7 @@ Future<void> showCelebration(
     context: context,
     barrierDismissible: true,
     barrierLabel: 'celebration',
-    barrierColor: Colors.black.withValues(alpha: 0.82),
+    barrierColor: Colors.black.withOpacity(0.82),
     transitionDuration: const Duration(milliseconds: 300),
     pageBuilder: (_, __, ___) =>
         _CelebrationView(title: title, message: message, coins: coins, icon: icon),
@@ -174,7 +174,7 @@ class _GlowBadge extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: AppColors.brand.withValues(alpha: 0.6),
+            color: AppColors.brand.withOpacity(0.6),
             blurRadius: 48,
             spreadRadius: 2,
           ),
@@ -188,6 +188,6 @@ class _GlowBadge extends StatelessWidget {
             duration: 600.ms,
             curve: AppCurves.spring)
         .then()
-        .shimmer(duration: 1100.ms, color: Colors.white.withValues(alpha: 0.5));
+        .shimmer(duration: 1100.ms, color: Colors.white.withOpacity(0.5));
   }
 }

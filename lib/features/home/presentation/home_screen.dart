@@ -315,7 +315,7 @@ class _RedeemPromptCard extends StatelessWidget {
             width: 46,
             height: 46,
             decoration: BoxDecoration(
-              color: ink.withValues(alpha: 0.14),
+              color: ink.withOpacity(0.14),
               borderRadius: BorderRadius.circular(AppRadius.md),
             ),
             child: const Icon(Icons.redeem_rounded, color: ink, size: 26),
@@ -333,7 +333,7 @@ class _RedeemPromptCard extends StatelessWidget {
                 Text(
                   'Turn your coins into Robux & gift cards',
                   style: context.text.bodySmall
-                      ?.copyWith(color: ink.withValues(alpha: 0.72)),
+                      ?.copyWith(color: ink.withOpacity(0.72)),
                 ),
               ],
             ),
@@ -342,7 +342,7 @@ class _RedeemPromptCard extends StatelessWidget {
             width: 30,
             height: 30,
             decoration: BoxDecoration(
-              color: ink.withValues(alpha: 0.14),
+              color: ink.withOpacity(0.14),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.arrow_forward_rounded,

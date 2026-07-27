@@ -62,7 +62,7 @@ class _GameFeatureCardState extends State<GameFeatureCard> {
                 color: (widget.gradient as LinearGradient)
                     .colors
                     .first
-                    .withValues(alpha: 0.45),
+                    .withOpacity(0.45),
                 blurRadius: 22,
                 spreadRadius: -8,
                 offset: const Offset(0, 10),
@@ -77,7 +77,7 @@ class _GameFeatureCardState extends State<GameFeatureCard> {
                 child: Icon(
                   widget.icon,
                   size: 68,
-                  color: Colors.white.withValues(alpha: 0.18),
+                  color: Colors.white.withOpacity(0.18),
                 )
                     .animate(onPlay: (c) => c.repeat(reverse: true))
                     .moveY(begin: 0, end: -6, duration: 1600.ms, curve: Curves.easeInOut),
@@ -95,7 +95,7 @@ class _GameFeatureCardState extends State<GameFeatureCard> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.25),
+                            color: Colors.black.withOpacity(0.25),
                             borderRadius: AppRadius.pillRadius,
                           ),
                           child: Text(widget.badge!,
@@ -126,7 +126,7 @@ class _GameFeatureCardState extends State<GameFeatureCard> {
                 Positioned.fill(
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.42),
+                      color: Colors.black.withOpacity(0.42),
                       borderRadius: BorderRadius.circular(AppRadius.lg),
                     ),
                     child: const Center(

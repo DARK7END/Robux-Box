@@ -105,15 +105,15 @@ class _CoinPainter extends CustomPainter {
       final alpha = (p.opacity * edge).clamp(0.0, 1.0);
 
       final glow = Paint()
-        ..color = color.withValues(alpha: alpha * 0.35)
+        ..color = color.withOpacity(alpha * 0.35)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
       canvas.drawCircle(Offset(x, y), p.radius * 1.6, glow);
 
       final body = Paint()
         ..shader = RadialGradient(
           colors: [
-            Color.lerp(color, Colors.white, 0.4)!.withValues(alpha: alpha),
-            color.withValues(alpha: alpha),
+            Color.lerp(color, Colors.white, 0.4)!.withOpacity(alpha),
+            color.withOpacity(alpha),
           ],
         ).createShader(Rect.fromCircle(center: Offset(x, y), radius: p.radius));
       canvas.drawCircle(Offset(x, y), p.radius, body);

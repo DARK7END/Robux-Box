@@ -46,7 +46,7 @@ class SpinWheel extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.brand.withValues(alpha: 0.35),
+                  color: AppColors.brand.withOpacity(0.35),
                   blurRadius: 40,
                   spreadRadius: -10,
                 ),
@@ -125,7 +125,7 @@ class _WheelPainter extends CustomPainter {
 
       // Divider line.
       final divider = Paint()
-        ..color = Colors.white.withValues(alpha: 0.08)
+        ..color = Colors.white.withOpacity(0.08)
         ..strokeWidth = 1.5
         ..style = PaintingStyle.stroke;
       canvas.drawArc(rect, a0, seg, true, divider);
@@ -164,7 +164,7 @@ class _WheelPainter extends CustomPainter {
     canvas.drawCircle(center, radius - 3, rim);
 
     // Rim light dots.
-    final dot = Paint()..color = Colors.white.withValues(alpha: 0.85);
+    final dot = Paint()..color = Colors.white.withOpacity(0.85);
     for (var i = 0; i < n * 2; i++) {
       final a = i * (math.pi / n);
       final p = Offset(
@@ -195,7 +195,7 @@ class _PointerPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.5
-        ..color = Colors.white.withValues(alpha: 0.6),
+        ..color = Colors.white.withOpacity(0.6),
     );
   }
 

@@ -1,5 +1,5 @@
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
-import 'package:cloud_functions/cloud_functions.dart';
+import 'package:cloud_functions/cloud_functions.dart' hide Result;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 

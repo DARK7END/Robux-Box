@@ -83,7 +83,7 @@ class _ArcPainter extends CustomPainter {
     final track = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
-      ..color = color.withValues(alpha: 0.12);
+      ..color = color.withOpacity(0.12);
     canvas.drawCircle(center, radius, track);
 
     // Glowing sweep
@@ -94,7 +94,7 @@ class _ArcPainter extends CustomPainter {
       ..shader = SweepGradient(
         startAngle: 0,
         endAngle: 2 * math.pi,
-        colors: [color.withValues(alpha: 0.0), color],
+        colors: [color.withOpacity(0.0), color],
         transform: GradientRotation(startAngle),
       ).createShader(rect)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
@@ -103,7 +103,7 @@ class _ArcPainter extends CustomPainter {
     // Pulsing core
     final pulse = 0.5 + 0.5 * math.sin(progress * 2 * math.pi);
     final core = Paint()
-      ..color = color.withValues(alpha: 0.25 + 0.35 * pulse)
+      ..color = color.withOpacity(0.25 + 0.35 * pulse)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
     canvas.drawCircle(center, radius * 0.28 * (0.8 + 0.2 * pulse), core);
   }

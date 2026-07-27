@@ -168,7 +168,7 @@ class _Step extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 11,
-            backgroundColor: context.colors.primary.withValues(alpha: 0.16),
+            backgroundColor: context.colors.primary.withOpacity(0.16),
             child: Text('$n',
                 style: context.text.labelSmall
                     ?.copyWith(color: context.colors.primary)),

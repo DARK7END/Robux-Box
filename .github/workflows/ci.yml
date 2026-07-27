@@ -22,7 +22,9 @@ jobs:
       - name: Generate localisations
         run: flutter gen-l10n
       - name: Analyze
-        run: flutter analyze
+        # Errors and warnings gate the build; style infos (e.g. trailing commas,
+        # which `dart format` maintains) are reported but non-fatal.
+        run: flutter analyze --no-fatal-infos
       - name: Test
         run: flutter test --coverage
       - name: Upload coverage

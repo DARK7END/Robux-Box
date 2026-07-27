@@ -55,7 +55,7 @@ class _DailyRewardCardState extends ConsumerState<DailyRewardCard> {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(AppRadius.md),
             ),
             child: const Icon(Icons.redeem_rounded,
@@ -74,7 +74,7 @@ class _DailyRewardCardState extends ConsumerState<DailyRewardCard> {
                 Text(
                   '+$reward coins • ${context.l10n.homeStreakDays(widget.user.streakCount)}',
                   style: context.text.bodySmall
-                      ?.copyWith(color: Colors.black.withValues(alpha: 0.7)),
+                      ?.copyWith(color: Colors.black.withOpacity(0.7)),
                 ),
               ],
             ),

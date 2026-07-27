@@ -120,7 +120,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
                               CircleAvatar(
                                 radius: 18,
                                 backgroundColor: context.colors.primary
-                                    .withValues(alpha: 0.2),
+                                    .withOpacity(0.2),
                                 child: Text(
                                     u.displayName.isNotEmpty
                                         ? u.displayName[0].toUpperCase()

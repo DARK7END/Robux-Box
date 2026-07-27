@@ -154,7 +154,7 @@ class _RedemptionTile extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(AppSpacing.md),
               decoration: BoxDecoration(
-                color: AppColors.success.withValues(alpha: 0.12),
+                color: AppColors.success.withOpacity(0.12),
                 borderRadius: AppRadius.cardRadius,
               ),
               child: SelectableText(

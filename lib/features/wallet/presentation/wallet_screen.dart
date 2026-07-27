@@ -151,7 +151,7 @@ class _BalanceHero extends StatelessWidget {
             children: [
               Text(context.l10n.walletBalance,
                   style: context.text.bodyMedium
-                      ?.copyWith(color: Colors.black.withValues(alpha: 0.7))),
+                      ?.copyWith(color: Colors.black.withOpacity(0.7))),
               const SizedBox(height: 2),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,7 +168,7 @@ class _BalanceHero extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.md, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.18),
+                      color: Colors.black.withOpacity(0.18),
                       borderRadius: AppRadius.pillRadius,
                     ),
                     child: Text('≈ $robux Robux',
@@ -182,7 +182,7 @@ class _BalanceHero extends StatelessWidget {
                 const SizedBox(height: AppSpacing.sm),
                 Text('${wallet.pendingCoins} coins pending redemption',
                     style: context.text.bodySmall?.copyWith(
-                        color: Colors.black.withValues(alpha: 0.65))),
+                        color: Colors.black.withOpacity(0.65))),
               ],
             ],
           ),
@@ -214,7 +214,7 @@ class _StatCard extends StatelessWidget {
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.16),
+              color: color.withOpacity(0.16),
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -309,7 +309,7 @@ class TransactionTile extends StatelessWidget {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.14),
+              color: color.withOpacity(0.14),
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
             child: Icon(_icon, color: color, size: 22),

@@ -87,7 +87,7 @@ class _ReportSheetState extends ConsumerState<_ReportSheet> {
                 .map((c) => ChoiceChip(
                       label: Text(c),
                       selected: _category == c,
-                      selectedColor: AppColors.brand.withValues(alpha: 0.2),
+                      selectedColor: AppColors.brand.withOpacity(0.2),
                       onSelected: (_) => setState(() => _category = c),
                     ))
                 .toList(),

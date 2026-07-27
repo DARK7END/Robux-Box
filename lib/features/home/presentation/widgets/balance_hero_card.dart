@@ -23,7 +23,7 @@ class BalanceHeroCard extends StatelessWidget {
 
   // Rich, slightly green-tinted black so ink feels part of the card, not pasted.
   static const Color _ink = Color(0xFF06230F);
-  static Color get _inkSoft => _ink.withValues(alpha: 0.62);
+  static Color get _inkSoft => _ink.withOpacity(0.62);
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,8 @@ class BalanceHeroCard extends StatelessWidget {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      Colors.white.withValues(alpha: 0.32),
-                      Colors.white.withValues(alpha: 0.0),
+                      Colors.white.withOpacity(0.32),
+                      Colors.white.withOpacity(0.0),
                     ],
                   ),
                 ),
@@ -62,7 +62,7 @@ class BalanceHeroCard extends StatelessWidget {
               child: Icon(
                 Icons.monetization_on_rounded,
                 size: 168,
-                color: _ink.withValues(alpha: 0.10),
+                color: _ink.withOpacity(0.10),
               ),
             ),
             Padding(
@@ -114,7 +114,7 @@ class BalanceHeroCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.lg, vertical: AppSpacing.md),
                     decoration: BoxDecoration(
-                      color: _ink.withValues(alpha: 0.14),
+                      color: _ink.withOpacity(0.14),
                       borderRadius: AppRadius.cardRadius,
                     ),
                     child: Row(
@@ -161,7 +161,7 @@ class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 1, height: 26, color: color.withValues(alpha: 0.18));
+        width: 1, height: 26, color: color.withOpacity(0.18));
   }
 }
 
@@ -186,8 +186,8 @@ class _LevelProgress extends StatelessWidget {
             builder: (context, value, _) => LinearProgressIndicator(
               value: value,
               minHeight: 8,
-              backgroundColor: ink.withValues(alpha: 0.16),
-              valueColor: AlwaysStoppedAnimation(ink.withValues(alpha: 0.88)),
+              backgroundColor: ink.withOpacity(0.16),
+              valueColor: AlwaysStoppedAnimation(ink.withOpacity(0.88)),
             ),
           ),
         ),
@@ -214,7 +214,7 @@ class _StreakChip extends StatelessWidget {
       padding:
           const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 5),
       decoration: BoxDecoration(
-        color: BalanceHeroCard._ink.withValues(alpha: 0.16),
+        color: BalanceHeroCard._ink.withOpacity(0.16),
         borderRadius: AppRadius.pillRadius,
       ),
       child: Row(

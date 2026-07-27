@@ -64,7 +64,7 @@ abstract final class AppShadows {
 
   static List<BoxShadow> soft(Color color) => [
         BoxShadow(
-          color: color.withValues(alpha: 0.10),
+          color: color.withOpacity(0.10),
           blurRadius: 24,
           offset: const Offset(0, 10),
         ),
@@ -72,7 +72,7 @@ abstract final class AppShadows {
 
   static List<BoxShadow> glow(Color color) => [
         BoxShadow(
-          color: color.withValues(alpha: 0.45),
+          color: color.withOpacity(0.45),
           blurRadius: 28,
           spreadRadius: -6,
           offset: const Offset(0, 8),

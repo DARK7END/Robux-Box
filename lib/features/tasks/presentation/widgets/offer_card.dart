@@ -106,7 +106,7 @@ class OfferCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.sm, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.coin.withValues(alpha: 0.14),
+                  color: AppColors.coin.withOpacity(0.14),
                   borderRadius: AppRadius.pillRadius,
                 ),
                 child: Row(
@@ -145,7 +145,7 @@ class _Icon extends StatelessWidget {
       width: 52,
       height: 52,
       decoration: BoxDecoration(
-        color: context.colors.primary.withValues(alpha: 0.12),
+        color: context.colors.primary.withOpacity(0.12),
         borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       clipBehavior: Clip.antiAlias,

@@ -89,8 +89,8 @@ class MainShell extends StatelessWidget {
                             shape: BoxShape.circle,
                             gradient: RadialGradient(
                               colors: [
-                                AppColors.brand.withValues(alpha: 0.32),
-                                AppColors.brand.withValues(alpha: 0.0),
+                                AppColors.brand.withOpacity(0.32),
+                                AppColors.brand.withOpacity(0.0),
                               ],
                             ),
                           ),

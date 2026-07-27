@@ -86,7 +86,7 @@ class _BadgeTile extends StatelessWidget {
         boxShadow: unlocked
             ? [
                 BoxShadow(
-                  color: badge.colors.first.withValues(alpha: 0.5),
+                  color: badge.colors.first.withOpacity(0.5),
                   blurRadius: 20,
                   spreadRadius: -4,
                 ),
@@ -94,7 +94,7 @@ class _BadgeTile extends StatelessWidget {
             : null,
         border: Border.all(
           color: unlocked
-              ? Colors.white.withValues(alpha: 0.3)
+              ? Colors.white.withOpacity(0.3)
               : context.surfaces.border,
           width: 2,
         ),
@@ -113,7 +113,7 @@ class _BadgeTile extends StatelessWidget {
                 .animate(onPlay: (c) => c.repeat())
                 .shimmer(
                     duration: 2400.ms,
-                    color: Colors.white.withValues(alpha: 0.35))
+                    color: Colors.white.withOpacity(0.35))
             : emblem,
         const SizedBox(height: AppSpacing.sm),
         Text(

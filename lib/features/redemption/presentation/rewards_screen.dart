@@ -148,7 +148,7 @@ class _BalanceHero extends StatelessWidget {
               children: [
                 Text('Available balance',
                     style: context.text.bodySmall
-                        ?.copyWith(color: Colors.black.withValues(alpha: 0.7))),
+                        ?.copyWith(color: Colors.black.withOpacity(0.7))),
                 const SizedBox(height: 2),
                 Row(
                   children: [
@@ -168,7 +168,7 @@ class _BalanceHero extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.md, vertical: AppSpacing.sm),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.18),
+              color: Colors.black.withOpacity(0.18),
               borderRadius: AppRadius.cardRadius,
             ),
             child: Column(
@@ -177,7 +177,7 @@ class _BalanceHero extends StatelessWidget {
                     style: AppTypography.counter(18, AppColors.black)),
                 Text('Robux',
                     style: context.text.labelSmall
-                        ?.copyWith(color: Colors.black.withValues(alpha: 0.7))),
+                        ?.copyWith(color: Colors.black.withOpacity(0.7))),
               ],
             ),
           ),

@@ -173,7 +173,7 @@ class _MetricCard extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: metric.color.withValues(alpha: 0.16),
+              color: metric.color.withOpacity(0.16),
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
             child: Icon(metric.icon, color: metric.color, size: 20),

@@ -63,7 +63,7 @@ class NotificationsScreen extends ConsumerWidget {
               return GlassCard(
                 fillColor: n.isRead
                     ? null
-                    : context.colors.primary.withValues(alpha: 0.08),
+                    : context.colors.primary.withOpacity(0.08),
                 onTap: () {
                   if (uid != null && !n.isRead) {
                     ref.read(notificationRepositoryProvider).markRead(uid, n.id);
@@ -77,7 +77,7 @@ class NotificationsScreen extends ConsumerWidget {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: context.colors.primary.withValues(alpha: 0.14),
+                        color: context.colors.primary.withOpacity(0.14),
                         borderRadius: BorderRadius.circular(AppRadius.sm),
                       ),
                       child: Icon(_icon(n.type),

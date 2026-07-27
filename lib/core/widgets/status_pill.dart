@@ -34,11 +34,11 @@ class StatusPill extends StatelessWidget {
         vertical: dense ? 3 : AppSpacing.xs + 1,
       ),
       decoration: BoxDecoration(
-        color: filled ? color : color.withValues(alpha: 0.14),
+        color: filled ? color : color.withOpacity(0.14),
         borderRadius: AppRadius.pillRadius,
         border: filled
             ? null
-            : Border.all(color: color.withValues(alpha: 0.35)),
+            : Border.all(color: color.withOpacity(0.35)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

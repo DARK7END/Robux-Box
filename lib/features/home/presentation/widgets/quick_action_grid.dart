@@ -43,7 +43,7 @@ class QuickActionGrid extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: a.color.withValues(alpha: 0.16),
+                      color: a.color.withOpacity(0.16),
                       borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
                     child: Icon(a.icon, color: a.color, size: 22),

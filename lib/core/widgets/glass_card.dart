@@ -59,7 +59,7 @@ class GlassCard extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color.alphaBlend(Colors.white.withValues(alpha: 0.05), base),
+              Color.alphaBlend(Colors.white.withOpacity(0.05), base),
               base,
             ],
           ),
@@ -80,9 +80,9 @@ class GlassCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.white.withValues(alpha: 0.0),
-                    Colors.white.withValues(alpha: 0.35),
-                    Colors.white.withValues(alpha: 0.0),
+                    Colors.white.withOpacity(0.0),
+                    Colors.white.withOpacity(0.35),
+                    Colors.white.withOpacity(0.0),
                   ],
                 ),
               ),

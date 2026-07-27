@@ -24,7 +24,6 @@ class SecureStorageService {
 
   static const _kDeviceId = 'sec_device_id';
   static const _kDeviceSecret = 'sec_device_secret';
-  static const _kIntegrityNonce = 'sec_integrity_nonce';
 
   Future<String> deviceId() async {
     final existing = await _storage.read(key: _kDeviceId);

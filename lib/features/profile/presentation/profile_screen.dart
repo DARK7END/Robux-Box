@@ -157,7 +157,7 @@ class _ProfileHeader extends StatelessWidget {
                     builder: (context, value, _) => LinearProgressIndicator(
                       value: value,
                       minHeight: 8,
-                      backgroundColor: Colors.black.withValues(alpha: 0.25),
+                      backgroundColor: Colors.black.withOpacity(0.25),
                       valueColor:
                           const AlwaysStoppedAnimation(AppColors.black),
                     ),
@@ -167,7 +167,7 @@ class _ProfileHeader extends StatelessWidget {
               const SizedBox(width: AppSpacing.sm),
               Text('${user.xp}/${user.xpForNextLevel}',
                   style: context.text.labelSmall?.copyWith(
-                      color: Colors.black.withValues(alpha: 0.7))),
+                      color: Colors.black.withOpacity(0.7))),
             ],
           ),
           const SizedBox(height: AppSpacing.lg),

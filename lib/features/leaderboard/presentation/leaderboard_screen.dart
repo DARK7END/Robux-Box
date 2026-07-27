@@ -175,7 +175,7 @@ class _PodiumSpot extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [medal.withValues(alpha: 0.4), medal.withValues(alpha: 0.05)],
+                colors: [medal.withOpacity(0.4), medal.withOpacity(0.05)],
               ),
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(AppRadius.md)),
@@ -253,7 +253,7 @@ class _Avatar extends StatelessWidget {
   }
 
   Widget _fallback(BuildContext context) => Container(
-        color: context.colors.primary.withValues(alpha: 0.2),
+        color: context.colors.primary.withOpacity(0.2),
         child: Center(
           child: Text(
             entry.displayName.isNotEmpty

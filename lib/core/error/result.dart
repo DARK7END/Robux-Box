@@ -34,7 +34,7 @@ sealed class Result<T> {
   }) {
     return switch (this) {
       Success<T>(:final value) => success(value),
-      Err<T>(:final failure) => failure(failure),
+      Err<T>(failure: final f) => failure(f),
     };
   }
 

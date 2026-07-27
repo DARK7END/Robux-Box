@@ -36,7 +36,7 @@ class RewardCard extends StatelessWidget {
       onTap: onTap,
       padding: EdgeInsets.zero,
       // A faint foil edge in the reward's own accent colour.
-      borderColor: accent.withValues(alpha: 0.30),
+      borderColor: accent.withOpacity(0.30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -109,7 +109,7 @@ class _ArtPanel extends StatelessWidget {
               right: -14,
               bottom: -18,
               child: Icon(glyph,
-                  size: 96, color: Colors.black.withValues(alpha: 0.10)),
+                  size: 96, color: Colors.black.withOpacity(0.10)),
             ),
             // Custom artwork, if provided, sits over the gradient.
             if (reward.imageUrl.isNotEmpty)
@@ -134,8 +134,8 @@ class _ArtPanel extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.white.withValues(alpha: 0.28),
-                      Colors.white.withValues(alpha: 0.0),
+                      Colors.white.withOpacity(0.28),
+                      Colors.white.withOpacity(0.0),
                     ],
                   ),
                 ),
@@ -154,7 +154,7 @@ class _ArtPanel extends StatelessWidget {
           .shimmer(
             duration: 2600.ms,
             delay: 1400.ms,
-            color: Colors.white.withValues(alpha: 0.22),
+            color: Colors.white.withOpacity(0.22),
           ),
     );
   }
@@ -169,9 +169,9 @@ class _Ribbon extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.34),
+        color: Colors.black.withOpacity(0.34),
         borderRadius: AppRadius.pillRadius,
-        border: Border.all(color: Colors.white.withValues(alpha: 0.28)),
+        border: Border.all(color: Colors.white.withOpacity(0.28)),
       ),
       child: Text(
         label.toUpperCase(),
@@ -197,9 +197,9 @@ class _CostPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: tint.withValues(alpha: 0.14),
+        color: tint.withOpacity(0.14),
         borderRadius: AppRadius.pillRadius,
-        border: Border.all(color: tint.withValues(alpha: 0.34)),
+        border: Border.all(color: tint.withOpacity(0.34)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

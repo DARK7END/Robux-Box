@@ -31,7 +31,7 @@ class BrandCategoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadius.lg),
           boxShadow: [
             BoxShadow(
-              color: b.primary.withValues(alpha: 0.4),
+              color: b.primary.withOpacity(0.4),
               blurRadius: 18,
               spreadRadius: -6,
               offset: const Offset(0, 8),
@@ -52,8 +52,8 @@ class BrandCategoryCard extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.white.withValues(alpha: 0.28),
-                      Colors.white.withValues(alpha: 0.0),
+                      Colors.white.withOpacity(0.28),
+                      Colors.white.withOpacity(0.0),
                     ],
                   ),
                   borderRadius: const BorderRadius.vertical(

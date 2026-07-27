@@ -115,7 +115,7 @@ class _Chest extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.xl),
         boxShadow: [
           BoxShadow(
-            color: AppColors.coin.withValues(alpha: 0.5),
+            color: AppColors.coin.withOpacity(0.5),
             blurRadius: 44,
             spreadRadius: -6,
           ),
@@ -134,6 +134,6 @@ class _Chest extends StatelessWidget {
         .animate(onPlay: (c) => c.repeat(reverse: true))
         .scaleXY(begin: 1, end: 1.05, duration: 1200.ms, curve: Curves.easeInOut)
         .shimmer(
-            duration: 2000.ms, color: Colors.white.withValues(alpha: 0.4));
+            duration: 2000.ms, color: Colors.white.withOpacity(0.4));
   }
 }

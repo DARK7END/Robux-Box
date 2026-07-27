@@ -240,7 +240,7 @@ class _RedemptionCardState extends ConsumerState<_RedemptionCard> {
                         color: AppColors.danger),
                     style: IconButton.styleFrom(
                         backgroundColor:
-                            AppColors.danger.withValues(alpha: 0.12)),
+                            AppColors.danger.withOpacity(0.12)),
                   ),
                 ],
               ),

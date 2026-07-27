@@ -119,7 +119,7 @@ class _SectionCard extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: section.color.withValues(alpha: 0.16),
+                  color: section.color.withOpacity(0.16),
                   borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: Icon(section.icon, color: section.color, size: 24),

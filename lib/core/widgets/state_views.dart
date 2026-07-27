@@ -46,8 +46,8 @@ class EmptyStateView extends StatelessWidget {
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        primary.withValues(alpha: 0.16),
-                        primary.withValues(alpha: 0.0),
+                        primary.withOpacity(0.16),
+                        primary.withOpacity(0.0),
                       ],
                     ),
                   ),
@@ -56,9 +56,9 @@ class EmptyStateView extends StatelessWidget {
                   width: 84,
                   height: 84,
                   decoration: BoxDecoration(
-                    color: primary.withValues(alpha: 0.12),
+                    color: primary.withOpacity(0.12),
                     shape: BoxShape.circle,
-                    border: Border.all(color: primary.withValues(alpha: 0.22)),
+                    border: Border.all(color: primary.withOpacity(0.22)),
                   ),
                   child: Icon(icon, size: 38, color: primary),
                 )
@@ -125,10 +125,10 @@ class ErrorStateView extends StatelessWidget {
               width: 84,
               height: 84,
               decoration: BoxDecoration(
-                color: AppColors.danger.withValues(alpha: 0.12),
+                color: AppColors.danger.withOpacity(0.12),
                 shape: BoxShape.circle,
                 border:
-                    Border.all(color: AppColors.danger.withValues(alpha: 0.24)),
+                    Border.all(color: AppColors.danger.withOpacity(0.24)),
               ),
               child: const Icon(Icons.wifi_off_rounded,
                   size: 38, color: AppColors.danger),

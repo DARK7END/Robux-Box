@@ -37,7 +37,7 @@ class GeoTierInfo extends Equatable {
         'tierLevel': tier.level,
         'source': source,
         'confidence': confidence,
-        'resolvedAt': resolvedAt.toIso8601String(),
+        'resolvedAt': resolvedAt?.toIso8601String(),
       };
 
   static const GeoTierInfo unknown = GeoTierInfo(

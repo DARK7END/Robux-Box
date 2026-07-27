@@ -146,7 +146,7 @@ class _RingPainter extends CustomPainter {
     final track = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 7
-      ..color = AppColors.brand.withValues(alpha: 0.14);
+      ..color = AppColors.brand.withOpacity(0.14);
     canvas.drawCircle(center, radius, track);
 
     final arc = Paint()
@@ -179,19 +179,19 @@ class _AchievementTile extends StatelessWidget {
     final unlocked = achievement.isUnlocked;
     final color = unlocked ? AppColors.coin : context.surfaces.textTertiary;
     return GlassCard(
-      borderColor: unlocked ? AppColors.coin.withValues(alpha: 0.4) : null,
+      borderColor: unlocked ? AppColors.coin.withOpacity(0.4) : null,
       child: Row(
         children: [
           Container(
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.16),
+              color: color.withOpacity(0.16),
               borderRadius: BorderRadius.circular(AppRadius.sm),
               boxShadow: unlocked
                   ? [
                       BoxShadow(
-                        color: AppColors.coin.withValues(alpha: 0.35),
+                        color: AppColors.coin.withOpacity(0.35),
                         blurRadius: 14,
                         spreadRadius: -4,
                       ),
