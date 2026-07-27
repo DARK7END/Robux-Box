@@ -8,23 +8,8 @@ allprojects {
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-
-    // Some older Flutter plugins don't declare a compileSdk/namespace, which
-    // fails under AGP 8 with "compileSdkVersion is not specified". Inject sane
-    // defaults for any Android subproject missing them. Registered BEFORE
-    // evaluationDependsOn so the callback is in place before evaluation runs
-    // (otherwise Gradle throws "afterEvaluate ... already evaluated").
-    afterEvaluate { project ->
-        if (project.extensions.findByName("android") != null) {
-            project.android {
-                compileSdkVersion 35
-                if (namespace == null) {
-                    namespace project.group
-                }
-            }
-        }
-    }
-
+}
+subprojects {
     project.evaluationDependsOn(":app")
 }
 
