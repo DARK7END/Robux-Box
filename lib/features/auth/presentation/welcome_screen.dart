@@ -33,7 +33,12 @@ class WelcomeScreen extends ConsumerWidget {
 
     return AppScaffold(
       showAppBar: false,
-      body: Column(
+      body: Stack(
+        children: [
+          const Positioned.fill(
+            child: IgnorePointer(child: CoinParticles(count: 14, speed: 0.6)),
+          ),
+          Column(
         children: [
           const Spacer(flex: 2),
           _Logo().animate().scale(
@@ -87,6 +92,8 @@ class WelcomeScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.xl),
           _TermsFooter(config: config),
           SizedBox(height: context.padding.bottom + AppSpacing.md),
+            ],
+          ),
         ],
       ),
     );
