@@ -5,9 +5,12 @@ import '../../../models/reward.dart';
 /// A redeemable brand shown as a premium category card on the Redeem screen.
 ///
 /// Colours mirror each brand's identity; [icon] is the fallback glyph used
-/// only if [assetLogo] (the real logo PNG in `assets/icons/brands/`) fails to
-/// load. [match] decides which catalogue [Reward]s belong to this brand (by
-/// kind + provider/title keyword).
+/// only if [assetLogo] (the small logo PNG in `assets/icons/brands/`) fails
+/// to load. [cardImage] is the complete, ready-made card art (in
+/// `assets/images/redeem_brand_cards/`) shown as-is on the Redeem grid tile,
+/// unedited — [assetLogo] is used only where a small isolated mark is needed
+/// instead (e.g. the brand sheet header). [match] decides which catalogue
+/// [Reward]s belong to this brand (by kind + provider/title keyword).
 class RewardBrand {
   const RewardBrand({
     required this.id,
@@ -17,6 +20,7 @@ class RewardBrand {
     required this.kind,
     this.keyword,
     this.assetLogo,
+    this.cardImage,
   });
 
   final String id;
@@ -28,8 +32,13 @@ class RewardBrand {
   /// Optional keyword matched against reward title/provider (case-insensitive).
   final String? keyword;
 
-  /// Optional bundled logo asset path (placeholder for now).
+  /// Small isolated logo mark asset path.
   final String? assetLogo;
+
+  /// Complete card artwork (icon + name + subtitle + border, all baked in),
+  /// shown unedited as the whole Redeem grid tile in place of the
+  /// code-drawn gradient card.
+  final String? cardImage;
 
   Gradient get gradient => LinearGradient(
         begin: Alignment.topLeft,
@@ -60,6 +69,7 @@ abstract final class RewardBrands {
     icon: Icons.videogame_asset_rounded,
     kind: RewardKind.robux,
     assetLogo: 'assets/icons/brands/roblox.png',
+    cardImage: 'assets/images/redeem_brand_cards/roblox.png',
   );
 
   static const steam = RewardBrand(
@@ -70,6 +80,7 @@ abstract final class RewardBrands {
     kind: RewardKind.giftCard,
     keyword: 'steam',
     assetLogo: 'assets/icons/brands/steam.png',
+    cardImage: 'assets/images/redeem_brand_cards/steam.png',
   );
 
   static const playstation = RewardBrand(
@@ -80,6 +91,7 @@ abstract final class RewardBrands {
     kind: RewardKind.giftCard,
     keyword: 'playstation',
     assetLogo: 'assets/icons/brands/playstation.png',
+    cardImage: 'assets/images/redeem_brand_cards/playstation.png',
   );
 
   static const xbox = RewardBrand(
@@ -90,6 +102,7 @@ abstract final class RewardBrands {
     kind: RewardKind.giftCard,
     keyword: 'xbox',
     assetLogo: 'assets/icons/brands/xbox.png',
+    cardImage: 'assets/images/redeem_brand_cards/xbox.png',
   );
 
   static const nintendo = RewardBrand(
@@ -100,6 +113,7 @@ abstract final class RewardBrands {
     kind: RewardKind.giftCard,
     keyword: 'nintendo',
     assetLogo: 'assets/icons/brands/nintendo.png',
+    cardImage: 'assets/images/redeem_brand_cards/nintendo.png',
   );
 
   static const googlePlay = RewardBrand(
@@ -110,6 +124,7 @@ abstract final class RewardBrands {
     kind: RewardKind.digitalCode,
     keyword: 'google',
     assetLogo: 'assets/icons/brands/google_play.png',
+    cardImage: 'assets/images/redeem_brand_cards/google_play.png',
   );
 
   static const apple = RewardBrand(
@@ -120,6 +135,7 @@ abstract final class RewardBrands {
     kind: RewardKind.digitalCode,
     keyword: 'apple',
     assetLogo: 'assets/icons/brands/apple.png',
+    cardImage: 'assets/images/redeem_brand_cards/apple.png',
   );
 
   static const amazon = RewardBrand(
@@ -130,6 +146,7 @@ abstract final class RewardBrands {
     kind: RewardKind.giftCard,
     keyword: 'amazon',
     assetLogo: 'assets/icons/brands/amazon.png',
+    cardImage: 'assets/images/redeem_brand_cards/amazon.png',
   );
 
   static const paypal = RewardBrand(
@@ -140,6 +157,7 @@ abstract final class RewardBrands {
     kind: RewardKind.giftCard,
     keyword: 'paypal',
     assetLogo: 'assets/icons/brands/paypal.png',
+    cardImage: 'assets/images/redeem_brand_cards/paypal.png',
   );
 
   static const List<RewardBrand> all = [

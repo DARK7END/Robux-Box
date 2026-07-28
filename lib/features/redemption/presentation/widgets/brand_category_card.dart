@@ -6,10 +6,12 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/pressable.dart';
 import '../../domain/reward_brand.dart';
 
-/// A premium, tappable brand tile (Roblox, Steam, PlayStation…). Brand-coloured
-/// gradient, soft glow, glossy highlight and the app-wide [Pressable] squish.
-/// Shows the real logo from [RewardBrand.assetLogo]; falls back to the
-/// Material [icon] if that's unset.
+/// A premium, tappable brand tile (Roblox, Steam, PlayStation…).
+///
+/// When [RewardBrand.cardImage] is set, the tile is that artwork shown
+/// as-is (icon, name and subtitle already baked in) — nothing drawn on top.
+/// Otherwise it falls back to a code-drawn gradient card with the brand's
+/// [RewardBrand.assetLogo]/[RewardBrand.icon] and name.
 class BrandCategoryCard extends StatelessWidget {
   const BrandCategoryCard({super.key, required this.brand, required this.onTap});
 
@@ -19,6 +21,32 @@ class BrandCategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final b = brand;
+    if (b.cardImage != null) {
+      return Pressable(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            boxShadow: [
+              BoxShadow(
+                color: b.primary.withOpacity(0.4),
+                blurRadius: 18,
+                spreadRadius: -6,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            child: Hero(
+              tag: 'brand_${b.id}',
+              child: Image.asset(b.cardImage!, fit: BoxFit.cover),
+            ),
+          ),
+        ),
+      );
+    }
+
     final onColor =
         ThemeData.estimateBrightnessForColor(b.primary) == Brightness.dark
             ? Colors.white
