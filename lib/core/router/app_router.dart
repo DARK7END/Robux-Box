@@ -65,7 +65,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           loc == AppRoutes.onboarding;
 
       if (!onboardingSeen && !loggedIn) {
-        return onSplash || inAuthFlow ? null : AppRoutes.onboarding;
+        // NOTE: onSplash must NOT be treated as "already in place" here (unlike
+        // the branches below) — splash is only ever a transient loading state,
+        // so a first-time user sitting on it has to be actively redirected to
+        // onboarding once auth resolves, or they're stuck there forever.
+        return inAuthFlow ? null : AppRoutes.onboarding;
       }
 
       if (!loggedIn) {
