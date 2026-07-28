@@ -9,7 +9,6 @@ import '../../../core/extensions/format_extensions.dart';
 import '../../../core/router/routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
-import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../models/reward.dart';
@@ -134,50 +133,69 @@ class _BalanceHero extends StatelessWidget {
   Widget build(BuildContext context) {
     final robux = coins.asRobux(AppConstants.coinsPerRobux);
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.xl),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        gradient: AppGradients.brand,
+        color: AppColors.darkBgElevated,
         borderRadius: BorderRadius.circular(AppRadius.xl),
         boxShadow: AppShadows.glow(AppColors.brand),
       ),
-      child: Row(
+      child: Stack(
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(context.l10n.rewardsAvailableBalance,
-                    style: context.text.bodySmall
-                        ?.copyWith(color: Colors.black.withOpacity(0.7))),
-                const SizedBox(height: 2),
-                Row(
-                  children: [
-                    const RGlyph(size: 26, color: AppColors.black),
-                    const SizedBox(width: 6),
-                    AnimatedCounter(
-                      value: coins,
-                      style: AppTypography.counter(30, AppColors.black),
-                    ),
-                  ],
+          Positioned.fill(
+            child: Image.asset('assets/images/redeem_balance_art.png',
+                fit: BoxFit.cover),
+          ),
+          // Left-to-right scrim: keeps the balance legible over the art
+          // without hiding the chest, which stays clear on the right.
+          const Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.black87, Colors.transparent],
+                  stops: [0.0, 0.62],
                 ),
-              ],
+              ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.18),
-              borderRadius: AppRadius.cardRadius,
-            ),
-            child: Column(
-              children: [
-                Text('≈ $robux',
-                    style: AppTypography.counter(18, AppColors.black)),
-                Text(context.l10n.rewardsRobux,
-                    style: context.text.labelSmall
-                        ?.copyWith(color: Colors.black.withOpacity(0.7))),
-              ],
+          // The artwork is a fixed image (chest baked into its right side, not
+          // mirrored for RTL), so the text block that shares the scrim with it
+          // is pinned to the same physical left side regardless of locale —
+          // otherwise Arabic would right-align this straight onto the chest.
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.xl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(context.l10n.rewardsAvailableBalance,
+                      style: context.text.bodySmall?.copyWith(
+                          color: AppColors.brandBright,
+                          fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const RGlyph(size: 26, color: AppColors.white),
+                      const SizedBox(width: 6),
+                      AnimatedCounter(
+                        value: coins,
+                        style: AppTypography.counter(30, AppColors.white),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text('≈ $robux',
+                      style: AppTypography.counter(
+                          14, Colors.white.withOpacity(0.85))),
+                  Text(context.l10n.rewardsRobux,
+                      style: context.text.labelSmall
+                          ?.copyWith(color: Colors.white60)),
+                ],
+              ),
             ),
           ),
         ],
