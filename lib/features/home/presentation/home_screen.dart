@@ -120,6 +120,7 @@ class _HomeContent extends ConsumerWidget {
                     ? context.l10n.earnWinUpTo500
                     : context.l10n.earnPlayedToday,
                 icon: Icons.casino_rounded,
+                image: 'assets/images/spin_wheel_feature.png',
                 gradient: AppGradients.accent,
                 badge: user.canSpinToday
                     ? context.l10n.earnFreeBadge
@@ -136,6 +137,7 @@ class _HomeContent extends ConsumerWidget {
                     ? context.l10n.earnOpenForCoins
                     : context.l10n.earnOpenedToday,
                 icon: Icons.inventory_2_rounded,
+                image: 'assets/images/lucky_chest_feature.png',
                 gradient: AppGradients.coin,
                 badge: user.canOpenChestToday
                     ? context.l10n.earnHotBadge
@@ -175,27 +177,33 @@ class _Header extends ConsumerWidget {
     return Row(
       children: [
         // Avatar inside a brand-gradient ring for a premium "profile" accent.
-        Container(
-          padding: const EdgeInsets.all(2),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: AppGradients.brand,
-            boxShadow: AppShadows.glow(AppColors.brand),
-          ),
-          child: CircleAvatar(
-            radius: 23,
-            backgroundColor: context.surfaces.surfaceHigh,
-            backgroundImage:
-                user.photoUrl.isNotEmpty ? NetworkImage(user.photoUrl) : null,
-            child: user.photoUrl.isEmpty
-                ? Text(
-                    user.displayName.isNotEmpty
-                        ? user.displayName[0].toUpperCase()
-                        : '?',
-                    style: context.text.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w800),
-                  )
-                : null,
+        // Tapping it opens the account (profile tab), where the avatar itself
+        // opens editing — same pattern as the rest of the app.
+        Pressable(
+          onTap: () => context.go(AppRoutes.profile),
+          child: Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: AppGradients.brand,
+              boxShadow: AppShadows.glow(AppColors.brand),
+            ),
+            child: CircleAvatar(
+              radius: 23,
+              backgroundColor: context.surfaces.surfaceHigh,
+              backgroundImage: user.photoUrl.isNotEmpty
+                  ? NetworkImage(user.photoUrl)
+                  : null,
+              child: user.photoUrl.isEmpty
+                  ? Text(
+                      user.displayName.isNotEmpty
+                          ? user.displayName[0].toUpperCase()
+                          : '?',
+                      style: context.text.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w800),
+                    )
+                  : null,
+            ),
           ),
         ),
         const SizedBox(width: AppSpacing.md),
