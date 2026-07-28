@@ -40,7 +40,7 @@ echo "▶ Generating iOS app icons (best effort)…"
 # older pip that doesn't recognise the flag.
 python3 -m pip install --quiet --break-system-packages Pillow 2>/dev/null || \
   python3 -m pip install --quiet Pillow || true
-python3 tool/generate_icon.py --ios || echo "  (skipped — default icon kept)"
+python3 tool/generate_icon.py --ios || echo "  (skipped — see error above)"
 
 echo "▶ Installing pods…"
 flutter pub get >/dev/null
