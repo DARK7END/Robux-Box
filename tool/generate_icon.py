@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""Generates the Robux Box brand emblem from code (no external art) and exports
-every size the app needs — Android launcher icons, the iOS AppIcon set, the
-Play Store listing icon and the splash-screen hero graphic.
+"""Exports every icon size the app needs — Android launcher icons, the iOS
+AppIcon set and the Play Store listing icon — from the real Robux Box artwork
+in tool/icon_source/, plus the splash-screen hero graphic and the animated
+splash's separate crate/coin sprites (generated from code, since no
+coins-free, wordmark-free cutout of the supplied artwork exists).
 
-Design: a dark, angular loot-crate with glowing green neon seams and a
-hexagonal "R$" badge on its face, spilling gold-and-green R$ coins, inside a
-glowing neon-green rounded-square frame on a near-black hex-textured backdrop.
+If tool/icon_source/app_icon_source.jpg is ever missing, the launcher-icon
+family falls back to a code-drawn emblem (dark angular loot-crate, glowing
+green neon seams, hexagonal "R$" badge, gold-and-green R$ coins spilling out,
+inside a neon-green rounded-square frame) so the script never hard-fails.
 
 Run: python3 tool/generate_icon.py          # Android + Play Store + splash hero
      python3 tool/generate_icon.py --ios     # iOS AppIcon set (needs ios/ to exist)
@@ -19,6 +22,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 RES = os.path.join(ROOT, "android", "app", "src", "main", "res")
 STORE = os.path.join(ROOT, "assets", "images")
+SOURCE_ICON = os.path.join(os.path.dirname(__file__), "icon_source", "app_icon_source.jpg")
 
 # ---- brand palette --------------------------------------------------------
 GREEN = (0, 255, 106)
@@ -291,6 +295,40 @@ def compose_hero(size, square_corners=False):
     return img
 
 
+def load_hero_source(size=M):
+    """The real Robux Box icon artwork (a square, already-composed render)
+    supplied by the team, in place of the code-drawn emblem. Returns an
+    opaque RGB image at size x size. Falls back to the procedural emblem if
+    the source file isn't present."""
+    if not os.path.isfile(SOURCE_ICON):
+        print(f"  (no supplied icon art at {SOURCE_ICON} — falling back to procedural emblem)")
+        return compose_hero(size, square_corners=True).convert("RGB")
+    img = Image.open(SOURCE_ICON).convert("RGB")
+    w, h = img.size
+    side = min(w, h)
+    img = img.crop(((w - side) // 2, (h - side) // 2, (w + side) // 2, (h + side) // 2))
+    return img.resize((size, size), Image.LANCZOS)
+
+
+def adaptive_foreground_from_source(size):
+    """Adaptive-icon foreground: the supplied artwork scaled into Android's
+    ~72dp safe zone (of the 108dp canvas) so launcher masks — circle, squircle,
+    whatever the OEM picks — never clip into the crate or the wordmark,
+    centred on transparency."""
+    src = load_hero_source(round(size * 0.68))
+    layer = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    offset = (size - src.width) // 2
+    layer.paste(src, (offset, offset))
+    return layer
+
+
+def adaptive_background_from_source(size):
+    """Adaptive-icon background: a flat fill matching the artwork's own
+    near-black backdrop, so whatever a launcher mask crops away at the edges
+    blends in seamlessly instead of showing a seam."""
+    return Image.new("RGBA", (size, size), (9, 9, 9, 255))
+
+
 def save(img, path, px):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     img.resize((px, px), Image.LANCZOS).save(path)
@@ -316,7 +354,7 @@ IOS_SPECS = [
 
 def _ios_square():
     """Opaque, square (no rounding, no alpha) master for iOS."""
-    return compose_hero(M, square_corners=True).convert("RGB")
+    return load_hero_source(M)
 
 
 def generate_ios():
@@ -344,15 +382,14 @@ def generate_ios():
 
 
 def main():
-    hero = compose_hero(M)
+    hero = load_hero_source(M).convert("RGBA")
     hero_round = Image.new("RGBA", (M, M), (0, 0, 0, 0))
     mask = Image.new("L", (M, M), 0)
     ImageDraw.Draw(mask).ellipse([0, 0, M, M], fill=255)
-    flat_hero = compose_hero(M, square_corners=True)
-    hero_round.paste(flat_hero, (0, 0), mask)
+    hero_round.paste(hero, (0, 0), mask)
 
-    fg = compose_emblem(M)                    # adaptive foreground (safe zone)
-    bg = plain_background(M, rounded=False)    # adaptive background (OS-masked)
+    fg = adaptive_foreground_from_source(M)    # adaptive foreground (safe zone)
+    bg = adaptive_background_from_source(M)    # adaptive background (OS-masked)
 
     for name, mult in DENSITIES.items():
         legacy = int(48 * mult)
@@ -363,22 +400,21 @@ def main():
         save(bg, f"{RES}/mipmap-{name}/ic_launcher_background.png", adaptive)
 
     os.makedirs(STORE, exist_ok=True)
-    hero.resize((512, 512), Image.LANCZOS).save(f"{STORE}/play_store_icon.png")
+    hero.convert("RGB").resize((512, 512), Image.LANCZOS).save(f"{STORE}/play_store_icon.png")
 
-    # Splash-screen hero: same emblem, larger and without the outer corner
-    # rounding cut so it sits cleanly on the app's own dark background.
+    # Splash-screen hero and the animated splash's separate crate/coin sprites
+    # stay procedurally generated: the supplied artwork is a single flattened
+    # composition (coins + wordmark baked in) with no separable crate-only
+    # cutout, so it can't feed the splash's independently animated pieces.
     splash = compose_hero(768)
     splash.save(f"{STORE}/splash_logo.png")
 
-    # Splash-screen ANIMATED variant: crate + badge alone (no frame, no baked
-    # coins, generous transparent padding for shadow/glow bleed) so Flutter can
-    # place independently moving coin widgets and light rays around it.
     badge = draw_crate(900, scale=0.66, coins=False)
     badge.save(f"{STORE}/crate_badge.png")
     coin_sprite = draw_coin(320)
     coin_sprite.save(f"{STORE}/coin.png")
 
-    print("Android + store + splash assets generated.")
+    print("Android + store icons generated from supplied artwork; splash assets generated procedurally.")
 
 
 if __name__ == "__main__":
