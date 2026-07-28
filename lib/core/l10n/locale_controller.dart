@@ -5,12 +5,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/preferences_service.dart';
 
-/// The locales the app ships translations for. English is the base; Arabic is
-/// fully translated. Add a new `app_<code>.arb` and list its [Locale] here to
-/// support more languages — the rest of the app needs no changes.
+/// The locales the app ships translations for. English is the base; all
+/// others are fully translated. Add a new `app_<code>.arb` and list its
+/// [Locale] here to support more languages — the rest of the app needs no
+/// changes.
 const List<Locale> kSupportedLocales = [
   Locale('en'),
   Locale('ar'),
+  Locale('es'),
+  Locale('pt'),
+  Locale('fr'),
+  Locale('tr'),
+  Locale('id'),
+  Locale('hi'),
 ];
 
 /// Controls the active locale.

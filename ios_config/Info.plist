@@ -34,6 +34,12 @@
 	<array>
 		<string>en</string>
 		<string>ar</string>
+		<string>es</string>
+		<string>pt</string>
+		<string>fr</string>
+		<string>tr</string>
+		<string>id</string>
+		<string>hi</string>
 	</array>
 
 	<!-- Google Sign-In: iOS OAuth client + callback URL scheme. -->

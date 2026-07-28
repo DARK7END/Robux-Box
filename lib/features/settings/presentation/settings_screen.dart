@@ -71,7 +71,7 @@ class SettingsScreen extends ConsumerWidget {
                     _localeLabel(context, locale),
                     style: context.text.bodyMedium,
                   ),
-                  onTap: () => _pickLanguage(context, ref),
+                  onTap: () => _pickLanguage(context, ref, locale),
                 ),
               ],
             ),
@@ -134,33 +134,51 @@ class SettingsScreen extends ConsumerWidget {
     return switch (locale.languageCode) {
       'ar' => 'العربية',
       'en' => 'English',
+      'es' => 'Español',
+      'pt' => 'Português',
+      'fr' => 'Français',
+      'tr' => 'Türkçe',
+      'id' => 'Bahasa Indonesia',
+      'hi' => 'हिन्दी',
       _ => locale.languageCode.toUpperCase(),
     };
   }
 
-  void _pickLanguage(BuildContext context, WidgetRef ref) {
+  void _pickLanguage(BuildContext context, WidgetRef ref, Locale? current) {
     showModalBottomSheet<void>(
       context: context,
+      isScrollControlled: true,
       builder: (_) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: Text(context.l10n.settingsSystemDefault),
-              onTap: () {
-                ref.read(localeControllerProvider.notifier).setLocale(null);
-                Navigator.pop(context);
-              },
-            ),
-            for (final l in kSupportedLocales)
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.7,
+          ),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
               ListTile(
-                title: Text(_localeLabel(context, l)),
+                title: Text(context.l10n.settingsSystemDefault),
+                trailing: current == null
+                    ? const Icon(Icons.check_rounded, color: AppColors.brand)
+                    : null,
                 onTap: () {
-                  ref.read(localeControllerProvider.notifier).setLocale(l);
+                  ref.read(localeControllerProvider.notifier).setLocale(null);
                   Navigator.pop(context);
                 },
               ),
-          ],
+              for (final l in kSupportedLocales)
+                ListTile(
+                  title: Text(_localeLabel(context, l)),
+                  trailing: current?.languageCode == l.languageCode
+                      ? const Icon(Icons.check_rounded, color: AppColors.brand)
+                      : null,
+                  onTap: () {
+                    ref.read(localeControllerProvider.notifier).setLocale(l);
+                    Navigator.pop(context);
+                  },
+                ),
+            ],
+          ),
         ),
       ),
     );
