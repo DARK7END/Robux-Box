@@ -322,7 +322,8 @@ class _UserActionsSheetState extends ConsumerState<_UserActionsSheet> {
             children: [
               for (final s in AccountStatus.values)
                 Padding(
-                  padding: const EdgeInsets.only(right: AppSpacing.sm),
+                  padding:
+                      const EdgeInsetsDirectional.only(end: AppSpacing.sm),
                   child: ActionChip(
                     label: Text(s.name),
                     onPressed: _busy

@@ -123,7 +123,7 @@ class _HomeContent extends ConsumerWidget {
                 gradient: AppGradients.accent,
                 badge: user.canSpinToday
                     ? context.l10n.earnFreeBadge
-                    : timeUntilMidnight(),
+                    : timeUntilMidnight(context.l10n),
                 dimmed: !user.canSpinToday,
                 onTap: () => context.go(AppRoutes.earn),
               ),
@@ -139,7 +139,7 @@ class _HomeContent extends ConsumerWidget {
                 gradient: AppGradients.coin,
                 badge: user.canOpenChestToday
                     ? context.l10n.earnHotBadge
-                    : timeUntilMidnight(),
+                    : timeUntilMidnight(context.l10n),
                 dimmed: !user.canOpenChestToday,
                 onTap: () => context.go(AppRoutes.earn),
               ),

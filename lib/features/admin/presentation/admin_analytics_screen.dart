@@ -128,7 +128,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
               ),
               const SizedBox(height: AppSpacing.lg),
               Center(
-                child: Text('Updated ${updated.relative()}',
+                child: Text('Updated ${updated.relative(context.l10n)}',
                     style: context.text.labelSmall),
               ),
             ],

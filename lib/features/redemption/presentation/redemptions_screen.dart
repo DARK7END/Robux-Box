@@ -143,7 +143,7 @@ class _RedemptionTile extends StatelessWidget {
               Text('${redemption.coinCost}', style: context.text.bodySmall),
               const Spacer(),
               if (redemption.createdAt != null)
-                Text(redemption.createdAt!.relative(),
+                Text(redemption.createdAt!.relative(context.l10n),
                     style: context.text.bodySmall),
             ],
           ),

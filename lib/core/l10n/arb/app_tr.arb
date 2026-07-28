@@ -25,6 +25,12 @@
   "commonAwesome": "Harika!",
   "commonNotFound": "Bulunamadı",
   "commonPageNotFound": "Sayfa bulunamadı: {uri}",
+  "timeJustNow": "Şimdi",
+  "timeMinutesAgo": "{minutes} dk önce",
+  "timeHoursAgo": "{hours} sa önce",
+  "timeDaysAgo": "{days} g önce",
+  "timeInHours": "{hours} sa sonra",
+  "timeInMinutes": "{minutes} dk sonra",
 
   "navHome": "Ana sayfa",
   "navEarn": "Kazan",

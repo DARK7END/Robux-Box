@@ -25,6 +25,12 @@
   "commonAwesome": "Ótimo!",
   "commonNotFound": "Não encontrado",
   "commonPageNotFound": "Página não encontrada: {uri}",
+  "timeJustNow": "Agora mesmo",
+  "timeMinutesAgo": "há {minutes} min",
+  "timeHoursAgo": "há {hours} h",
+  "timeDaysAgo": "há {days} d",
+  "timeInHours": "em {hours} h",
+  "timeInMinutes": "em {minutes} min",
 
   "navHome": "Início",
   "navEarn": "Ganhar",

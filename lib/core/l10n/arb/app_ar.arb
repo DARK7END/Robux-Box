@@ -25,6 +25,12 @@
   "commonAwesome": "رائع!",
   "commonNotFound": "غير موجود",
   "commonPageNotFound": "الصفحة غير موجودة: {uri}",
+  "timeJustNow": "الآن",
+  "timeMinutesAgo": "منذ {minutes} د",
+  "timeHoursAgo": "منذ {hours} س",
+  "timeDaysAgo": "منذ {days} ي",
+  "timeInHours": "خلال {hours} س",
+  "timeInMinutes": "خلال {minutes} د",
 
   "navHome": "الرئيسية",
   "navEarn": "اربح",

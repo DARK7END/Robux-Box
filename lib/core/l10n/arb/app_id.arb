@@ -25,6 +25,12 @@
   "commonAwesome": "Keren!",
   "commonNotFound": "Tidak ditemukan",
   "commonPageNotFound": "Halaman tidak ditemukan: {uri}",
+  "timeJustNow": "Baru saja",
+  "timeMinutesAgo": "{minutes} mnt lalu",
+  "timeHoursAgo": "{hours} jam lalu",
+  "timeDaysAgo": "{days} hr lalu",
+  "timeInHours": "dalam {hours} jam",
+  "timeInMinutes": "dalam {minutes} mnt",
 
   "navHome": "Beranda",
   "navEarn": "Dapatkan",

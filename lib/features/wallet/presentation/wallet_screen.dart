@@ -324,7 +324,7 @@ class TransactionTile extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis),
                 if (tx.createdAt != null)
-                  Text(tx.createdAt!.relative(),
+                  Text(tx.createdAt!.relative(context.l10n),
                       style: context.text.bodySmall),
               ],
             ),

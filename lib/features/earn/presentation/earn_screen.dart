@@ -77,7 +77,9 @@ class _EarnScreenState extends ConsumerState<EarnScreen> {
                       : context.l10n.earnPlayedToday,
                   icon: Icons.casino_rounded,
                   gradient: AppGradients.accent,
-                  badge: canSpin ? context.l10n.earnFreeBadge : timeUntilMidnight(),
+                  badge: canSpin
+                      ? context.l10n.earnFreeBadge
+                      : timeUntilMidnight(context.l10n),
                   dimmed: !canSpin,
                   onTap: () => canSpin
                       ? showSpinWheelSheet(context)
@@ -94,7 +96,9 @@ class _EarnScreenState extends ConsumerState<EarnScreen> {
                       : context.l10n.earnOpenedToday,
                   icon: Icons.inventory_2_rounded,
                   gradient: AppGradients.coin,
-                  badge: canChest ? context.l10n.earnHotBadge : timeUntilMidnight(),
+                  badge: canChest
+                      ? context.l10n.earnHotBadge
+                      : timeUntilMidnight(context.l10n),
                   dimmed: !canChest,
                   onTap: () => canChest
                       ? showLuckyChestSheet(context)

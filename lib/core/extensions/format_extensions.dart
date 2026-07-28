@@ -1,5 +1,7 @@
 import 'package:intl/intl.dart';
 
+import '../l10n/gen/app_localizations.dart';
+
 /// Number, currency and date formatting helpers, locale-aware via [intl].
 extension NumFormatX on num {
   /// `1234567` → `1,234,567` (grouping localised).
@@ -17,12 +19,12 @@ extension NumFormatX on num {
 
 /// Short "in Xh / in Ym" string until the next local midnight — used for daily
 /// game (spin/chest) cooldown badges.
-String timeUntilMidnight() {
+String timeUntilMidnight(AppLocalizations l10n) {
   final now = DateTime.now();
   final next = DateTime(now.year, now.month, now.day + 1);
   final d = next.difference(now);
-  if (d.inHours >= 1) return 'in ${d.inHours}h';
-  return 'in ${d.inMinutes.clamp(1, 59)}m';
+  if (d.inHours >= 1) return l10n.timeInHours(d.inHours);
+  return l10n.timeInMinutes(d.inMinutes.clamp(1, 59).toInt());
 }
 
 /// ISO 3166-1 alpha-2 → flag emoji, e.g. "US" → 🇺🇸. Computed from Unicode
@@ -39,13 +41,13 @@ extension CountryCodeX on String {
 }
 
 extension DateFormatX on DateTime {
-  String relative([DateTime? now]) {
+  String relative(AppLocalizations l10n, [DateTime? now]) {
     final reference = now ?? DateTime.now();
     final diff = reference.difference(this);
-    if (diff.inSeconds < 60) return 'just now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    if (diff.inDays < 7) return '${diff.inDays}d ago';
+    if (diff.inSeconds < 60) return l10n.timeJustNow;
+    if (diff.inMinutes < 60) return l10n.timeMinutesAgo(diff.inMinutes);
+    if (diff.inHours < 24) return l10n.timeHoursAgo(diff.inHours);
+    if (diff.inDays < 7) return l10n.timeDaysAgo(diff.inDays);
     return DateFormat.yMMMd().format(this);
   }
 

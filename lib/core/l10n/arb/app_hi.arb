@@ -25,6 +25,12 @@
   "commonAwesome": "शानदार!",
   "commonNotFound": "नहीं मिला",
   "commonPageNotFound": "पेज नहीं मिला: {uri}",
+  "timeJustNow": "अभी अभी",
+  "timeMinutesAgo": "{minutes} मिनट पहले",
+  "timeHoursAgo": "{hours} घंटे पहले",
+  "timeDaysAgo": "{days} दिन पहले",
+  "timeInHours": "{hours} घंटे में",
+  "timeInMinutes": "{minutes} मिनट में",
 
   "navHome": "होम",
   "navEarn": "कमाएं",

@@ -204,7 +204,8 @@ class _RedemptionCardState extends ConsumerState<_RedemptionCard> {
                     overflow: TextOverflow.ellipsis),
               ),
               if (r.createdAt != null)
-                Text(r.createdAt!.relative(), style: context.text.labelSmall),
+                Text(r.createdAt!.relative(context.l10n),
+                    style: context.text.labelSmall),
             ],
           ),
           if (r.status == RedemptionStatus.pending ||

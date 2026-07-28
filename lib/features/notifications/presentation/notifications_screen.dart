@@ -93,7 +93,7 @@ class NotificationsScreen extends ConsumerWidget {
                           if (n.createdAt != null)
                             Padding(
                               padding: const EdgeInsets.only(top: 4),
-                              child: Text(n.createdAt!.relative(),
+                              child: Text(n.createdAt!.relative(context.l10n),
                                   style: context.text.labelSmall?.copyWith(
                                       color: context.surfaces.textTertiary)),
                             ),

@@ -25,6 +25,12 @@
   "commonAwesome": "Génial !",
   "commonNotFound": "Introuvable",
   "commonPageNotFound": "Page introuvable : {uri}",
+  "timeJustNow": "À l''instant",
+  "timeMinutesAgo": "il y a {minutes} min",
+  "timeHoursAgo": "il y a {hours} h",
+  "timeDaysAgo": "il y a {days} j",
+  "timeInHours": "dans {hours} h",
+  "timeInMinutes": "dans {minutes} min",
 
   "navHome": "Accueil",
   "navEarn": "Gagner",
