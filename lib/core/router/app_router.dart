@@ -83,10 +83,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(
-          path: AppRoutes.splash, builder: (_, __) => const SplashScreen()),
+          path: AppRoutes.splash,
+          pageBuilder: (c, s) => _fadePage(s, const SplashScreen())),
       GoRoute(
           path: AppRoutes.onboarding,
-          builder: (_, __) => const OnboardingScreen()),
+          pageBuilder: (c, s) => _fadePage(s, const OnboardingScreen())),
       GoRoute(
           path: AppRoutes.welcome,
           pageBuilder: (c, s) => _fadePage(s, const WelcomeScreen())),
