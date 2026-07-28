@@ -52,14 +52,15 @@ class AdminRewardsScreen extends ConsumerWidget {
               return GlassCard(
                 child: Row(
                   children: [
-                    Icon(
-                      switch (r.kind) {
-                        RewardKind.robux => Icons.paid_rounded,
-                        RewardKind.giftCard => Icons.card_giftcard_rounded,
-                        RewardKind.digitalCode => Icons.vpn_key_rounded,
-                      },
-                      color: AppColors.robux,
-                    ),
+                    switch (r.kind) {
+                      RewardKind.robux =>
+                        const RGlyph(size: 24, color: AppColors.robux),
+                      RewardKind.giftCard => const Icon(
+                          Icons.card_giftcard_rounded,
+                          color: AppColors.robux),
+                      RewardKind.digitalCode =>
+                        const Icon(Icons.vpn_key_rounded, color: AppColors.robux),
+                    },
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: Column(

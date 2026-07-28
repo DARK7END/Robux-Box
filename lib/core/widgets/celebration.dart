@@ -11,6 +11,7 @@ import '../theme/app_dimens.dart';
 import '../theme/app_gradients.dart';
 import '../theme/app_typography.dart';
 import 'gradient_button.dart';
+import 'r_glyph.dart';
 
 /// Full-screen success celebration: dual confetti blasters, a spring-popped
 /// glowing badge, an animated coin figure and confetti in the brand palette.
@@ -131,8 +132,7 @@ class _CelebrationViewState extends State<_CelebrationView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.monetization_on_rounded,
-                        color: AppColors.coin, size: 30),
+                    const RGlyph(size: 30, color: AppColors.coin),
                     const SizedBox(width: AppSpacing.sm),
                     Text('+${widget.coins}',
                         style: AppTypography.counter(38, AppColors.coin)),

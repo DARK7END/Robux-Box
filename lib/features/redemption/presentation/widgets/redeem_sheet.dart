@@ -141,15 +141,16 @@ class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
                   },
                   borderRadius: BorderRadius.circular(AppRadius.lg),
                 ),
-                child: Icon(
-                  switch (widget.reward.kind) {
-                    RewardKind.robux => Icons.paid_rounded,
-                    RewardKind.giftCard => Icons.card_giftcard_rounded,
-                    RewardKind.digitalCode => Icons.vpn_key_rounded,
-                  },
-                  color: AppColors.white,
-                  size: 44,
-                ),
+                child: switch (widget.reward.kind) {
+                  RewardKind.robux =>
+                    const RGlyph(size: 44, color: AppColors.white),
+                  RewardKind.giftCard => const Icon(
+                      Icons.card_giftcard_rounded,
+                      color: AppColors.white,
+                      size: 44),
+                  RewardKind.digitalCode => const Icon(Icons.vpn_key_rounded,
+                      color: AppColors.white, size: 44),
+                },
               ),
             ),
             const SizedBox(height: AppSpacing.lg),

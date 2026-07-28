@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/r_glyph.dart';
 
 /// A custom-painted prize wheel. [prizes] label each segment; [rotation] (in
 /// radians) is driven by the parent's animation so the wheel can be spun to land
@@ -74,8 +75,7 @@ class SpinWheel extends StatelessWidget {
               ),
             ),
             alignment: Alignment.center,
-            child: Icon(Icons.monetization_on_rounded,
-                color: AppColors.coin, size: size * 0.11),
+            child: RGlyph(color: AppColors.coin, size: size * 0.11),
           ),
           // Pointer at the top.
           Positioned(

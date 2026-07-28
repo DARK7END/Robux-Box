@@ -5,6 +5,7 @@ import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/glass_card.dart';
+import '../../../../core/widgets/r_glyph.dart';
 import '../../../../core/widgets/status_pill.dart';
 import '../../../../models/offer.dart';
 
@@ -112,8 +113,7 @@ class OfferCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.monetization_on_rounded,
-                        size: 14, color: AppColors.coin),
+                    const RGlyph(size: 14, color: AppColors.coin),
                     const SizedBox(width: 3),
                     Text('${offer.rewardCoins}',
                         style: context.text.labelMedium?.copyWith(

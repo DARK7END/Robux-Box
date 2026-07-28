@@ -5,6 +5,7 @@ import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/glass_card.dart';
+import '../../../../core/widgets/r_glyph.dart';
 import '../../../profile/data/user_repository.dart';
 
 class _Mission {
@@ -105,13 +106,10 @@ class _MissionTile extends StatelessWidget {
           const SizedBox(width: AppSpacing.md),
           Column(
             children: [
-              Icon(
-                mission.done
-                    ? Icons.check_circle_rounded
-                    : Icons.monetization_on_rounded,
-                color: mission.done ? AppColors.success : AppColors.coin,
-                size: 18,
-              ),
+              mission.done
+                  ? const Icon(Icons.check_circle_rounded,
+                      color: AppColors.success, size: 18)
+                  : const RGlyph(size: 18, color: AppColors.coin),
               Text('+${mission.reward}',
                   style: context.text.labelSmall
                       ?.copyWith(color: AppColors.coin)),

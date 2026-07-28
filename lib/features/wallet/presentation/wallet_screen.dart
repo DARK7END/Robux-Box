@@ -156,8 +156,7 @@ class _BalanceHero extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Icon(Icons.monetization_on_rounded,
-                      color: AppColors.black, size: 34),
+                  const RGlyph(size: 34, color: AppColors.black),
                   const SizedBox(width: AppSpacing.sm),
                   AnimatedCounter(
                     value: wallet.coins,

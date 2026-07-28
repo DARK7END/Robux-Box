@@ -68,19 +68,19 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
               Parse.toInt(m['updatedAt']));
           final tiles = [
             _Metric('Users', Parse.toInt(m['userCount']).compactGroup(),
-                Icons.people_alt_rounded, AppColors.secondary),
+                _iconOf(Icons.people_alt_rounded), AppColors.secondary),
             _Metric('Active (24h)', Parse.toInt(m['dau']).compactGroup(),
-                Icons.bolt_rounded, AppColors.brand),
+                _iconOf(Icons.bolt_rounded), AppColors.brand),
             _Metric('Coins in circulation', coins.compactShort(),
-                Icons.monetization_on_rounded, AppColors.coin),
+                (s, c) => RGlyph(size: s, color: c), AppColors.coin),
             _Metric('≈ Robux liability', robux,
-                Icons.paid_rounded, AppColors.robux),
+                (s, c) => RGlyph(size: s, color: c), AppColors.robux),
             _Metric('Lifetime earned',
                 Parse.toInt(m['lifetimeEarned']).compactShort(),
-                Icons.trending_up_rounded, AppColors.success),
+                _iconOf(Icons.trending_up_rounded), AppColors.success),
             _Metric('Lifetime spent',
                 Parse.toInt(m['lifetimeSpent']).compactShort(),
-                Icons.trending_down_rounded, AppColors.danger),
+                _iconOf(Icons.trending_down_rounded), AppColors.danger),
           ];
 
           return ListView(
@@ -150,11 +150,15 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
   }
 }
 
+typedef _IconBuilder = Widget Function(double size, Color color);
+
+_IconBuilder _iconOf(IconData d) => (s, c) => Icon(d, size: s, color: c);
+
 class _Metric {
   const _Metric(this.label, this.value, this.icon, this.color);
   final String label;
   final String value;
-  final IconData icon;
+  final _IconBuilder icon;
   final Color color;
 }
 
@@ -176,7 +180,7 @@ class _MetricCard extends StatelessWidget {
               color: metric.color.withOpacity(0.16),
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
-            child: Icon(metric.icon, color: metric.color, size: 20),
+            child: metric.icon(20, metric.color),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

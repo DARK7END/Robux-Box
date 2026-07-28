@@ -7,7 +7,10 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_gradients.dart';
 import '../../../../core/widgets/glass_card.dart';
+import '../../../../core/widgets/r_glyph.dart';
 import '../../../../models/reward.dart';
+
+typedef _GlyphBuilder = Widget Function(double size, Color color);
 
 /// A single catalogue reward tile, styled like a collectible trading card:
 /// a glossy gradient "art" panel with a foil shimmer sweep and an oversized
@@ -26,10 +29,23 @@ class RewardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (Gradient art, Color accent, IconData glyph) = switch (reward.kind) {
-      RewardKind.robux => (AppGradients.robux, AppColors.brand, Icons.paid_rounded),
-      RewardKind.giftCard => (AppGradients.coin, AppColors.coin, Icons.card_giftcard_rounded),
-      RewardKind.digitalCode => (AppGradients.vip, AppColors.vip, Icons.vpn_key_rounded),
+    final (Gradient art, Color accent, _GlyphBuilder glyph) = switch (reward.kind) {
+      RewardKind.robux => (
+          AppGradients.robux,
+          AppColors.brand,
+          (double s, Color c) => RGlyph(size: s, color: c),
+        ),
+      RewardKind.giftCard => (
+          AppGradients.coin,
+          AppColors.coin,
+          (double s, Color c) =>
+              Icon(Icons.card_giftcard_rounded, size: s, color: c),
+        ),
+      RewardKind.digitalCode => (
+          AppGradients.vip,
+          AppColors.vip,
+          (double s, Color c) => Icon(Icons.vpn_key_rounded, size: s, color: c),
+        ),
     };
 
     return GlassCard(
@@ -88,7 +104,7 @@ class _ArtPanel extends StatelessWidget {
   final Reward reward;
   final Gradient gradient;
   final Color accent;
-  final IconData glyph;
+  final _GlyphBuilder glyph;
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +124,7 @@ class _ArtPanel extends StatelessWidget {
             Positioned(
               right: -14,
               bottom: -18,
-              child: Icon(glyph,
-                  size: 96, color: Colors.black.withOpacity(0.10)),
+              child: glyph(96, Colors.black.withOpacity(0.10)),
             ),
             // Custom artwork, if provided, sits over the gradient.
             if (reward.imageUrl.isNotEmpty)
@@ -124,7 +139,7 @@ class _ArtPanel extends StatelessWidget {
               )
             else
               Center(
-                child: Icon(glyph, color: AppColors.white, size: 42),
+                child: glyph(42, AppColors.white),
               ),
             // Glossy top light.
             Positioned(

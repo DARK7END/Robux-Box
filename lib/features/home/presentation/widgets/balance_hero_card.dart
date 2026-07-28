@@ -6,6 +6,7 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_gradients.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/animated_counter.dart';
+import '../../../../core/widgets/r_glyph.dart';
 import '../../../../models/app_user.dart';
 import '../../../../models/wallet.dart';
 
@@ -59,11 +60,7 @@ class BalanceHeroCard extends StatelessWidget {
             Positioned(
               right: -28,
               bottom: -34,
-              child: Icon(
-                Icons.monetization_on_rounded,
-                size: 168,
-                color: _ink.withOpacity(0.10),
-              ),
+              child: RGlyph(size: 168, color: _ink.withOpacity(0.10)),
             ),
             Padding(
               padding: const EdgeInsets.all(AppSpacing.xl),

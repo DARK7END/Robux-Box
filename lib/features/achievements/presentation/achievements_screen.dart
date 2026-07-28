@@ -233,8 +233,7 @@ class _AchievementTile extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Column(
             children: [
-              const Icon(Icons.monetization_on_rounded,
-                  color: AppColors.coin, size: 18),
+              const RGlyph(size: 18, color: AppColors.coin),
               Text('+${achievement.rewardCoins}',
                   style: context.text.labelSmall),
             ],
