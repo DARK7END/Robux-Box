@@ -8,8 +8,8 @@ import '../../domain/reward_brand.dart';
 
 /// A premium, tappable brand tile (Roblox, Steam, PlayStation…). Brand-coloured
 /// gradient, soft glow, glossy highlight and the app-wide [Pressable] squish.
-/// The Material [icon] is a placeholder for the official logo PNG the client
-/// will drop in later.
+/// Shows the real logo from [RewardBrand.assetLogo]; falls back to the
+/// Material [icon] if that's unset.
 class BrandCategoryCard extends StatelessWidget {
   const BrandCategoryCard({super.key, required this.brand, required this.onTap});
 
@@ -68,11 +68,13 @@ class BrandCategoryCard extends StatelessWidget {
                 children: [
                   Hero(
                     tag: 'brand_${b.id}',
-                    // Renders the official logo once one is dropped into
-                    // assets/icons/brands/ and set on the RewardBrand; falls
-                    // back to a generic glyph until then.
                     child: b.assetLogo != null
-                        ? Image.asset(b.assetLogo!, width: 30, height: 30)
+                        ? SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: Image.asset(b.assetLogo!,
+                                fit: BoxFit.contain),
+                          )
                         : Icon(b.icon, color: onColor, size: 30),
                   ),
                   const SizedBox(height: AppSpacing.sm),

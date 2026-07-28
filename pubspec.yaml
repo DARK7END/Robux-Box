@@ -90,6 +90,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/icons/brands/
     - assets/animations/
 
   # Display + body fonts are provided at runtime via the `google_fonts` package

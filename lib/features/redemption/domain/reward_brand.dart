@@ -4,10 +4,10 @@ import '../../../models/reward.dart';
 
 /// A redeemable brand shown as a premium category card on the Redeem screen.
 ///
-/// Colours mirror each brand's identity; [icon] is a Material placeholder that
-/// the client can swap for the official logo PNG/SVG later (drop it in
-/// `assets/icons/brands/` and set [assetLogo]). [match] decides which catalogue
-/// [Reward]s belong to this brand (by kind + provider/title keyword).
+/// Colours mirror each brand's identity; [icon] is the fallback glyph used
+/// only if [assetLogo] (the real logo PNG in `assets/icons/brands/`) fails to
+/// load. [match] decides which catalogue [Reward]s belong to this brand (by
+/// kind + provider/title keyword).
 class RewardBrand {
   const RewardBrand({
     required this.id,
@@ -59,6 +59,7 @@ abstract final class RewardBrands {
     colors: [Color(0xFF00FF6A), Color(0xFF00A344)],
     icon: Icons.videogame_asset_rounded,
     kind: RewardKind.robux,
+    assetLogo: 'assets/icons/brands/roblox.png',
   );
 
   static const steam = RewardBrand(
@@ -68,6 +69,7 @@ abstract final class RewardBrands {
     icon: Icons.cloud_rounded,
     kind: RewardKind.giftCard,
     keyword: 'steam',
+    assetLogo: 'assets/icons/brands/steam.png',
   );
 
   static const playstation = RewardBrand(
@@ -77,6 +79,7 @@ abstract final class RewardBrands {
     icon: Icons.sports_esports_rounded,
     kind: RewardKind.giftCard,
     keyword: 'playstation',
+    assetLogo: 'assets/icons/brands/playstation.png',
   );
 
   static const xbox = RewardBrand(
@@ -86,6 +89,7 @@ abstract final class RewardBrands {
     icon: Icons.gamepad_rounded,
     kind: RewardKind.giftCard,
     keyword: 'xbox',
+    assetLogo: 'assets/icons/brands/xbox.png',
   );
 
   static const nintendo = RewardBrand(
@@ -95,6 +99,7 @@ abstract final class RewardBrands {
     icon: Icons.sports_esports_outlined,
     kind: RewardKind.giftCard,
     keyword: 'nintendo',
+    assetLogo: 'assets/icons/brands/nintendo.png',
   );
 
   static const googlePlay = RewardBrand(
@@ -104,6 +109,7 @@ abstract final class RewardBrands {
     icon: Icons.play_arrow_rounded,
     kind: RewardKind.digitalCode,
     keyword: 'google',
+    assetLogo: 'assets/icons/brands/google_play.png',
   );
 
   static const apple = RewardBrand(
@@ -113,6 +119,7 @@ abstract final class RewardBrands {
     icon: Icons.apple,
     kind: RewardKind.digitalCode,
     keyword: 'apple',
+    assetLogo: 'assets/icons/brands/apple.png',
   );
 
   static const amazon = RewardBrand(
@@ -122,6 +129,7 @@ abstract final class RewardBrands {
     icon: Icons.shopping_cart_rounded,
     kind: RewardKind.giftCard,
     keyword: 'amazon',
+    assetLogo: 'assets/icons/brands/amazon.png',
   );
 
   static const paypal = RewardBrand(
@@ -131,6 +139,7 @@ abstract final class RewardBrands {
     icon: Icons.account_balance_wallet_rounded,
     kind: RewardKind.giftCard,
     keyword: 'paypal',
+    assetLogo: 'assets/icons/brands/paypal.png',
   );
 
   static const List<RewardBrand> all = [

@@ -52,7 +52,13 @@ class _BrandSheet extends ConsumerWidget {
                 ),
                 child: Hero(
                   tag: 'brand_${brand.id}',
-                  child: Icon(brand.icon, color: Colors.white, size: 24),
+                  child: brand.assetLogo != null
+                      ? Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Image.asset(brand.assetLogo!,
+                              fit: BoxFit.contain),
+                        )
+                      : Icon(brand.icon, color: Colors.white, size: 24),
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
