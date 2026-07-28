@@ -127,7 +127,11 @@ class _VipTierCard extends StatelessWidget {
             ),
           ),
           if (isCurrent)
-            StatusPill(label: 'Active', color: _color, filled: true, dense: true)
+            StatusPill(
+                label: context.l10n.vipActiveLabel,
+                color: _color,
+                filled: true,
+                dense: true)
           else
             const Icon(Icons.lock_outline_rounded, size: 18),
         ],

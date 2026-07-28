@@ -25,6 +25,19 @@ String timeUntilMidnight() {
   return 'in ${d.inMinutes.clamp(1, 59)}m';
 }
 
+/// ISO 3166-1 alpha-2 → flag emoji, e.g. "US" → 🇺🇸. Computed from Unicode
+/// Regional Indicator Symbols (base 0x1F1E6 = 'A'), so no lookup table or
+/// asset is needed for any of the ~250 country codes.
+extension CountryCodeX on String {
+  String get flagEmoji {
+    final code = trim().toUpperCase();
+    if (code.length != 2) return '🏳️';
+    final chars = code.codeUnits.map((c) => 0x1F1E6 + (c - 0x41));
+    if (chars.any((c) => c < 0x1F1E6 || c > 0x1F1FF)) return '🏳️';
+    return String.fromCharCodes(chars);
+  }
+}
+
 extension DateFormatX on DateTime {
   String relative([DateTime? now]) {
     final reference = now ?? DateTime.now();

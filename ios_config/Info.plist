@@ -71,6 +71,10 @@
 	<string>Robux Box uses your activity to verify completed offers and pay out your rewards.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Robux Box uses your location to determine your rewards tier so you earn the correct amount.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Robux Box needs photo library access so you can choose a profile picture.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Robux Box needs camera access so you can take a profile picture.</string>
 
 	<!-- FCM / background work. -->
 	<key>UIBackgroundModes</key>

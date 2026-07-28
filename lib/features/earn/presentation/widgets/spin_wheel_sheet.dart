@@ -61,11 +61,13 @@ class _SpinSheetState extends ConsumerState<_SpinSheet>
         await _animateTo(index);
         if (!mounted) return;
         setState(() => _spinning = false);
+        final title = context.l10n.earnYouWon;
+        final message = context.l10n.earnSpinWinMessage;
         Navigator.of(context).maybePop();
         await showCelebration(
           context,
-          title: 'You won!',
-          message: 'Added to your balance. Come back tomorrow for another spin!',
+          title: title,
+          message: message,
           coins: value.coinsCredited,
           icon: Icons.casino_rounded,
         );
@@ -116,8 +118,8 @@ class _SpinSheetState extends ConsumerState<_SpinSheet>
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text('Spin & Win', style: context.text.headlineSmall),
-          Text('One free spin every day',
+          Text(context.l10n.earnSpinAndWin, style: context.text.headlineSmall),
+          Text(context.l10n.earnSpinWheelDesc,
               style: context.text.bodyMedium),
           const SizedBox(height: AppSpacing.xxl),
           SpinWheel(

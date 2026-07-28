@@ -63,39 +63,43 @@ class _EarnScreenState extends ConsumerState<EarnScreen> {
             top: kToolbarHeight + AppSpacing.lg, bottom: 110),
         children: [
           SectionHeader(
-            title: 'Daily games',
-            subtitle: 'One free play each — win big',
+            title: context.l10n.homeDailyGamesTitle,
+            subtitle: context.l10n.earnDailyGamesSubtitle,
             icon: Icons.casino_rounded,
           ),
           Row(
             children: [
               Expanded(
                 child: GameFeatureCard(
-                  title: 'Spin Wheel',
-                  subtitle: canSpin ? 'Win up to 500' : 'Played today',
+                  title: context.l10n.earnSpinWheelName,
+                  subtitle: canSpin
+                      ? context.l10n.earnWinUpTo500
+                      : context.l10n.earnPlayedToday,
                   icon: Icons.casino_rounded,
                   gradient: AppGradients.accent,
-                  badge: canSpin ? 'FREE' : timeUntilMidnight(),
+                  badge: canSpin ? context.l10n.earnFreeBadge : timeUntilMidnight(),
                   dimmed: !canSpin,
                   onTap: () => canSpin
                       ? showSpinWheelSheet(context)
                       : AppToast.show(context,
-                          message: 'Come back tomorrow for your free spin!'),
+                          message: context.l10n.earnSpinAgainTomorrow),
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: GameFeatureCard(
-                  title: 'Lucky Chest',
-                  subtitle: canChest ? 'Open for coins' : 'Opened today',
+                  title: context.l10n.earnLuckyChestName,
+                  subtitle: canChest
+                      ? context.l10n.earnOpenForCoins
+                      : context.l10n.earnOpenedToday,
                   icon: Icons.inventory_2_rounded,
                   gradient: AppGradients.coin,
-                  badge: canChest ? 'HOT' : timeUntilMidnight(),
+                  badge: canChest ? context.l10n.earnHotBadge : timeUntilMidnight(),
                   dimmed: !canChest,
                   onTap: () => canChest
                       ? showLuckyChestSheet(context)
                       : AppToast.show(context,
-                          message: 'Your chest resets tomorrow!'),
+                          message: context.l10n.earnChestAgainTomorrow),
                 ),
               ),
             ],
@@ -249,7 +253,7 @@ class _PromoCodeCardState extends ConsumerState<_PromoCodeCard> {
               const Icon(Icons.confirmation_number_rounded,
                   color: AppColors.coin),
               const SizedBox(width: AppSpacing.sm),
-              Text('Promo code', style: context.text.titleSmall),
+              Text(context.l10n.earnPromoCode, style: context.text.titleSmall),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
@@ -259,7 +263,8 @@ class _PromoCodeCardState extends ConsumerState<_PromoCodeCard> {
                 child: TextField(
                   controller: _controller,
                   textCapitalization: TextCapitalization.characters,
-                  decoration: const InputDecoration(hintText: 'ENTER CODE'),
+                  decoration:
+                      InputDecoration(hintText: context.l10n.earnEnterCodeHint),
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),

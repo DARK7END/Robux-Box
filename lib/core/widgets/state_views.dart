@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../extensions/context_extensions.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_dimens.dart';
 import '../theme/app_theme.dart';
@@ -146,7 +147,7 @@ class ErrorStateView extends StatelessWidget {
             if (onRetry != null) ...[
               const SizedBox(height: AppSpacing.xl),
               GradientButton(
-                label: 'Retry',
+                label: context.l10n.commonRetry,
                 icon: Icons.refresh_rounded,
                 onPressed: onRetry,
                 expand: false,

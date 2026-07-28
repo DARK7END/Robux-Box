@@ -42,11 +42,13 @@ class _ChestSheetState extends ConsumerState<_ChestSheet> {
     setState(() => _busy = false);
     switch (result) {
       case Success(:final value):
+        final title = context.l10n.earnChestWonTitle;
+        final message = context.l10n.earnChestWinMessage;
         Navigator.of(context).maybePop();
         await showCelebration(
           context,
-          title: 'Lucky Chest!',
-          message: 'Nice haul! Come back tomorrow for another chest.',
+          title: title,
+          message: message,
           coins: value.coinsCredited,
           icon: Icons.inventory_2_rounded,
         );
@@ -81,8 +83,8 @@ class _ChestSheetState extends ConsumerState<_ChestSheet> {
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text('Lucky Chest', style: context.text.headlineSmall),
-          Text('Open once a day for free coins',
+          Text(context.l10n.earnLuckyChestName, style: context.text.headlineSmall),
+          Text(context.l10n.earnLuckyChestOpenDesc,
               style: context.text.bodyMedium),
           const SizedBox(height: AppSpacing.xxl),
           _Chest(busy: _busy),

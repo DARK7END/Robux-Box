@@ -68,7 +68,12 @@ class BrandCategoryCard extends StatelessWidget {
                 children: [
                   Hero(
                     tag: 'brand_${b.id}',
-                    child: Icon(b.icon, color: onColor, size: 30),
+                    // Renders the official logo once one is dropped into
+                    // assets/icons/brands/ and set on the RewardBrand; falls
+                    // back to a generic glyph until then.
+                    child: b.assetLogo != null
+                        ? Image.asset(b.assetLogo!, width: 30, height: 30)
+                        : Icon(b.icon, color: onColor, size: 30),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(

@@ -32,6 +32,7 @@ import '../../features/tasks/presentation/tasks_screen.dart';
 import '../../features/vip/presentation/vip_screen.dart';
 import '../../features/wallet/presentation/wallet_screen.dart';
 import '../config/providers.dart';
+import '../extensions/context_extensions.dart';
 import '../services/preferences_service.dart';
 import '../widgets/app_scaffold.dart';
 import 'routes.dart';
@@ -211,8 +212,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
     errorBuilder: (context, state) => AppScaffold(
-      title: 'Not found',
-      body: Center(child: Text('Page not found: ${state.uri}')),
+      title: context.l10n.commonNotFound,
+      body: Center(
+          child: Text(context.l10n.commonPageNotFound(state.uri.toString()))),
     ),
   );
 });

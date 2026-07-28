@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import '../extensions/context_extensions.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_dimens.dart';
 import '../theme/app_gradients.dart';
@@ -147,7 +148,7 @@ class _CelebrationViewState extends State<_CelebrationView> {
               SizedBox(
                 width: 220,
                 child: GradientButton(
-                  label: 'Awesome!',
+                  label: context.l10n.commonAwesome,
                   icon: Icons.celebration_rounded,
                   onPressed: () => Navigator.of(context).maybePop(),
                 ),

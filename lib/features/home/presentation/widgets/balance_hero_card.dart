@@ -128,7 +128,7 @@ class BalanceHeroCard extends StatelessWidget {
                         ),
                         const _Divider(color: _ink),
                         _Stat(
-                          label: 'Multiplier',
+                          label: context.l10n.homeMultiplier,
                           valueText:
                               '${user.earningMultiplier.toStringAsFixed(2)}x',
                           ink: _ink,

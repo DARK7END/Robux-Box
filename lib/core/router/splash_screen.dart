@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
+import '../extensions/context_extensions.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_dimens.dart';
 import '../widgets/app_scaffold.dart';
@@ -174,7 +175,7 @@ class _SplashLogo extends StatelessWidget {
             .then()
             .shimmer(duration: 1400.ms, color: AppColors.brand),
         const SizedBox(height: 6),
-        Text('Play. Earn. Redeem.', style: theme.textTheme.bodyMedium)
+        Text(context.l10n.commonTagline, style: theme.textTheme.bodyMedium)
             .animate()
             .fadeIn(delay: 650.ms, duration: 500.ms),
         const SizedBox(height: 18),

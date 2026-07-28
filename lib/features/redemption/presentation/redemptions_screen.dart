@@ -79,7 +79,7 @@ class _List extends StatelessWidget {
       return EmptyStateView(
         icon: Icons.receipt_long_rounded,
         title: context.l10n.redemptionEmpty,
-        message: 'Redeem a reward and track its progress here.',
+        message: context.l10n.redemptionEmptyDesc,
       );
     }
     return ListView.separated(

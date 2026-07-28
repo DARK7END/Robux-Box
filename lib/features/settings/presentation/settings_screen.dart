@@ -42,9 +42,9 @@ class SettingsScreen extends ConsumerWidget {
           if (isAdmin) ...[
             ProfileMenuTile(
               icon: Icons.shield_rounded,
-              label: 'Admin dashboard',
+              label: context.l10n.settingsAdminDashboard,
               color: AppColors.brand,
-              subtitle: 'Manage payouts, users, rewards',
+              subtitle: context.l10n.settingsAdminDashboardDesc,
               onTap: () => context.push(AppRoutes.admin),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -77,7 +77,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
-          _SectionLabel(label: 'Legal & support'),
+          _SectionLabel(label: context.l10n.settingsLegalSupport),
           ProfileMenuTile(
             icon: Icons.notifications_rounded,
             label: context.l10n.settingsNotifications,

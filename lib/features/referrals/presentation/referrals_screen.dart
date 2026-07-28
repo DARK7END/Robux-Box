@@ -89,7 +89,7 @@ class ReferralsScreen extends ConsumerWidget {
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: _StatCard(
-                  label: 'Lifetime share',
+                  label: context.l10n.referralLifetimeShare,
                   value:
                       '${(AppConstants.referralRevenueSharePercent * 100).round()}%',
                   icon: Icons.percent_rounded,
@@ -103,7 +103,8 @@ class ReferralsScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('How it works', style: context.text.titleSmall),
+                Text(context.l10n.referralHowItWorks,
+                    style: context.text.titleSmall),
                 const SizedBox(height: AppSpacing.sm),
                 _Step(
                     n: 1,

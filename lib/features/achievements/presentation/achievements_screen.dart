@@ -63,7 +63,7 @@ class AchievementsScreen extends ConsumerWidget {
             EmptyStateView(
               icon: Icons.emoji_events_rounded,
               title: context.l10n.commonComingSoon,
-              message: 'Keep earning to unlock achievements!',
+              message: context.l10n.achievementsEmptyDesc,
             )
           else
             ...items.map((a) => Padding(
@@ -118,7 +118,8 @@ class _ProgressHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Your progress', style: context.text.titleMedium),
+                Text(context.l10n.achievementsYourProgress,
+                    style: context.text.titleMedium),
                 const SizedBox(height: 2),
                 Text(
                   total == 0

@@ -67,8 +67,8 @@ class RewardsScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
             child: SectionHeader(
-              title: 'Redeem for',
-              subtitle: 'Pick a brand to see rewards',
+              title: context.l10n.rewardsRedeemForTitle,
+              subtitle: context.l10n.rewardsPickBrand,
               icon: Icons.storefront_rounded,
             ),
           ),
@@ -78,7 +78,7 @@ class RewardsScreen extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
             child: SectionHeader(
               title: context.l10n.rewardsRobux,
-              subtitle: 'Instant Robux packages',
+              subtitle: context.l10n.rewardsInstantPackages,
               icon: Icons.bolt_rounded,
               actionLabel: context.l10n.commonSeeAll,
               onAction: () => showBrandRewardsSheet(context, RewardBrands.roblox),
@@ -94,7 +94,7 @@ class RewardsScreen extends ConsumerWidget {
                   child: EmptyStateView(
                     icon: Icons.card_giftcard_rounded,
                     title: context.l10n.commonComingSoon,
-                    message: 'New Robux packages are added regularly.',
+                    message: context.l10n.rewardsComingSoonDesc,
                   ),
                 );
               }
@@ -146,7 +146,7 @@ class _BalanceHero extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Available balance',
+                Text(context.l10n.rewardsAvailableBalance,
                     style: context.text.bodySmall
                         ?.copyWith(color: Colors.black.withOpacity(0.7))),
                 const SizedBox(height: 2),
@@ -175,7 +175,7 @@ class _BalanceHero extends StatelessWidget {
               children: [
                 Text('≈ $robux',
                     style: AppTypography.counter(18, AppColors.black)),
-                Text('Robux',
+                Text(context.l10n.rewardsRobux,
                     style: context.text.labelSmall
                         ?.copyWith(color: Colors.black.withOpacity(0.7))),
               ],

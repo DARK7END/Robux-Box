@@ -57,7 +57,7 @@ class _RewardDialog extends StatelessWidget {
                 .then()
                 .shimmer(duration: 900.ms, color: Colors.white54),
             const SizedBox(height: AppSpacing.xl),
-            Text('Reward earned!',
+            Text(context.l10n.earnRewardEarnedTitle,
                     style: context.text.headlineSmall,
                     textAlign: TextAlign.center)
                 .animate()

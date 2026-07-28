@@ -107,19 +107,23 @@ class _HomeContent extends ConsumerWidget {
         const QuickActionGrid().animate().fadeIn(delay: 160.ms),
         const SizedBox(height: AppSpacing.xl),
         SectionHeader(
-          title: 'Daily games',
-          subtitle: 'Free plays every day',
+          title: context.l10n.homeDailyGamesTitle,
+          subtitle: context.l10n.homeDailyGamesSubtitle,
           icon: Icons.casino_rounded,
         ),
         Row(
           children: [
             Expanded(
               child: GameFeatureCard(
-                title: 'Spin Wheel',
-                subtitle: user.canSpinToday ? 'Win up to 500' : 'Played today',
+                title: context.l10n.earnSpinWheelName,
+                subtitle: user.canSpinToday
+                    ? context.l10n.earnWinUpTo500
+                    : context.l10n.earnPlayedToday,
                 icon: Icons.casino_rounded,
                 gradient: AppGradients.accent,
-                badge: user.canSpinToday ? 'FREE' : timeUntilMidnight(),
+                badge: user.canSpinToday
+                    ? context.l10n.earnFreeBadge
+                    : timeUntilMidnight(),
                 dimmed: !user.canSpinToday,
                 onTap: () => context.go(AppRoutes.earn),
               ),
@@ -127,11 +131,15 @@ class _HomeContent extends ConsumerWidget {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: GameFeatureCard(
-                title: 'Lucky Chest',
-                subtitle: user.canOpenChestToday ? 'Open for coins' : 'Opened today',
+                title: context.l10n.earnLuckyChestName,
+                subtitle: user.canOpenChestToday
+                    ? context.l10n.earnOpenForCoins
+                    : context.l10n.earnOpenedToday,
                 icon: Icons.inventory_2_rounded,
                 gradient: AppGradients.coin,
-                badge: user.canOpenChestToday ? 'HOT' : timeUntilMidnight(),
+                badge: user.canOpenChestToday
+                    ? context.l10n.earnHotBadge
+                    : timeUntilMidnight(),
                 dimmed: !user.canOpenChestToday,
                 onTap: () => context.go(AppRoutes.earn),
               ),
@@ -140,8 +148,8 @@ class _HomeContent extends ConsumerWidget {
         ).animate().fadeIn(delay: 200.ms),
         const SizedBox(height: AppSpacing.xl),
         SectionHeader(
-          title: 'Daily missions',
-          subtitle: 'Finish to earn bonus coins',
+          title: context.l10n.homeDailyMissionsTitle,
+          subtitle: context.l10n.homeDailyMissionsSubtitle,
           icon: Icons.flag_rounded,
         ),
         const MissionsSection(),
@@ -286,7 +294,7 @@ class _RobuxValueCard extends StatelessWidget {
                     size: 16, color: AppColors.white),
               ),
               const SizedBox(width: AppSpacing.sm),
-              Text('Robux', style: context.text.labelMedium),
+              Text(context.l10n.rewardsRobux, style: context.text.labelMedium),
             ],
           ),
           const SizedBox(height: AppSpacing.md),

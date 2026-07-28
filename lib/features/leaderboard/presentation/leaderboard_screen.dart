@@ -43,7 +43,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                   return EmptyStateView(
                     icon: Icons.leaderboard_rounded,
                     title: context.l10n.commonComingSoon,
-                    message: 'Earn coins to climb the ranks!',
+                    message: context.l10n.leaderboardEmptyDesc,
                   );
                 }
                 final podium = entries.take(3).toList();

@@ -95,12 +95,13 @@ class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
     switch (result) {
       case Success():
         final host = widget.hostContext;
+        final title = context.l10n.rewardsSubmittedTitle;
         final message = context.l10n.rewardsRequestSubmitted;
         Navigator.of(context).pop();
         if (host.mounted) {
           await showCelebration(
             host,
-            title: 'Redemption submitted!',
+            title: title,
             message: message,
             icon: Icons.card_giftcard_rounded,
           );
@@ -208,7 +209,7 @@ class _CostRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('Cost', style: context.text.bodyMedium),
+          Text(context.l10n.rewardsCostLabel, style: context.text.bodyMedium),
           Row(
             children: [
               const Icon(Icons.bolt_rounded, color: AppColors.coin, size: 18),

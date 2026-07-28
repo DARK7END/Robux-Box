@@ -11,8 +11,9 @@ import '../../../core/theme/app_gradients.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../models/app_user.dart';
 import '../../auth/domain/auth_controller.dart';
-import 'widgets/profile_menu_tile.dart';
 import '../data/user_repository.dart';
+import 'widgets/edit_profile_sheet.dart';
+import 'widgets/profile_menu_tile.dart';
 
 /// Profile hub: identity header, level, and navigation to every sub-feature.
 class ProfileScreen extends ConsumerWidget {
@@ -106,29 +107,50 @@ class _ProfileHeader extends StatelessWidget {
       gradient: AppGradients.brand,
       child: Column(
         children: [
-          Container(
-            width: 84,
-            height: 84,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white24, width: 3),
-            ),
-            child: ClipOval(
-              child: user.photoUrl.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: user.photoUrl, fit: BoxFit.cover)
-                  : Container(
-                      color: Colors.white24,
-                      child: Center(
-                        child: Text(
-                          user.displayName.isNotEmpty
-                              ? user.displayName[0].toUpperCase()
-                              : '?',
-                          style: context.text.headlineMedium
-                              ?.copyWith(color: AppColors.white),
-                        ),
-                      ),
+          Pressable(
+            onTap: () => showEditProfileSheet(context),
+            child: Stack(
+              children: [
+                Container(
+                  width: 84,
+                  height: 84,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white24, width: 3),
+                  ),
+                  child: ClipOval(
+                    child: user.photoUrl.isNotEmpty
+                        ? CachedNetworkImage(
+                            imageUrl: user.photoUrl, fit: BoxFit.cover)
+                        : Container(
+                            color: Colors.white24,
+                            child: Center(
+                              child: Text(
+                                user.displayName.isNotEmpty
+                                    ? user.displayName[0].toUpperCase()
+                                    : '?',
+                                style: context.text.headlineMedium
+                                    ?.copyWith(color: AppColors.white),
+                              ),
+                            ),
+                          ),
+                  ),
+                ),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: 26,
+                    height: 26,
+                    decoration: const BoxDecoration(
+                      color: AppColors.black,
+                      shape: BoxShape.circle,
                     ),
+                    child: const Icon(Icons.edit_rounded,
+                        size: 13, color: AppColors.white),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: AppSpacing.md),

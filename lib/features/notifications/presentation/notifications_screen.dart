@@ -50,7 +50,7 @@ class NotificationsScreen extends ConsumerWidget {
             return EmptyStateView(
               icon: Icons.notifications_off_rounded,
               title: context.l10n.notificationsEmpty,
-              message: 'New rewards and updates will show up here.',
+              message: context.l10n.notificationsEmptyDesc,
             );
           }
           return ListView.separated(
