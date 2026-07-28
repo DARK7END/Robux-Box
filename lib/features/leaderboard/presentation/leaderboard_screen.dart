@@ -245,6 +245,10 @@ class _Avatar extends StatelessWidget {
             ? CachedNetworkImage(
                 imageUrl: entry.photoUrl,
                 fit: BoxFit.cover,
+                memCacheWidth:
+                    (size * MediaQuery.of(context).devicePixelRatio).round(),
+                memCacheHeight:
+                    (size * MediaQuery.of(context).devicePixelRatio).round(),
                 errorWidget: (_, __, ___) => _fallback(context),
               )
             : _fallback(context),

@@ -116,6 +116,10 @@ class _ArtPanel extends StatelessWidget {
               CachedNetworkImage(
                 imageUrl: reward.imageUrl,
                 fit: BoxFit.cover,
+                memCacheWidth:
+                    (220 * MediaQuery.of(context).devicePixelRatio).round(),
+                memCacheHeight:
+                    (96 * MediaQuery.of(context).devicePixelRatio).round(),
                 errorWidget: (_, __, ___) => const SizedBox.shrink(),
               )
             else

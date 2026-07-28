@@ -153,6 +153,10 @@ class _Icon extends StatelessWidget {
           ? CachedNetworkImage(
               imageUrl: offer.iconUrl,
               fit: BoxFit.cover,
+              memCacheWidth:
+                  (52 * MediaQuery.of(context).devicePixelRatio).round(),
+              memCacheHeight:
+                  (52 * MediaQuery.of(context).devicePixelRatio).round(),
               errorWidget: (_, __, ___) =>
                   Icon(fallbackIcon, color: context.colors.primary),
             )

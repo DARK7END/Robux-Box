@@ -121,7 +121,15 @@ class _ProfileHeader extends StatelessWidget {
                   child: ClipOval(
                     child: user.photoUrl.isNotEmpty
                         ? CachedNetworkImage(
-                            imageUrl: user.photoUrl, fit: BoxFit.cover)
+                            imageUrl: user.photoUrl,
+                            fit: BoxFit.cover,
+                            memCacheWidth: (84 *
+                                    MediaQuery.of(context).devicePixelRatio)
+                                .round(),
+                            memCacheHeight: (84 *
+                                    MediaQuery.of(context).devicePixelRatio)
+                                .round(),
+                          )
                         : Container(
                             color: Colors.white24,
                             child: Center(

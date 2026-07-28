@@ -239,7 +239,13 @@ class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
     }
     final photoUrl = user?.photoUrl;
     if (photoUrl != null && photoUrl.isNotEmpty) {
-      return CachedNetworkImage(imageUrl: photoUrl, fit: BoxFit.cover);
+      final px = (96 * MediaQuery.of(context).devicePixelRatio).round();
+      return CachedNetworkImage(
+        imageUrl: photoUrl,
+        fit: BoxFit.cover,
+        memCacheWidth: px,
+        memCacheHeight: px,
+      );
     }
     final name = user?.displayName;
     return ColoredBox(
