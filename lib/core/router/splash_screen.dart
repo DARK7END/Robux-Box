@@ -4,15 +4,16 @@ import 'package:go_router/go_router.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_dimens.dart';
-import '../widgets/premium_loader.dart';
 import 'routes.dart';
 
 /// Branded splash shown while Firebase auth state resolves. The router's
 /// redirect moves the user on to onboarding, welcome or home once known.
 ///
-/// The full splash artwork (crate, coins, wordmark, tagline) is the real
-/// brand image supplied by the team, shown full-bleed — no part of it is
-/// drawn or generated in code.
+/// The full splash artwork (badge, wordmark, chest, coins, tagline and its
+/// own "loading" bar) is the real brand image supplied by the team, shown
+/// full-bleed — no part of it is drawn or generated in code. Since the art
+/// already has its own loading affordance baked in, nothing else is layered
+/// on top except the rare escape hatch below.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -55,22 +56,23 @@ class _SplashScreenState extends State<SplashScreen> {
                   curve: AppCurves.standard,
                 ),
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 40,
-            child: SafeArea(
-              top: false,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const PremiumLoader(size: 28)
-                        .animate()
-                        .fadeIn(delay: 500.ms, duration: 500.ms),
-                    if (_showEscapeHatch) ...[
-                      const SizedBox(height: 16),
-                      TextButton(
+          if (_showEscapeHatch)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 40,
+              child: SafeArea(
+                top: false,
+                child: Center(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.55),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 4),
+                      child: TextButton(
                         onPressed: () => context.go(AppRoutes.welcome),
                         child: Text(
                           'Taking longer than expected — Tap to continue',
@@ -78,13 +80,12 @@ class _SplashScreenState extends State<SplashScreen> {
                                 color: Colors.white70,
                               ),
                         ),
-                      ).animate().fadeIn(duration: 400.ms),
-                    ],
-                  ],
+                      ),
+                    ),
+                  ).animate().fadeIn(duration: 400.ms),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
