@@ -10,7 +10,8 @@
  *   • redemption  — request/cancel + admin processing
  *   • offerwall   — signed URL (callable) + provider postback / AdMob SSV (HTTP)
  *   • admin       — claims, coin adjustments, status, VIP, promocodes, broadcast
- *   • triggers    — account provisioning/cleanup, referral rewards
+ *   • triggers    — account provisioning/cleanup, referral rewards,
+ *                   achievement progress + coin payout on wallet changes
  *   • scheduled   — daily reset, leaderboard aggregation, reminder campaigns
  */
 
@@ -57,6 +58,9 @@ export {
   applyReferralOnProfile,
   onUserDeleted,
 } from "./triggers/auth";
+
+// Firestore trigger: achievement progress + coin payout
+export {syncAchievementsOnWalletWrite} from "./triggers/achievements";
 
 // Scheduled
 export {
