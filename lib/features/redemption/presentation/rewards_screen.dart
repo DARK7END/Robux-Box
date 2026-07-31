@@ -129,64 +129,83 @@ class _BalanceHero extends StatelessWidget {
   const _BalanceHero({required this.coins});
   final int coins;
 
+  // The chest artwork is shown whole (no crop) at a deliberately large size,
+  // which — given its tall, poster-like aspect ratio — makes it taller than
+  // the stat card below it. Rather than force-fitting it into the card, it's
+  // left to sit on top and spill past the card's own top edge.
+  static const double _imageWidth = 230;
+  static const double _imageAspect = 1024 / 1536; // width / height, uncropped
+  static const double _cardHeight = 160;
+  static const double _overlap = 50; // how far the art dips into the card
+
   @override
   Widget build(BuildContext context) {
     final usd = coins.asUsd(AppConstants.coinsPerRobux, AppConstants.usdPerRobux);
-    return Container(
-      height: 210,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: AppColors.darkBgElevated,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        boxShadow: AppShadows.glow(AppColors.brand),
-      ),
+    final imageHeight = _imageWidth / _imageAspect;
+    final cardTop = imageHeight - _overlap;
+
+    return SizedBox(
+      height: cardTop + _cardHeight,
       child: Stack(
-        fit: StackFit.expand,
         children: [
-          Image.asset('assets/images/redeem_balance_art.png', fit: BoxFit.cover),
-          // Uniform scrim: the art is busy edge-to-edge (chest + scattered
-          // coins), so — unlike a photo with one clean side — there's no
-          // single safe region to dodge. An even wash keeps the balance
-          // readable wherever the crop happens to land.
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.black45, Colors.black87],
+          Positioned(
+            left: 0,
+            right: 0,
+            top: cardTop,
+            height: _cardHeight,
+            child: Container(
+              padding: EdgeInsets.only(
+                top: _overlap + AppSpacing.md,
+                left: AppSpacing.xl,
+                right: AppSpacing.xl,
+                bottom: AppSpacing.lg,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.darkBgElevated,
+                borderRadius: BorderRadius.circular(AppRadius.xl),
+                boxShadow: AppShadows.glow(AppColors.brand),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(context.l10n.rewardsAvailableBalance,
+                      style: context.text.bodySmall?.copyWith(
+                          color: AppColors.brandBright,
+                          fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const RGlyph(size: 30, color: AppColors.white),
+                      const SizedBox(width: 6),
+                      AnimatedCounter(
+                        value: coins,
+                        style: AppTypography.counter(34, AppColors.white),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text('≈ $usd',
+                      style: AppTypography.counter(
+                          15, Colors.white.withOpacity(0.85))),
+                  Text(context.l10n.rewardsRedeemableValue,
+                      style: context.text.labelSmall
+                          ?.copyWith(color: Colors.white60)),
+                ],
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.xl),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(context.l10n.rewardsAvailableBalance,
-                    style: context.text.bodySmall?.copyWith(
-                        color: AppColors.brandBright,
-                        fontWeight: FontWeight.w600)),
-                const SizedBox(height: 2),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const RGlyph(size: 30, color: AppColors.white),
-                    const SizedBox(width: 6),
-                    AnimatedCounter(
-                      value: coins,
-                      style: AppTypography.counter(34, AppColors.white),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text('≈ $usd',
-                    style: AppTypography.counter(
-                        15, Colors.white.withOpacity(0.85))),
-                Text(context.l10n.rewardsRedeemableValue,
-                    style: context.text.labelSmall
-                        ?.copyWith(color: Colors.white60)),
-              ],
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 0,
+            child: Center(
+              child: Image.asset(
+                'assets/images/redeem_balance_art.png',
+                width: _imageWidth,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ],
