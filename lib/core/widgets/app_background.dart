@@ -27,13 +27,15 @@ class AppBackground extends StatelessWidget {
               ),
             ),
           ),
-          if (isDark)
-            const Positioned.fill(
-              child: DecoratedBox(
-                decoration:
-                    BoxDecoration(gradient: AppGradients.ambientDarkSecondary),
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: isDark
+                    ? AppGradients.ambientDarkSecondary
+                    : AppGradients.ambientLightSecondary,
               ),
             ),
+          ),
           Positioned.fill(child: child),
         ],
       ),

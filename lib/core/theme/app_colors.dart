@@ -65,12 +65,14 @@ abstract final class AppColors {
   static const Color glassHighlightDark = Color(0x38FFFFFF);
 
   // ---------------------------------------------------------------------------
-  // Light theme surfaces
+  // Light theme surfaces — a visibly green-tinted white, not a neutral grey,
+  // so the brand still reads the moment the OS/in-app toggle switches to
+  // light. Cards stay pure white so they lift off the green backdrop.
   // ---------------------------------------------------------------------------
-  static const Color lightBg = Color(0xFFF3F6F3);
+  static const Color lightBg = Color(0xFFEAF8EF);
   static const Color lightBgElevated = Color(0xFFFFFFFF);
   static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightSurfaceHigh = Color(0xFFEDF1ED);
+  static const Color lightSurfaceHigh = Color(0xFFDEF2E4);
   static const Color lightCard = Color(0xFFFFFFFF);
   static const Color lightBorder = Color(0x14000000);
   static const Color lightDivider = Color(0x0F000000);

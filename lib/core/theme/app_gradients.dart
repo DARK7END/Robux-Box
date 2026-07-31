@@ -78,7 +78,14 @@ abstract final class AppGradients {
   static const RadialGradient ambientLight = RadialGradient(
     center: Alignment(-0.8, -1.0),
     radius: 1.6,
-    colors: [Color(0x1F00FF6A), Color(0x148B5CF6), Color(0x00000000)],
+    colors: [Color(0x4400FF6A), Color(0x2200C853), Color(0x00000000)],
+    stops: [0.0, 0.5, 1.0],
+  );
+
+  static const RadialGradient ambientLightSecondary = RadialGradient(
+    center: Alignment(1.0, -0.2),
+    radius: 1.3,
+    colors: [Color(0x2600FF6A), Color(0x00000000)],
   );
 
   /// A shimmering sweep used for premium/VIP highlights and loading states.
