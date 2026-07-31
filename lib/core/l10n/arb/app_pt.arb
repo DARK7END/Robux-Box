@@ -167,7 +167,7 @@
   "rewardsConfirmTitle": "Confirmar resgate",
   "rewardsConfirmBody": "Resgatar {name} por {coins} moedas?",
   "rewardsEnterRoblox": "Seu nome de usuário do Roblox",
-  "rewardsRequestSubmitted": "Resgate enviado para análise",
+  "rewardsRequestSubmitted": "Resgate enviado. Resposta em minutos a algumas horas",
   "rewardsMinWithdraw": "Mínimo de {coins} moedas para resgatar",
   "rewardsRedeemForTitle": "Resgatar por",
   "rewardsPickBrand": "Escolha uma marca para ver as recompensas",

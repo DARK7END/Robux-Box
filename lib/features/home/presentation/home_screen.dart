@@ -20,7 +20,6 @@ import 'widgets/balance_hero_card.dart';
 import 'widgets/daily_reward_card.dart';
 import 'widgets/missions_section.dart';
 import 'widgets/quick_action_grid.dart';
-import 'widgets/tier_card.dart';
 
 /// The home dashboard: balance, tier, daily reward and quick actions.
 class HomeScreen extends ConsumerWidget {
@@ -87,15 +86,7 @@ class _HomeContent extends ConsumerWidget {
           ],
         ).animate().fadeIn().slideY(begin: 0.1, curve: AppCurves.standard),
         const SizedBox(height: AppSpacing.lg),
-        Row(
-          children: [
-            Expanded(child: TierCard(user: user)),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: _RobuxValueCard(coins: wallet.coins),
-            ),
-          ],
-        ).animate().fadeIn(delay: 80.ms),
+        _RobuxValueCard(coins: wallet.coins).animate().fadeIn(delay: 80.ms),
         const SizedBox(height: AppSpacing.lg),
         if (user.canClaimDaily)
           DailyRewardCard(user: user)

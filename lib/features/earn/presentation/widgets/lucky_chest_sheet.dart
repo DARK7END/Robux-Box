@@ -17,6 +17,7 @@ import '../../domain/earn_controller.dart';
 Future<void> showLuckyChestSheet(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => const _ChestSheet(),

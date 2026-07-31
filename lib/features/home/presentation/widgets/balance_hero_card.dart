@@ -115,19 +115,11 @@ class BalanceHeroCard extends StatelessWidget {
                       borderRadius: AppRadius.cardRadius,
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _Stat(
                           label: context.l10n.walletEarned,
                           value: wallet.lifetimeEarned,
-                          ink: _ink,
-                          inkSoft: _inkSoft,
-                        ),
-                        const _Divider(color: _ink),
-                        _Stat(
-                          label: context.l10n.homeMultiplier,
-                          valueText:
-                              '${user.earningMultiplier.toStringAsFixed(2)}x',
                           ink: _ink,
                           inkSoft: _inkSoft,
                         ),

@@ -103,6 +103,7 @@ class _AdminTicketsScreenState extends ConsumerState<AdminTicketsScreen> {
 Future<void> _showCategoryEditor(BuildContext context, WidgetRef ref) {
   return showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     useSafeArea: true,
     builder: (_) => const _CategoryEditor(),

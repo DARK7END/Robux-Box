@@ -167,7 +167,7 @@
   "rewardsConfirmTitle": "रिडेम्पशन की पुष्टि करें",
   "rewardsConfirmBody": "{coins} सिक्कों में {name} रिडीम करें?",
   "rewardsEnterRoblox": "आपका Roblox यूज़रनेम",
-  "rewardsRequestSubmitted": "समीक्षा के लिए रिडेम्पशन सबमिट किया गया",
+  "rewardsRequestSubmitted": "रिडेम्पशन सबमिट किया गया। कुछ मिनटों से कुछ घंटों में जवाब मिलेगा",
   "rewardsMinWithdraw": "रिडीम करने के लिए न्यूनतम {coins} सिक्के",
   "rewardsRedeemForTitle": "इसके लिए रिडीम करें",
   "rewardsPickBrand": "रिवॉर्ड देखने के लिए एक ब्रांड चुनें",

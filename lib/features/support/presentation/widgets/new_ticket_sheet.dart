@@ -20,6 +20,7 @@ import '../../domain/support_providers.dart';
 Future<void> showNewTicketSheet(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     useSafeArea: true,
     builder: (_) => const _NewTicketSheet(),

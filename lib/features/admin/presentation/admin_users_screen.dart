@@ -108,6 +108,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
                             if (b != null && context.mounted) {
                               showModalBottomSheet<void>(
                                 context: context,
+                                useRootNavigator: true,
                                 isScrollControlled: true,
                                 builder: (_) => _UserActionsSheet(bundle: b),
                               );
@@ -201,6 +202,7 @@ class _UserResultCard extends StatelessWidget {
             icon: Icons.tune_rounded,
             onPressed: () => showModalBottomSheet<void>(
               context: context,
+              useRootNavigator: true,
               isScrollControlled: true,
               builder: (_) => _UserActionsSheet(bundle: bundle),
             ),

@@ -14,6 +14,7 @@ import '../../../core/widgets/widgets.dart';
 Future<void> showReportSheet(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     builder: (_) => const _ReportSheet(),
   );

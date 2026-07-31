@@ -167,7 +167,7 @@
   "rewardsConfirmTitle": "Kullanımı onayla",
   "rewardsConfirmBody": "{coins} coin karşılığında {name} kullanılsın mı?",
   "rewardsEnterRoblox": "Roblox kullanıcı adın",
-  "rewardsRequestSubmitted": "Talep incelemeye gönderildi",
+  "rewardsRequestSubmitted": "Talep gönderildi. Birkaç dakika ile birkaç saat içinde yanıt alacaksınız",
   "rewardsMinWithdraw": "Kullanmak için minimum {coins} coin",
   "rewardsRedeemForTitle": "Şunun için kullan:",
   "rewardsPickBrand": "Ödülleri görmek için bir marka seç",

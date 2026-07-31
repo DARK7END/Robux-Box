@@ -21,6 +21,7 @@ Future<void> showRedeemSheet(
 }) {
   return showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     builder: (_) =>
         _RedeemSheet(reward: reward, coins: coins, hostContext: context),

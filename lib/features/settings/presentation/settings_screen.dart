@@ -148,6 +148,7 @@ class SettingsScreen extends ConsumerWidget {
   void _pickLanguage(BuildContext context, WidgetRef ref, Locale? current) {
     showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       builder: (_) => SafeArea(
         child: ConstrainedBox(

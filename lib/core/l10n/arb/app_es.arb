@@ -167,7 +167,7 @@
   "rewardsConfirmTitle": "Confirmar canje",
   "rewardsConfirmBody": "¿Canjear {name} por {coins} monedas?",
   "rewardsEnterRoblox": "Tu nombre de usuario de Roblox",
-  "rewardsRequestSubmitted": "Canje enviado para revisión",
+  "rewardsRequestSubmitted": "Canje enviado. Recibirás respuesta en cuestión de minutos a unas horas",
   "rewardsMinWithdraw": "Mínimo {coins} monedas para canjear",
   "rewardsRedeemForTitle": "Canjear por",
   "rewardsPickBrand": "Elige una marca para ver recompensas",

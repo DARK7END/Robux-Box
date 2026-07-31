@@ -179,7 +179,7 @@
   "rewardsConfirmBody": "استبدال {name} مقابل {coins} عملة؟",
   "@rewardsConfirmBody": { "placeholders": { "name": { "type": "String" }, "coins": { "type": "int" } } },
   "rewardsEnterRoblox": "اسم مستخدم روبلوكس",
-  "rewardsRequestSubmitted": "تم إرسال طلب الاستبدال للمراجعة",
+  "rewardsRequestSubmitted": "تم إرسال طلب الاستبدال، وسيتم الرد خلال دقائق إلى ساعات قليلة",
   "rewardsMinWithdraw": "الحد الأدنى {coins} عملة للاستبدال",
   "rewardsRedeemForTitle": "استبدل مقابل",
   "rewardsPickBrand": "اختر علامة تجارية لعرض المكافآت",

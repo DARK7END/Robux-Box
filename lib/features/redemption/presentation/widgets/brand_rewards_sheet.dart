@@ -14,6 +14,7 @@ import 'reward_card.dart';
 Future<void> showBrandRewardsSheet(BuildContext context, RewardBrand brand) {
   return showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     builder: (_) => DraggableScrollableSheet(
       initialChildSize: 0.75,

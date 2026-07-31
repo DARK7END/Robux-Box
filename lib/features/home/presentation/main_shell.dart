@@ -2,21 +2,28 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/extensions/context_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../earn/data/earn_repository.dart';
 
 /// Root scaffold hosting the five primary tabs with a floating, glassmorphic
 /// bottom bar. The selected tab is marked by a glowing pill that springs into
 /// place, and the active icon lifts with a subtle bounce.
-class MainShell extends StatelessWidget {
+class MainShell extends ConsumerStatefulWidget {
   const MainShell({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
 
+  @override
+  ConsumerState<MainShell> createState() => _MainShellState();
+}
+
+class _MainShellState extends ConsumerState<MainShell> {
   // Home · Earn · Redeem · Tasks · Profile
   static const _items = [
     _NavItem(Icons.home_rounded, Icons.home_outlined),
@@ -26,11 +33,20 @@ class MainShell extends StatelessWidget {
     _NavItem(Icons.person_rounded, Icons.person_outline_rounded),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    // Keeps the account's region-based earning tier current, silently — no
+    // loading state, no toast, nothing surfaced in the UI. Intentionally not
+    // user-triggerable (see reportTier's doc comment for why).
+    Future.microtask(() => ref.read(earnRepositoryProvider).reportTier());
+  }
+
   void _onTap(int index) {
     HapticFeedback.lightImpact();
-    navigationShell.goBranch(
+    widget.navigationShell.goBranch(
       index,
-      initialLocation: index == navigationShell.currentIndex,
+      initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
 
@@ -43,13 +59,13 @@ class MainShell extends StatelessWidget {
       context.l10n.navTasks,
       context.l10n.navProfile,
     ];
-    final current = navigationShell.currentIndex;
+    final current = widget.navigationShell.currentIndex;
     final count = _items.length;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBody: true,
-      body: navigationShell,
+      body: widget.navigationShell,
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(
           left: AppSpacing.lg,

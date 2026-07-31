@@ -167,7 +167,7 @@
   "rewardsConfirmTitle": "Konfirmasi penukaran",
   "rewardsConfirmBody": "Tukar {name} dengan {coins} koin?",
   "rewardsEnterRoblox": "Nama pengguna Robloxmu",
-  "rewardsRequestSubmitted": "Penukaran dikirim untuk ditinjau",
+  "rewardsRequestSubmitted": "Penukaran dikirim. Balasan dalam beberapa menit hingga beberapa jam",
   "rewardsMinWithdraw": "Minimum {coins} koin untuk menukar",
   "rewardsRedeemForTitle": "Tukar dengan",
   "rewardsPickBrand": "Pilih merek untuk melihat hadiah",

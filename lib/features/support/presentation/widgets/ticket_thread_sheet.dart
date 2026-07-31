@@ -29,6 +29,7 @@ Future<void> showTicketThreadSheet(
 }) {
   return showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     useSafeArea: true,
     builder: (_) => DraggableScrollableSheet(

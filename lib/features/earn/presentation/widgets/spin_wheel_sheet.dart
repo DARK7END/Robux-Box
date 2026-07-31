@@ -18,6 +18,7 @@ import 'spin_wheel.dart';
 Future<void> showSpinWheelSheet(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => const _SpinSheet(),

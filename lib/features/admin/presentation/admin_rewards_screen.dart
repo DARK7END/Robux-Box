@@ -25,6 +25,7 @@ class AdminRewardsScreen extends ConsumerWidget {
         foregroundColor: AppColors.black,
         onPressed: () => showModalBottomSheet<void>(
           context: context,
+          useRootNavigator: true,
           isScrollControlled: true,
           builder: (_) => const _RewardForm(),
         ),

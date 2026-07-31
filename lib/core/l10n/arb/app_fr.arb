@@ -167,7 +167,7 @@
   "rewardsConfirmTitle": "Confirmer l''échange",
   "rewardsConfirmBody": "Échanger {name} contre {coins} pièces ?",
   "rewardsEnterRoblox": "Ton nom d''utilisateur Roblox",
-  "rewardsRequestSubmitted": "Échange envoyé pour vérification",
+  "rewardsRequestSubmitted": "Échange envoyé. Réponse sous quelques minutes à quelques heures",
   "rewardsMinWithdraw": "Minimum {coins} pièces pour échanger",
   "rewardsRedeemForTitle": "Échanger contre",
   "rewardsPickBrand": "Choisis une marque pour voir les récompenses",
