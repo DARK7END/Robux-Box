@@ -174,6 +174,39 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
+    // -------------------------- Support Tickets -----------------------------
+    // A user can open a ticket and read/reply to their own; admins can read,
+    // reply to and manage the status of every ticket. Non-economic, so — like
+    // rewards — writes go straight through rules rather than a Cloud Function.
+    match /supportTickets/{ticketId} {
+      allow create: if isSignedIn()
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.status == 'open';
+      allow read: if isUser(resource.data.uid) || isAdmin();
+      // Sending a message updates updatedAt/lastMessagePreview/status in the
+      // same batch as the message write; the owner may only ever flip their
+      // own ticket's status, never touch anything else.
+      allow update: if isAdmin()
+                    || (isUser(resource.data.uid)
+                        && request.resource.data.uid == resource.data.uid
+                        && request.resource.data.diff(resource.data).affectedKeys()
+                             .hasOnly(['status', 'updatedAt', 'lastMessagePreview', 'lastSenderIsAdmin'])
+                        && (request.resource.data.status == 'open'
+                            || request.resource.data.status == 'closed'));
+      allow delete: if isAdmin();
+
+      match /messages/{messageId} {
+        function ticketOwnerUid() {
+          return get(/databases/$(database)/documents/supportTickets/$(ticketId)).data.uid;
+        }
+        allow create: if (isUser(ticketOwnerUid()) || isAdmin())
+                      && request.resource.data.senderUid == request.auth.uid
+                      && request.resource.data.isAdmin == isAdmin();
+        allow read: if isUser(ticketOwnerUid()) || isAdmin();
+        allow update, delete: if false;
+      }
+    }
+
     // Default deny — anything not matched above is inaccessible.
     match /{document=**} {
       allow read, write: if false;

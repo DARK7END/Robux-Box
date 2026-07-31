@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/config/providers.dart';
@@ -121,15 +122,42 @@ class _TermsFooter extends StatelessWidget {
   const _TermsFooter({required this.config});
   final AppConfig config;
 
+  Future<void> _open(String url) async {
+    final uri = Uri.tryParse(url);
+    if (uri != null) await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final base =
+        context.text.bodySmall?.copyWith(color: context.surfaces.textTertiary);
+    final link = base?.copyWith(
+      color: AppColors.brand,
+      decoration: TextDecoration.underline,
+      decorationColor: AppColors.brand,
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-      child: Text(
-        context.l10n.authAgreeTerms,
-        style: context.text.bodySmall
-            ?.copyWith(color: context.surfaces.textTertiary),
-        textAlign: TextAlign.center,
+      child: Column(
+        children: [
+          Text(context.l10n.authAgreeTerms,
+              style: base, textAlign: TextAlign.center),
+          const SizedBox(height: AppSpacing.xs),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () => _open(config.termsUrl),
+                child: Text(context.l10n.settingsTerms, style: link),
+              ),
+              Text('  ·  ', style: base),
+              GestureDetector(
+                onTap: () => _open(config.privacyUrl),
+                child: Text(context.l10n.settingsPrivacy, style: link),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -8,6 +8,7 @@ import '../../../core/router/routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/widgets/widgets.dart';
+import '../../support/domain/support_providers.dart';
 import '../domain/admin_providers.dart';
 
 /// Admin dashboard home — a grid of management sections. Only reachable when the
@@ -18,10 +19,13 @@ class AdminDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pending = ref.watch(pendingRedemptionsCountProvider);
+    final openTickets = ref.watch(openTicketsCountProvider);
 
     final sections = <_AdminSection>[
       _AdminSection('Withdraw Requests', Icons.account_balance_wallet_rounded,
           AppColors.brand, AppRoutes.adminRedemptions, badge: pending),
+      _AdminSection('Support', Icons.support_agent_rounded, AppColors.info,
+          AppRoutes.adminTickets, badge: openTickets),
       _AdminSection('Users', Icons.people_alt_rounded, AppColors.secondary,
           AppRoutes.adminUsers),
       _AdminSection('Rewards', Icons.card_giftcard_rounded, AppColors.robux,
@@ -59,7 +63,8 @@ class AdminDashboardScreen extends ConsumerWidget {
                       Text('Control center',
                           style: context.text.titleMedium
                               ?.copyWith(color: AppColors.white)),
-                      Text('$pending payout(s) awaiting review',
+                      Text(
+                          '$pending payout(s) · $openTickets ticket(s) awaiting you',
                           style: context.text.bodySmall
                               ?.copyWith(color: Colors.white70)),
                     ],

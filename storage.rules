@@ -26,6 +26,16 @@ service firebase.storage {
       allow write: if isUser(uid) && isImage() && underMaxSize();
     }
 
+    // Support-ticket attachments. Any signed-in user may upload (the ticket
+    // itself is owner/admin-gated in firestore.rules, and the URL is only ever
+    // surfaced through a message doc, which is gated the same way). Reads are
+    // signed-in-only so an admin can view what a user attached.
+    match /support/{ticketId}/{fileName} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isImage() && underMaxSize();
+      allow update, delete: if isAdmin();
+    }
+
     // Admin-managed public assets (reward art, banners, offer icons).
     match /public/{allPaths=**} {
       allow read: if true;

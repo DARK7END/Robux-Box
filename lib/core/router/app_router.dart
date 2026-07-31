@@ -11,6 +11,7 @@ import '../../features/admin/presentation/admin_promocodes_screen.dart';
 import '../../features/admin/presentation/admin_redemptions_screen.dart';
 import '../../features/admin/presentation/admin_reports_screen.dart';
 import '../../features/admin/presentation/admin_rewards_screen.dart';
+import '../../features/admin/presentation/admin_tickets_screen.dart';
 import '../../features/admin/presentation/admin_users_screen.dart';
 import '../../features/admin/presentation/widgets/admin_gate.dart';
 import '../../features/auth/presentation/email_auth_screen.dart';
@@ -28,6 +29,7 @@ import '../../features/redemption/presentation/redemptions_screen.dart';
 import '../../features/redemption/presentation/rewards_screen.dart';
 import '../../features/referrals/presentation/referrals_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/support/presentation/support_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
 import '../../features/vip/presentation/vip_screen.dart';
 import '../../features/wallet/presentation/wallet_screen.dart';
@@ -132,6 +134,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           parentNavigatorKey: _rootKey,
           pageBuilder: (c, s) => _fadePage(s, const SettingsScreen())),
       GoRoute(
+          path: AppRoutes.support,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) => _fadePage(s, const SupportScreen())),
+      GoRoute(
           path: AppRoutes.leaderboard,
           parentNavigatorKey: _rootKey,
           pageBuilder: (c, s) => _fadePage(s, const LeaderboardScreen())),
@@ -172,6 +178,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           parentNavigatorKey: _rootKey,
           pageBuilder: (c, s) =>
               _fadePage(s, const AdminGate(child: AdminReportsScreen()))),
+      GoRoute(
+          path: AppRoutes.adminTickets,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) =>
+              _fadePage(s, const AdminGate(child: AdminTicketsScreen()))),
       GoRoute(
           path: AppRoutes.adminManage,
           parentNavigatorKey: _rootKey,

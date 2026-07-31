@@ -32,6 +32,7 @@ abstract final class AppRoutes {
   static const String notifications = '/notifications';
   static const String settings = '/settings';
   static const String setupRoblox = '/setup/roblox';
+  static const String support = '/support';
 
   // Admin dashboard (claim-gated)
   static const String admin = '/admin';
@@ -41,6 +42,7 @@ abstract final class AppRoutes {
   static const String adminBroadcast = '/admin/broadcast';
   static const String adminRewards = '/admin/rewards';
   static const String adminReports = '/admin/reports';
+  static const String adminTickets = '/admin/tickets';
   static const String adminManage = '/admin/admins';
   static const String adminAnalytics = '/admin/analytics';
 

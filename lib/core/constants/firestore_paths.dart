@@ -20,6 +20,7 @@ abstract final class FsPaths {
   static const String banners = 'banners';
   static const String promocodes = 'promocodes';
   static const String reports = 'reports';
+  static const String supportTickets = 'supportTickets';
   static const String referrals = 'referrals';
   static const String devices = 'devices';
   static const String adImpressions = 'ad_impressions';
@@ -42,6 +43,8 @@ abstract final class FsPaths {
   static String promocode(String code) => '$promocodes/$code';
   static String configDoc(String name) => '$config/$name';
   static String leaderboard(String period) => '$leaderboards/$period';
+  static String supportTicket(String id) => '$supportTickets/$id';
+  static String ticketMessages(String id) => '$supportTickets/$id/messages';
 
   // Well-known config docs
   static const String configEconomy = 'economy';

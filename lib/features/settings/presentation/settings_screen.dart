@@ -100,7 +100,8 @@ class SettingsScreen extends ConsumerWidget {
             icon: Icons.support_agent_rounded,
             label: context.l10n.settingsSupport,
             color: AppColors.success,
-            onTap: () => _open('mailto:${config.supportEmail}'),
+            subtitle: context.l10n.supportSettingsSubtitle,
+            onTap: () => context.push(AppRoutes.support),
           ),
           ProfileMenuTile(
             icon: Icons.bug_report_rounded,
