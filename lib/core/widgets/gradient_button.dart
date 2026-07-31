@@ -24,6 +24,7 @@ class GradientButton extends StatefulWidget {
     this.expand = true,
     this.glow = true,
     this.foregroundColor,
+    this.borderRadius = AppRadius.md,
   });
 
   final String label;
@@ -35,6 +36,7 @@ class GradientButton extends StatefulWidget {
   final double height;
   final bool expand;
   final bool glow;
+  final double borderRadius;
 
   /// Text/icon colour. When null it is derived from the gradient's brightness
   /// so labels stay legible on both bright (green/gold → dark ink) and deep
@@ -86,7 +88,7 @@ class _GradientButtonState extends State<GradientButton> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             gradient: widget.gradient,
-            borderRadius: BorderRadius.circular(AppRadius.md),
+            borderRadius: BorderRadius.circular(widget.borderRadius),
             boxShadow: widget.glow && _interactive
                 ? AppShadows.glow(widget.gradient.colors.first)
                 : null,
