@@ -5,6 +5,7 @@ on:
     branches: [main, "claude/**"]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   flutter:
@@ -35,6 +36,12 @@ jobs:
 
   build-android:
     name: Build Android APK
+    # Manual only. This used to run on every push, publishing a new APK to the
+    # GitHub release on each one — with pushes going to both the feature branch
+    # and main, that silently piled up dozens of stale release assets. Trigger
+    # this from the Actions tab (or ask for it) only when a sideload build is
+    # actually needed.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -58,28 +65,24 @@ jobs:
       # for Play Store upload. Release mode still exercises R8/proguard.
       - name: Build release APK
         run: flutter build apk --release
-      - name: Rename APK with build number
+      - name: Rename APK
         run: |
           mkdir -p dist
-          cp build/app/outputs/flutter-apk/app-release.apk \
-             "dist/robux-box-build${{ github.run_number }}.apk"
-      # Publishes to a single rolling "android-latest" release (updated in place
-      # on every push build) rather than a workflow artifact — artifacts expire
-      # and require a GitHub login to download; a release gives a stable,
-      # directly-downloadable link for sideloading onto a phone.
+          cp build/app/outputs/flutter-apk/app-release.apk dist/robux-box-latest.apk
+      # A single rolling "android-latest" release: delete it first (ignoring
+      # "not found" on the very first run) and recreate it fresh, so exactly one
+      # APK ever exists instead of accumulating a new asset on every run.
       - name: Publish GitHub release
-        if: github.event_name == 'push'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: android-latest
-          name: "Robux Box (Android) — build ${{ github.run_number }}"
-          body: |
-            Automated build from `${{ github.sha }}` on `${{ github.ref_name }}`.
-
-            Debug-signed APK for sideload testing only — not signed for Play Store upload.
-          prerelease: true
-          make_latest: true
-          files: dist/robux-box-build${{ github.run_number }}.apk
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete android-latest --yes --cleanup-tag || true
+          gh release create android-latest dist/robux-box-latest.apk \
+            --target "${{ github.sha }}" \
+            --title "Robux Box (Android) — latest" \
+            --notes "Automated build from ${{ github.sha }} on ${{ github.ref_name }}. Debug-signed APK for sideload testing only — not signed for Play Store upload." \
+            --prerelease \
+            --latest
 
   functions:
     name: Cloud Functions build & test

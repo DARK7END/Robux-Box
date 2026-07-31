@@ -50,25 +50,23 @@ jobs:
       - name: Package unsigned IPA
         run: bash tool/package_unsigned_ipa.sh
 
-      - name: Rename IPA with build number
+      - name: Rename IPA
         run: |
           mkdir -p dist
           cp build/ios/ipa/RobuxBox-unsigned.ipa \
-             "dist/RobuxBox-unsigned-${{ github.event.inputs.flavor }}-build${{ github.run_number }}.ipa"
+             "dist/RobuxBox-unsigned-${{ github.event.inputs.flavor }}.ipa"
 
-      # Publishes to a single rolling "ios-latest" release (updated in place on
-      # every manual run) instead of a workflow artifact — artifacts expire and
-      # require a GitHub login to download; a release gives a stable,
-      # directly-downloadable link for dropping into iLoader / Sideloadly / AltStore.
+      # A single rolling "ios-latest" release: delete it first (ignoring "not
+      # found" on the very first run) and recreate it fresh, so exactly one IPA
+      # per flavor ever exists instead of accumulating a new asset per run.
       - name: Publish GitHub release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ios-latest
-          name: "Robux Box (iOS, unsigned) — build ${{ github.run_number }}"
-          body: |
-            Automated unsigned .ipa build from `${{ github.sha }}` (flavor: `${{ github.event.inputs.flavor }}`).
-
-            No Apple Developer account or code signing — sideload with iLoader, Sideloadly or AltStore using your free Apple ID.
-          prerelease: true
-          make_latest: true
-          files: dist/RobuxBox-unsigned-${{ github.event.inputs.flavor }}-build${{ github.run_number }}.ipa
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete ios-latest --yes --cleanup-tag || true
+          gh release create ios-latest "dist/RobuxBox-unsigned-${{ github.event.inputs.flavor }}.ipa" \
+            --target "${{ github.sha }}" \
+            --title "Robux Box (iOS, unsigned) — latest" \
+            --notes "Automated unsigned .ipa build from ${{ github.sha }} (flavor: ${{ github.event.inputs.flavor }}). No Apple Developer account or code signing — sideload with iLoader, Sideloadly or AltStore using your free Apple ID." \
+            --prerelease \
+            --latest
