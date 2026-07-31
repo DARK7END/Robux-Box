@@ -12,6 +12,8 @@ firebase login
 # .firebaserc is gitignored, so select the project once per clone:
 firebase use robux-box
 ```
+(The legal pages in step 7b are on GitHub Pages, not Firebase — the CLI is
+only needed for Functions, rules and indexes.)
 
 ## 1. Firebase project
 1. Create a project (Firebase console) on the **Blaze** plan (Functions require it).
@@ -63,24 +65,26 @@ firebase deploy --only firestore:rules,firestore:indexes,storage
 
 ## 7b. Legal pages (required by Google Play)
 Google Play will not publish the listing without a publicly reachable privacy
-policy URL. These are served by Firebase Hosting straight from this repo — no
-domain purchase needed.
+policy URL. These are published free by **GitHub Pages** from this repo — no
+domain to buy and no hosting to pay for.
 
-```bash
-# 1. Replace every [PLACEHOLDER] in docs/PRIVACY_POLICY.md and
-#    docs/TERMS_OF_SERVICE.md ([COMPANY NAME], [DATE], age, provider names…).
-# 2. Regenerate the HTML and deploy:
-python3 tool/build_legal_pages.py
-firebase deploy --only hosting
-```
+**One-time:** repo **Settings → Pages → Source: “GitHub Actions”**.
+
+Then:
+1. Replace every `[PLACEHOLDER]` in `docs/PRIVACY_POLICY.md` and
+   `docs/TERMS_OF_SERVICE.md` (`[COMPANY NAME]`, `[DATE]`, minimum age,
+   offerwall provider name/URL…).
+2. Push to `main`. `.github/workflows/pages.yml` regenerates the HTML from
+   that markdown and publishes it — no local step needed.
 
 Live at:
-- `https://robux-box.web.app/privacy`
-- `https://robux-box.web.app/terms`
+- `https://dark7end.github.io/Robux-Box/privacy.html`
+- `https://dark7end.github.io/Robux-Box/terms.html`
 
 These are the defaults compiled into `AppConfig`, so the in-app links and the
-Play Store listing both work with no extra flags. To move to a branded domain
-later, add it in Firebase Console → Hosting → Custom domain, then rebuild with
+Play Store listing both work with no extra flags. To preview locally run
+`python3 tool/build_legal_pages.py` and open `public/privacy.html`. If a
+branded domain is ever added, point it at Pages and rebuild with
 `--dart-define=PRIVACY_URL=… --dart-define=TERMS_URL=…`.
 
 ## 8. Seed initial data

@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """Renders the legal markdown in docs/ into styled HTML pages under public/,
-which Firebase Hosting serves at https://<project>.web.app/privacy and /terms.
+published by GitHub Pages (see .github/workflows/pages.yml) at
+https://dark7end.github.io/Robux-Box/privacy.html and /terms.html.
 
 Google Play requires a publicly reachable privacy-policy URL, so these pages
 are what the store listing and the in-app links point at.
 
-Run after editing either document:
+Every link here is relative, because Pages serves the site from the
+/Robux-Box/ subpath — absolute "/privacy.html" links would resolve against
+the domain root and 404.
+
+CI regenerates these on every push, so edit the markdown in docs/, not the
+HTML. To preview locally:
 
     python3 tool/build_legal_pages.py
 """
@@ -146,12 +152,12 @@ def page(title: str, body: str) -> str:
 <body>
 <div class="wrap">
   <header>
-    <a class="brand" href="/">Robux <span>Box</span></a>
+    <a class="brand" href="./">Robux <span>Box</span></a>
   </header>
   {body}
   <footer>
-    <a href="/privacy.html">Privacy Policy</a>
-    <a href="/terms.html">Terms of Service</a>
+    <a href="./privacy.html">Privacy Policy</a>
+    <a href="./terms.html">Terms of Service</a>
   </footer>
 </div>
 </body>
@@ -170,7 +176,7 @@ INDEX = """<!doctype html>
 <body>
 <div class="wrap">
   <header>
-    <a class="brand" href="/">Robux <span>Box</span></a>
+    <a class="brand" href="./">Robux <span>Box</span></a>
     <h1>Play. Earn. Redeem.</h1>
   </header>
   <p>Earn coins by watching ads and completing offers, then redeem them for
@@ -179,8 +185,8 @@ INDEX = """<!doctype html>
   Roblox Corporation.</strong></p>
   <h2>Legal</h2>
   <ul>
-    <li><a href="/privacy.html">Privacy Policy</a></li>
-    <li><a href="/terms.html">Terms of Service</a></li>
+    <li><a href="./privacy.html">Privacy Policy</a></li>
+    <li><a href="./terms.html">Terms of Service</a></li>
   </ul>
 </div>
 </body>
@@ -204,7 +210,12 @@ def main():
     with open(os.path.join(OUT, "index.html"), "w", encoding="utf-8") as f:
         f.write(INDEX)
     print("  → public/index.html")
-    print("Done. Deploy with: firebase deploy --only hosting")
+
+    # Serve the files as-is; without this GitHub Pages runs them through
+    # Jekyll, which ignores any path starting with an underscore.
+    open(os.path.join(OUT, ".nojekyll"), "w").close()
+    print("  → public/.nojekyll")
+    print("Done. Pushing to main publishes these via .github/workflows/pages.yml")
 
 
 if __name__ == "__main__":

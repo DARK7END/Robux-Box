@@ -1,0 +1,51 @@
+name: Legal pages (GitHub Pages)
+
+# Publishes the privacy policy and terms to
+# https://dark7end.github.io/Robux-Box/ — the URLs compiled into the app and
+# submitted to the Play Console. Google Play rejects a listing whose privacy
+# URL does not load, so this must stay green.
+#
+# One-time setup: repo Settings → Pages → Source: "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/PRIVACY_POLICY.md"
+      - "docs/TERMS_OF_SERVICE.md"
+      - "tool/build_legal_pages.py"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two Pages deploys race; keep the in-flight one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Rebuilt from the markdown every run, so the published HTML can never
+      # drift from docs/.
+      - name: Build pages from docs/
+        run: python3 tool/build_legal_pages.py
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
