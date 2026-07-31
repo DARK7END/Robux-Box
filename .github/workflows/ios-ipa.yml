@@ -68,5 +68,4 @@ jobs:
             --target "${{ github.sha }}" \
             --title "Robux Box (iOS, unsigned) — latest" \
             --notes "Automated unsigned .ipa build from ${{ github.sha }} (flavor: ${{ github.event.inputs.flavor }}). No Apple Developer account or code signing — sideload with iLoader, Sideloadly or AltStore using your free Apple ID." \
-            --prerelease \
-            --latest
+            --prerelease

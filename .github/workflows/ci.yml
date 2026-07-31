@@ -81,8 +81,7 @@ jobs:
             --target "${{ github.sha }}" \
             --title "Robux Box (Android) — latest" \
             --notes "Automated build from ${{ github.sha }} on ${{ github.ref_name }}. Debug-signed APK for sideload testing only — not signed for Play Store upload." \
-            --prerelease \
-            --latest
+            --prerelease
 
   functions:
     name: Cloud Functions build & test
