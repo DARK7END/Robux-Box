@@ -28,9 +28,17 @@
 - **Real-money / rewards:** ensure your reward model complies with Play's
   "Real-Money Gambling, Games, and Contests" and monetisation policies. This app
   is **not** gambling (no wager/chance-of-loss), but review the ToS.
-- **Target audience & content rating:** complete the IARC questionnaire. If you
-  target teens, comply with **Families** policy and disable personalised ads for
-  under-13 where required.
+- **Target audience & content rating:** the app is **all ages** (see
+  `docs/TERMS_OF_SERVICE.md` § 1 and `docs/PRIVACY_POLICY.md` § 6) — declare
+  children as part of the target audience in Play Console's questionnaire, not
+  just "teens." This puts the listing under the **Families** policy: no
+  behaviourally-targeted ads to child users (AdMob's
+  `tagForChildDirectedTreatment` / `tagForUnderAgeOfConsent`, not yet wired up
+  in `lib/core/services/ads_service.dart` — needs an in-app age check to set
+  per-request, since blanket-tagging the whole app would cut ad revenue for
+  every user, not just children) and review of the reward/redemption flow
+  against Families policy before submission — complete the IARC questionnaire
+  accordingly.
 - **Roblox trademark:** do not use Roblox branding/logos; keep the
   non-affiliation disclaimer visible.
 

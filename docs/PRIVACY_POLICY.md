@@ -49,9 +49,13 @@ and activity from our systems (some records may be retained where required for
 fraud prevention or legal compliance).
 
 ## 6. Children
-The App is intended for users **[13/16/18]+**. We do not knowingly collect data
-from children below the applicable age. If you believe a child has provided data,
-contact us for removal.
+The App is open to users of **all ages**, including children. Where the law
+requires it (for example, COPPA in the United States), we obtain verifiable
+parental consent before collecting personal information from a child, collect
+no more data from a child than is reasonably necessary, and do not serve
+behaviourally-targeted ("personalised") advertising to a user known to be a
+child. A parent or guardian can contact us at any time to review, correct or
+delete their child's information, or to withdraw consent.
 
 ## 7. Security
 Data is encrypted in transit (TLS). Sensitive local values are stored in the

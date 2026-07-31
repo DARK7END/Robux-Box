@@ -7,8 +7,12 @@ These Terms govern your use of the Robux Box application (the "App") provided by
 **[COMPANY NAME]** ("we", "us"). By using the App you agree to these Terms.
 
 ## 1. Eligibility
-You must be at least **[13/16/18]** years old (and of legal age in your
-jurisdiction) and provide accurate information. One account per person.
+Robux Box is open to users of **all ages**. If you are below the age at which
+your jurisdiction's data-protection law lets you consent for yourself (for
+example, under 13 in the United States under COPPA), a parent or legal
+guardian must review these Terms and the Privacy Policy and agree to them on
+your behalf before you use the App. Provide accurate information; one account
+per person.
 
 ## 2. The App
 Robux Box lets you earn virtual **coins** by watching rewarded advertisements and
