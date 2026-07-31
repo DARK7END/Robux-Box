@@ -26,6 +26,7 @@ OUT = os.path.join(ROOT, "public")
 PAGES = [
     ("PRIVACY_POLICY.md", "privacy.html", "Privacy Policy"),
     ("TERMS_OF_SERVICE.md", "terms.html", "Terms of Service"),
+    ("ACCOUNT_DELETION.md", "account-deletion.html", "Account Deletion"),
 ]
 
 CSS = """
@@ -57,7 +58,7 @@ h2 {
 }
 p, li { color: #B7BCB7; }
 a { color: #00FF6A; }
-ul { padding-left: 22px; }
+ul, ol { padding-left: 22px; }
 li { margin: 6px 0; }
 strong { color: #fff; }
 hr { border: 0; border-top: 1px solid rgba(255,255,255,0.10); margin: 34px 0; }
@@ -79,12 +80,15 @@ def inline(text: str) -> str:
     return text
 
 
+_OL_ITEM = re.compile(r"^(\d+)\.\s+(.*)$")
+
+
 def md_to_html(md: str) -> tuple[str, str]:
     """Returns (page_title, body_html). The first `# ` heading is the title and
     is rendered as the page's <h1>."""
     title = ""
     out: list[str] = []
-    in_list = False
+    list_tag: str | None = None  # "ul", "ol" or None
     para: list[str] = []
 
     def flush_para():
@@ -94,14 +98,22 @@ def md_to_html(md: str) -> tuple[str, str]:
             para = []
 
     def close_list():
-        nonlocal in_list
-        if in_list:
-            out.append("</ul>")
-            in_list = False
+        nonlocal list_tag
+        if list_tag:
+            out.append(f"</{list_tag}>")
+            list_tag = None
+
+    def open_list(tag: str):
+        nonlocal list_tag
+        if list_tag != tag:
+            close_list()
+            out.append(f"<{tag}>")
+            list_tag = tag
 
     for raw in md.splitlines():
         line = raw.rstrip()
         stripped = line.strip()
+        ol_match = _OL_ITEM.match(stripped)
 
         if not stripped:
             flush_para()
@@ -123,13 +135,15 @@ def md_to_html(md: str) -> tuple[str, str]:
             out.append("<hr>")
         elif stripped.startswith("- "):
             flush_para()
-            if not in_list:
-                out.append("<ul>")
-                in_list = True
+            open_list("ul")
             out.append(f"<li>{inline(stripped[2:].strip())}</li>")
+        elif ol_match:
+            flush_para()
+            open_list("ol")
+            out.append(f"<li>{inline(ol_match.group(2).strip())}</li>")
         else:
             # A continuation line inside a list item keeps that item going.
-            if in_list and raw.startswith("  "):
+            if list_tag and raw.startswith("  "):
                 out[-1] = out[-1][:-5] + " " + inline(stripped) + "</li>"
             else:
                 close_list()
@@ -141,12 +155,13 @@ def md_to_html(md: str) -> tuple[str, str]:
 
 
 def page(title: str, body: str) -> str:
+    page_title = title if title.endswith("Robux Box") else f"{title} — Robux Box"
     return f"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{html.escape(title)} — Robux Box</title>
+<title>{html.escape(page_title)}</title>
 <style>{CSS}</style>
 </head>
 <body>
@@ -158,6 +173,7 @@ def page(title: str, body: str) -> str:
   <footer>
     <a href="./privacy.html">Privacy Policy</a>
     <a href="./terms.html">Terms of Service</a>
+    <a href="./account-deletion.html">Account Deletion</a>
   </footer>
 </div>
 </body>
@@ -187,6 +203,7 @@ INDEX = """<!doctype html>
   <ul>
     <li><a href="./privacy.html">Privacy Policy</a></li>
     <li><a href="./terms.html">Terms of Service</a></li>
+    <li><a href="./account-deletion.html">Account Deletion</a></li>
   </ul>
 </div>
 </body>

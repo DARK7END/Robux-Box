@@ -80,6 +80,10 @@ Then:
 Live at:
 - `https://dark7end.github.io/Robux-Box/privacy.html`
 - `https://dark7end.github.io/Robux-Box/terms.html`
+- `https://dark7end.github.io/Robux-Box/account-deletion.html` — this is the
+  URL Play Console's Data safety → "Account deletion" field asks for. The app
+  already deletes accounts in-app (Settings → Account Deletion); this page
+  just describes those steps publicly, which is what Play requires.
 
 These are the defaults compiled into `AppConfig`, so the in-app links and the
 Play Store listing both work with no extra flags. To preview locally run

@@ -15,6 +15,10 @@ extension NumFormatX on num {
   /// Coins → Robux display, e.g. 250 coins / 100 = "2.50".
   String asRobux(int coinsPerRobux) =>
       (this / coinsPerRobux).toStringAsFixed(2);
+
+  /// Coins → an illustrative USD value, e.g. 10,000 coins → "$1.25".
+  String asUsd(int coinsPerRobux, double usdPerRobux) =>
+      '\$${(this / coinsPerRobux * usdPerRobux).toStringAsFixed(2)}';
 }
 
 /// Short "in Xh / in Ym" string until the next local midnight — used for daily

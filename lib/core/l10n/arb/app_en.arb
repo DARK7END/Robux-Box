@@ -194,6 +194,7 @@
   "rewardsInstantPackages": "Instant Robux packages",
   "rewardsComingSoonDesc": "New Robux packages are added regularly.",
   "rewardsAvailableBalance": "Available balance",
+  "rewardsRedeemableValue": "Estimated value",
   "rewardsSubmittedTitle": "Redemption submitted!",
   "rewardsCostLabel": "Cost",
 
@@ -271,6 +272,7 @@
   "settingsNotifications": "Notifications",
   "settingsPrivacy": "Privacy",
   "settingsTerms": "Terms of Service",
+  "settingsAccountDeletion": "Account Deletion",
   "settingsSupport": "Support",
   "settingsReport": "Report a problem",
   "reportHint": "Describe the issue…",

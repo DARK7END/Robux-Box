@@ -131,8 +131,9 @@ class _BalanceHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final robux = coins.asRobux(AppConstants.coinsPerRobux);
+    final usd = coins.asUsd(AppConstants.coinsPerRobux, AppConstants.usdPerRobux);
     return Container(
+      height: 210,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: AppColors.darkBgElevated,
@@ -140,62 +141,52 @@ class _BalanceHero extends StatelessWidget {
         boxShadow: AppShadows.glow(AppColors.brand),
       ),
       child: Stack(
+        fit: StackFit.expand,
         children: [
-          Positioned.fill(
-            child: Image.asset('assets/images/redeem_balance_art.png',
-                fit: BoxFit.cover),
-          ),
-          // Left-to-right scrim: keeps the balance legible over the art
-          // without hiding the chest, which stays clear on the right.
-          const Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [Colors.black87, Colors.transparent],
-                  stops: [0.0, 0.62],
-                ),
+          Image.asset('assets/images/redeem_balance_art.png', fit: BoxFit.cover),
+          // Uniform scrim: the art is busy edge-to-edge (chest + scattered
+          // coins), so — unlike a photo with one clean side — there's no
+          // single safe region to dodge. An even wash keeps the balance
+          // readable wherever the crop happens to land.
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.black45, Colors.black87],
               ),
             ),
           ),
-          // The artwork is a fixed image (chest baked into its right side, not
-          // mirrored for RTL), so the text block that shares the scrim with it
-          // is pinned to the same physical left side regardless of locale —
-          // otherwise Arabic would right-align this straight onto the chest.
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.xl),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(context.l10n.rewardsAvailableBalance,
-                      style: context.text.bodySmall?.copyWith(
-                          color: AppColors.brandBright,
-                          fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 2),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const RGlyph(size: 26, color: AppColors.white),
-                      const SizedBox(width: 6),
-                      AnimatedCounter(
-                        value: coins,
-                        style: AppTypography.counter(30, AppColors.white),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text('≈ $robux',
-                      style: AppTypography.counter(
-                          14, Colors.white.withOpacity(0.85))),
-                  Text(context.l10n.rewardsRobux,
-                      style: context.text.labelSmall
-                          ?.copyWith(color: Colors.white60)),
-                ],
-              ),
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.xl),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(context.l10n.rewardsAvailableBalance,
+                    style: context.text.bodySmall?.copyWith(
+                        color: AppColors.brandBright,
+                        fontWeight: FontWeight.w600)),
+                const SizedBox(height: 2),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const RGlyph(size: 30, color: AppColors.white),
+                    const SizedBox(width: 6),
+                    AnimatedCounter(
+                      value: coins,
+                      style: AppTypography.counter(34, AppColors.white),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text('≈ $usd',
+                    style: AppTypography.counter(
+                        15, Colors.white.withOpacity(0.85))),
+                Text(context.l10n.rewardsRedeemableValue,
+                    style: context.text.labelSmall
+                        ?.copyWith(color: Colors.white60)),
+              ],
             ),
           ),
         ],

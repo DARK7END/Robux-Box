@@ -174,6 +174,7 @@
   "rewardsInstantPackages": "Paquetes de Robux instantáneos",
   "rewardsComingSoonDesc": "Se añaden nuevos paquetes de Robux regularmente.",
   "rewardsAvailableBalance": "Saldo disponible",
+  "rewardsRedeemableValue": "Valor estimado",
   "rewardsSubmittedTitle": "¡Canje enviado!",
   "rewardsCostLabel": "Costo",
 
@@ -245,6 +246,7 @@
   "settingsNotifications": "Notificaciones",
   "settingsPrivacy": "Privacidad",
   "settingsTerms": "Términos del servicio",
+  "settingsAccountDeletion": "Eliminación de cuenta",
   "settingsSupport": "Soporte",
   "settingsReport": "Reportar un problema",
   "reportHint": "Describe el problema…",

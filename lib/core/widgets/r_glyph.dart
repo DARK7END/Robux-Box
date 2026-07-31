@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-/// The brand's own currency mark ("R$"), used everywhere a coin/money glyph
-/// is needed in place of a generic dollar-sign icon. Occupies the same
-/// `size x size` footprint an [Icon] would, so it drops in as a direct
-/// replacement — [FittedBox] scales the mark to fit, so it never overflows
-/// a tightly constrained parent.
+/// The brand's own currency mark — a fixed piece of artwork, used everywhere
+/// a coin/money glyph is needed in place of a generic dollar-sign icon.
+/// Occupies the same `size x size` footprint an [Icon] would, so it drops in
+/// as a direct replacement. Being a real image rather than rendered text, its
+/// shape never shifts with locale or font fallback.
+///
+/// [color]'s opacity (not its hue — the artwork is already fully branded) is
+/// applied on top, so call sites that pass a translucent color for a faint
+/// "ghost" watermark effect keep working unchanged.
 class RGlyph extends StatelessWidget {
   const RGlyph({super.key, required this.size, required this.color});
 
@@ -17,16 +20,11 @@ class RGlyph extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: FittedBox(
-        fit: BoxFit.contain,
-        child: Text(
-          'R\$',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w800,
-            height: 1,
-            letterSpacing: -0.5,
-            color: color,
-          ),
+      child: Opacity(
+        opacity: color.opacity,
+        child: Image.asset(
+          'assets/images/currency_coin.png',
+          fit: BoxFit.contain,
         ),
       ),
     );

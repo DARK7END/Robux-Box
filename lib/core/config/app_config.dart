@@ -27,6 +27,7 @@ class AppConfig {
     required this.supportEmail,
     required this.privacyUrl,
     required this.termsUrl,
+    required this.accountDeletionUrl,
     required this.minWithdrawCoins,
     required this.appStoreId,
   });
@@ -48,6 +49,7 @@ class AppConfig {
   final String supportEmail;
   final String privacyUrl;
   final String termsUrl;
+  final String accountDeletionUrl;
   final int minWithdrawCoins;
   final String appStoreId;
 
@@ -106,6 +108,11 @@ class AppConfig {
       termsUrl: const String.fromEnvironment(
         'TERMS_URL',
         defaultValue: 'https://dark7end.github.io/Robux-Box/terms.html',
+      ),
+      accountDeletionUrl: const String.fromEnvironment(
+        'ACCOUNT_DELETION_URL',
+        defaultValue:
+            'https://dark7end.github.io/Robux-Box/account-deletion.html',
       ),
       minWithdrawCoins:
           const int.fromEnvironment('MIN_WITHDRAW_COINS', defaultValue: 1000),

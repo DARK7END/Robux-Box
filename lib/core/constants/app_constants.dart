@@ -12,6 +12,12 @@ abstract final class AppConstants {
   /// for the developer while still rewarding the user fairly.
   static const int coinsPerRobux = 100; // 100 coins == 1 Robux payout unit
 
+  /// Illustrative USD value of one Robux payout unit (approximate real-world
+  /// Robux purchase price), shown on the Redeem screen as "≈ $x.xx" so coins
+  /// translate to a figure users recognise at a glance. Not a cash-out rate —
+  /// redemptions are always Robux/gift cards/codes, never money.
+  static const double usdPerRobux = 0.0125;
+
   /// Referral rewards.
   static const int referrerBonusCoins = 250;
   static const int refereeBonusCoins = 100;

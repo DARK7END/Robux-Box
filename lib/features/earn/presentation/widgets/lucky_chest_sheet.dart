@@ -113,9 +113,8 @@ class _Chest extends StatelessWidget {
     final chest = Container(
       width: 150,
       height: 150,
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: AppGradients.coin,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
         boxShadow: [
           BoxShadow(
             color: AppColors.coin.withOpacity(0.5),
@@ -124,8 +123,7 @@ class _Chest extends StatelessWidget {
           ),
         ],
       ),
-      child: const Icon(Icons.inventory_2_rounded,
-          size: 84, color: AppColors.black),
+      child: Image.asset('assets/images/chest_icon.png', fit: BoxFit.contain),
     );
 
     if (busy) {

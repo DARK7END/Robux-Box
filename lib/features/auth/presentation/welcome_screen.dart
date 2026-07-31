@@ -107,13 +107,13 @@ class _Logo extends StatelessWidget {
     return Container(
       width: 96,
       height: 96,
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         gradient: AppGradients.brand,
         borderRadius: BorderRadius.circular(AppRadius.xxl),
         boxShadow: AppShadows.brandGlow,
       ),
-      child: const Icon(Icons.inventory_2_rounded,
-          size: 48, color: AppColors.black),
+      child: Image.asset('assets/images/chest_icon.png', fit: BoxFit.contain),
     );
   }
 }

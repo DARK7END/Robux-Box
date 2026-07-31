@@ -17,7 +17,11 @@
   rewards tier), device identifiers, app activity, in-app actions.
 - Purpose: app functionality, fraud prevention, analytics, advertising.
 - Encrypted in transit: **yes**. User can request deletion: **yes** (in-app
-  "Delete account").
+  "Delete account", Settings → Account Deletion).
+- Play Console's **"Account deletion"** field (Data safety → Data deletion)
+  takes `https://dark7end.github.io/Robux-Box/account-deletion.html` — same
+  GitHub Pages pipeline as the privacy/terms URLs (`docs/ACCOUNT_DELETION.md`
+  → `tool/build_legal_pages.py`).
 
 ### Policy compliance
 - **Permissions:** justify `ACCESS_FINE/COARSE_LOCATION` (rewards tier),

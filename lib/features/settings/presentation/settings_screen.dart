@@ -97,6 +97,12 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => _open(config.termsUrl),
           ),
           ProfileMenuTile(
+            icon: Icons.person_remove_rounded,
+            label: context.l10n.settingsAccountDeletion,
+            color: AppColors.danger,
+            onTap: () => _open(config.accountDeletionUrl),
+          ),
+          ProfileMenuTile(
             icon: Icons.support_agent_rounded,
             label: context.l10n.settingsSupport,
             color: AppColors.success,
