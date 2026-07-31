@@ -8,6 +8,9 @@ flutter --version                      # 3.24+
 npm i -g firebase-tools                # Firebase CLI
 dart pub global activate flutterfire_cli
 firebase login
+
+# .firebaserc is gitignored, so select the project once per clone:
+firebase use robux-box
 ```
 
 ## 1. Firebase project
@@ -58,6 +61,28 @@ firebase deploy --only functions
 firebase deploy --only firestore:rules,firestore:indexes,storage
 ```
 
+## 7b. Legal pages (required by Google Play)
+Google Play will not publish the listing without a publicly reachable privacy
+policy URL. These are served by Firebase Hosting straight from this repo — no
+domain purchase needed.
+
+```bash
+# 1. Replace every [PLACEHOLDER] in docs/PRIVACY_POLICY.md and
+#    docs/TERMS_OF_SERVICE.md ([COMPANY NAME], [DATE], age, provider names…).
+# 2. Regenerate the HTML and deploy:
+python3 tool/build_legal_pages.py
+firebase deploy --only hosting
+```
+
+Live at:
+- `https://robux-box.web.app/privacy`
+- `https://robux-box.web.app/terms`
+
+These are the defaults compiled into `AppConfig`, so the in-app links and the
+Play Store listing both work with no extra flags. To move to a branded domain
+later, add it in Firebase Console → Hosting → Custom domain, then rebuild with
+`--dart-define=PRIVACY_URL=… --dart-define=TERMS_URL=…`.
+
 ## 8. Seed initial data
 Create `scripts/seed.js` (Node, Admin SDK) or add docs manually per
 `docs/FIRESTORE_SCHEMA.md` (at minimum: a few `rewards`, `geo_tiers/overrides`).
@@ -85,9 +110,9 @@ flutter build appbundle --release \
   --dart-define=ADMOB_REWARDED_ANDROID=ca-app-pub-XXX/YYY \
   --dart-define=OFFERWALL_APP_ID=... \
   --dart-define=OFFERWALL_BASE_URL=https://wall.provider.com/wall \
-  --dart-define=SUPPORT_EMAIL=support@yourdomain.app \
-  --dart-define=PRIVACY_URL=https://yourdomain.app/privacy \
-  --dart-define=TERMS_URL=https://yourdomain.app/terms
+  --dart-define=SUPPORT_EMAIL=support@yourdomain.app
+# PRIVACY_URL / TERMS_URL default to the Firebase Hosting pages deployed in
+# step 7b, so only pass them if you have moved to a custom domain.
 ```
 Output: `build/app/outputs/bundle/release/app-release.aab`.
 

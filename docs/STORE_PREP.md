@@ -60,3 +60,6 @@
 - [ ] Delete-account removes data (verify Firestore + Auth).
 - [ ] App Check enforced; no cleartext traffic; Crashlytics receiving events.
 - [ ] Privacy Policy & Terms URLs reachable from Settings.
+- [ ] `firebase deploy --only hosting` run, so `https://robux-box.web.app/privacy`
+      and `/terms` load publicly — Play Console requires the privacy URL, and
+      rejects the listing if it 404s or still shows `[PLACEHOLDER]` text.

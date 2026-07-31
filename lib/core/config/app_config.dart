@@ -94,13 +94,18 @@ class AppConfig {
         'SUPPORT_EMAIL',
         defaultValue: 'support@robuxbox.app',
       ),
+      // Served by Firebase Hosting from public/ (see tool/build_legal_pages.py).
+      // Google Play requires a publicly reachable privacy-policy URL, and this
+      // domain exists as soon as `firebase deploy --only hosting` has run — no
+      // custom domain purchase needed. Override via --dart-define once a
+      // branded domain is pointed at the same Hosting site.
       privacyUrl: const String.fromEnvironment(
         'PRIVACY_URL',
-        defaultValue: 'https://robuxbox.app/privacy',
+        defaultValue: 'https://robux-box.web.app/privacy',
       ),
       termsUrl: const String.fromEnvironment(
         'TERMS_URL',
-        defaultValue: 'https://robuxbox.app/terms',
+        defaultValue: 'https://robux-box.web.app/terms',
       ),
       minWithdrawCoins:
           const int.fromEnvironment('MIN_WITHDRAW_COINS', defaultValue: 1000),
