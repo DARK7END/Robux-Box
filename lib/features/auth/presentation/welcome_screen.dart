@@ -11,12 +11,16 @@ import '../../../core/extensions/context_extensions.dart';
 import '../../../core/router/routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
-import '../../../core/theme/app_gradients.dart';
 import '../../../core/widgets/widgets.dart';
 import '../domain/auth_controller.dart';
 import 'widgets/social_auth_button.dart';
 
 /// Auth landing screen offering Google, phone and email sign-in.
+///
+/// The hero artwork already carries the full "Robux Box / Play. Earn.
+/// Redeem." branding, so this screen shows no separate logo or tagline on
+/// top of it — just the welcome copy and the sign-in options, anchored low
+/// where the artwork is naturally darkest.
 class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
 
@@ -32,88 +36,94 @@ class WelcomeScreen extends ConsumerWidget {
       }
     });
 
-    return AppScaffold(
-      showAppBar: false,
+    return Scaffold(
+      backgroundColor: AppColors.darkBg,
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          const Positioned.fill(
-            child: IgnorePointer(child: CoinParticles(count: 14, speed: 0.6)),
-          ),
-          Column(
-        children: [
-          const Spacer(flex: 2),
-          _Logo().animate().scale(
-                begin: const Offset(0.6, 0.6),
-                curve: AppCurves.spring,
-                duration: AppDuration.slow,
+          Image.asset('assets/images/welcome_hero.png', fit: BoxFit.cover),
+          // Insurance, not the primary legibility mechanism — the artwork's
+          // own ground/shadow is already near-black through this band, this
+          // just guarantees it regardless of device aspect ratio and crop.
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.transparent, Colors.black87],
+                stops: [0.45, 0.82],
               ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            context.l10n.tagline,
-            style: context.text.labelLarge
-                ?.copyWith(color: context.colors.primary, letterSpacing: 1),
-          ).animate().fadeIn(delay: 100.ms),
-          const SizedBox(height: AppSpacing.lg),
-          Text(
-            context.l10n.authWelcomeTitle,
-            style: context.text.headlineMedium,
-            textAlign: TextAlign.center,
-          ).animate().fadeIn(delay: 150.ms),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            context.l10n.authWelcomeSubtitle,
-            style: context.text.bodyLarge
-                ?.copyWith(color: context.surfaces.textTertiary),
-          ).animate().fadeIn(delay: 250.ms),
-          const Spacer(flex: 3),
-          SocialAuthButton(
-            label: context.l10n.authContinueWithGoogle,
-            icon: Icons.g_mobiledata_rounded,
-            loading: busy,
-            onPressed: busy
-                ? null
-                : () async {
-                    final ok =
-                        await ref.read(authControllerProvider.notifier).signInWithGoogle();
-                    if (ok && context.mounted) context.go(AppRoutes.home);
-                  },
-          ).animate().fadeIn(delay: 350.ms).slideY(begin: 0.2),
-          const SizedBox(height: AppSpacing.md),
-          SocialAuthButton(
-            label: context.l10n.authContinueWithPhone,
-            icon: Icons.phone_iphone_rounded,
-            onPressed: busy ? null : () => context.push(AppRoutes.phoneAuth),
-          ).animate().fadeIn(delay: 450.ms).slideY(begin: 0.2),
-          const SizedBox(height: AppSpacing.md),
-          SocialAuthButton(
-            label: context.l10n.authContinueWithEmail,
-            icon: Icons.alternate_email_rounded,
-            onPressed: busy ? null : () => context.push(AppRoutes.emailAuth),
-          ).animate().fadeIn(delay: 550.ms).slideY(begin: 0.2),
-          const SizedBox(height: AppSpacing.xl),
-          _TermsFooter(config: config),
-          SizedBox(height: context.padding.bottom + AppSpacing.md),
-            ],
+            ),
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                const Spacer(flex: 5),
+                Text(
+                  context.l10n.authWelcomeTitle,
+                  style: context.text.headlineMedium
+                      ?.copyWith(color: AppColors.white),
+                  textAlign: TextAlign.center,
+                ).animate().fadeIn(delay: 150.ms),
+                const SizedBox(height: AppSpacing.sm),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+                  child: Text(
+                    context.l10n.authWelcomeSubtitle,
+                    style: context.text.bodyLarge
+                        ?.copyWith(color: Colors.white70),
+                    textAlign: TextAlign.center,
+                  ).animate().fadeIn(delay: 250.ms),
+                ),
+                const Spacer(flex: 3),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                  child: Column(
+                    children: [
+                      SocialAuthButton(
+                        label: context.l10n.authContinueWithGoogle,
+                        icon: Icons.g_mobiledata_rounded,
+                        loading: busy,
+                        onPressed: busy
+                            ? null
+                            : () async {
+                                final ok = await ref
+                                    .read(authControllerProvider.notifier)
+                                    .signInWithGoogle();
+                                if (ok && context.mounted) {
+                                  context.go(AppRoutes.home);
+                                }
+                              },
+                      ).animate().fadeIn(delay: 350.ms).slideY(begin: 0.2),
+                      const SizedBox(height: AppSpacing.md),
+                      SocialAuthButton(
+                        label: context.l10n.authContinueWithPhone,
+                        icon: Icons.phone_iphone_rounded,
+                        onPressed: busy
+                            ? null
+                            : () => context.push(AppRoutes.phoneAuth),
+                      ).animate().fadeIn(delay: 450.ms).slideY(begin: 0.2),
+                      const SizedBox(height: AppSpacing.md),
+                      SocialAuthButton(
+                        label: context.l10n.authContinueWithEmail,
+                        icon: Icons.alternate_email_rounded,
+                        onPressed: busy
+                            ? null
+                            : () => context.push(AppRoutes.emailAuth),
+                      ).animate().fadeIn(delay: 550.ms).slideY(begin: 0.2),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xl),
+                _TermsFooter(config: config),
+                SizedBox(height: context.padding.bottom + AppSpacing.md),
+              ],
+            ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _Logo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 96,
-      height: 96,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        gradient: AppGradients.brand,
-        borderRadius: BorderRadius.circular(AppRadius.xxl),
-        boxShadow: AppShadows.brandGlow,
-      ),
-      child: Image.asset('assets/images/chest_icon.png', fit: BoxFit.contain),
     );
   }
 }
@@ -129,10 +139,10 @@ class _TermsFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final base =
-        context.text.bodySmall?.copyWith(color: context.surfaces.textTertiary);
-    final link = base?.copyWith(
+    const base = TextStyle(color: Colors.white70, fontSize: 12);
+    const link = TextStyle(
       color: AppColors.brand,
+      fontSize: 12,
       decoration: TextDecoration.underline,
       decorationColor: AppColors.brand,
     );
@@ -150,7 +160,7 @@ class _TermsFooter extends StatelessWidget {
                 onTap: () => _open(config.termsUrl),
                 child: Text(context.l10n.settingsTerms, style: link),
               ),
-              Text('  ·  ', style: base),
+              const Text('  ·  ', style: base),
               GestureDetector(
                 onTap: () => _open(config.privacyUrl),
                 child: Text(context.l10n.settingsPrivacy, style: link),
