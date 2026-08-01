@@ -90,6 +90,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/redeem_brand_cards/
+    - assets/images/robux_packages/
     - assets/icons/
     - assets/icons/brands/
     - assets/animations/

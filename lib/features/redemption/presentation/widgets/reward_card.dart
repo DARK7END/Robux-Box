@@ -9,6 +9,7 @@ import '../../../../core/theme/app_gradients.dart';
 import '../../../../core/widgets/glass_card.dart';
 import '../../../../core/widgets/r_glyph.dart';
 import '../../../../models/reward.dart';
+import '../../domain/robux_card_art.dart';
 
 typedef _GlyphBuilder = Widget Function(double size, Color color);
 
@@ -110,6 +111,7 @@ class _ArtPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     const radius =
         BorderRadius.vertical(top: Radius.circular(AppRadius.lg));
+    final localArt = robuxCardArtFor(reward);
     // The panel is opaque (gradient fills it), so a foil shimmer applied to the
     // whole thing renders reliably — a slow diagonal light sweep like real foil.
     return ClipRRect(
@@ -126,8 +128,12 @@ class _ArtPanel extends StatelessWidget {
               bottom: -18,
               child: glyph(96, Colors.black.withOpacity(0.10)),
             ),
-            // Custom artwork, if provided, sits over the gradient.
-            if (reward.imageUrl.isNotEmpty)
+            // Real card art for a known Robux tier takes priority, then any
+            // admin-provided custom artwork, then the code-drawn glyph.
+            if (localArt != null)
+              Image.asset(localArt,
+                  fit: BoxFit.cover, alignment: Alignment.topCenter)
+            else if (reward.imageUrl.isNotEmpty)
               CachedNetworkImage(
                 imageUrl: reward.imageUrl,
                 fit: BoxFit.cover,

@@ -12,6 +12,7 @@ import '../../../../core/widgets/widgets.dart';
 import '../../../../models/reward.dart';
 import '../../../profile/data/user_repository.dart';
 import '../../data/redemption_repository.dart';
+import '../../domain/robux_card_art.dart';
 
 /// Bottom sheet to confirm a redemption and collect the delivery target.
 Future<void> showRedeemSheet(
@@ -116,6 +117,7 @@ class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
   Widget build(BuildContext context) {
     final (label, hint, keyboard, validator) = _fieldSpec;
     final affordable = widget.coins >= widget.reward.coinCost;
+    final localArt = robuxCardArtFor(widget.reward);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -134,6 +136,7 @@ class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
               tag: 'reward_${widget.reward.id}',
               child: Container(
                 height: 96,
+                clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
                   gradient: switch (widget.reward.kind) {
                     RewardKind.robux => AppGradients.robux,
@@ -142,16 +145,23 @@ class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
                   },
                   borderRadius: BorderRadius.circular(AppRadius.lg),
                 ),
-                child: switch (widget.reward.kind) {
-                  RewardKind.robux =>
-                    const RGlyph(size: 44, color: AppColors.white),
-                  RewardKind.giftCard => const Icon(
-                      Icons.card_giftcard_rounded,
-                      color: AppColors.white,
-                      size: 44),
-                  RewardKind.digitalCode => const Icon(Icons.vpn_key_rounded,
-                      color: AppColors.white, size: 44),
-                },
+                // A known Robux tier's real card art takes priority over the
+                // generic glyph, matching the reward card it Hero-animates from.
+                child: localArt != null
+                    ? Image.asset(localArt,
+                        fit: BoxFit.cover, alignment: Alignment.topCenter)
+                    : switch (widget.reward.kind) {
+                        RewardKind.robux =>
+                          const RGlyph(size: 44, color: AppColors.white),
+                        RewardKind.giftCard => const Icon(
+                            Icons.card_giftcard_rounded,
+                            color: AppColors.white,
+                            size: 44),
+                        RewardKind.digitalCode => const Icon(
+                            Icons.vpn_key_rounded,
+                            color: AppColors.white,
+                            size: 44),
+                      },
               ),
             ),
             const SizedBox(height: AppSpacing.lg),

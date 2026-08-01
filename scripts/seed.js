@@ -36,17 +36,25 @@ async function main() {
     map: {US: 1, GB: 1, CA: 1, DE: 1, FR: 2, BR: 3, IN: 4, EG: 4},
   }, {merge: true});
 
-  // Reward catalogue
+  // Reward catalogue. The five Robux tiers mirror the bundled global gift-card
+  // art (assets/images/robux_packages/) — coinCost applies a graduated bulk
+  // discount off the flat coinsPerRobux rate (0% -> 12%) as the tier grows.
   const rewards = [
-    {id: "robux_100", kind: "robux", title: "100 Robux", subtitle: "Starter pack",
+    {id: "robux_100", kind: "robux", title: "100 Robux", subtitle: "Global gift card",
       coinCost: 10000, faceValue: 100, currency: "RBX", provider: "manual",
       isActive: true, sortOrder: 1, badge: ""},
-    {id: "robux_400", kind: "robux", title: "400 Robux", subtitle: "Most popular",
+    {id: "robux_200", kind: "robux", title: "200 Robux", subtitle: "Global gift card",
+      coinCost: 19500, faceValue: 200, currency: "RBX", provider: "manual",
+      isActive: true, sortOrder: 2, badge: ""},
+    {id: "robux_400", kind: "robux", title: "400 Robux", subtitle: "Global gift card",
       coinCost: 38000, faceValue: 400, currency: "RBX", provider: "manual",
-      isActive: true, sortOrder: 2, badge: "Popular"},
-    {id: "robux_800", kind: "robux", title: "800 Robux", subtitle: "Best value",
+      isActive: true, sortOrder: 3, badge: "Popular"},
+    {id: "robux_800", kind: "robux", title: "800 Robux", subtitle: "Global gift card",
       coinCost: 72000, faceValue: 800, currency: "RBX", provider: "manual",
-      isActive: true, sortOrder: 3, badge: "Best value"},
+      isActive: true, sortOrder: 4, badge: ""},
+    {id: "robux_1000", kind: "robux", title: "1000 Robux", subtitle: "Global gift card",
+      coinCost: 88000, faceValue: 1000, currency: "RBX", provider: "manual",
+      isActive: true, sortOrder: 5, badge: "Best value"},
     {id: "gc_amazon_10", kind: "giftCard", title: "$10 Amazon", subtitle: "Gift card",
       coinCost: 100000, faceValue: 10, currency: "USD", provider: "reloadly",
       isActive: true, sortOrder: 10, badge: ""},
