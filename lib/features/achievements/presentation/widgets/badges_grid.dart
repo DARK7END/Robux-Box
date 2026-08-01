@@ -65,6 +65,10 @@ class BadgesGrid extends ConsumerWidget {
   }
 }
 
+/// A collectible medal: a metallic-rimmed disc (glossy highlight + centred
+/// icon) with a two-flap ribbon tail peeking out beneath it, like a real
+/// enamel-pin achievement badge. Locked badges keep the same silhouette,
+/// desaturated, with a lock glyph in place of the badge's icon.
 class _BadgeTile extends StatelessWidget {
   const _BadgeTile({required this.badge});
   final _Badge badge;
@@ -72,50 +76,110 @@ class _BadgeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final unlocked = badge.unlocked;
-    final emblem = Container(
-      width: 64,
-      height: 64,
-      decoration: BoxDecoration(
-        gradient: unlocked
-            ? LinearGradient(colors: badge.colors)
-            : LinearGradient(colors: [
-                context.surfaces.surfaceHigh,
-                context.surfaces.surfaceHigh
-              ]),
-        shape: BoxShape.circle,
-        boxShadow: unlocked
-            ? [
-                BoxShadow(
-                  color: badge.colors.first.withOpacity(0.5),
-                  blurRadius: 20,
-                  spreadRadius: -4,
+    final ribbonColor =
+        unlocked ? badge.colors.last : context.surfaces.surfaceHigh;
+    final rimColors = unlocked
+        ? [Colors.white.withOpacity(0.95), badge.colors.last]
+        : [context.surfaces.border, context.surfaces.border];
+    final faceGradient = unlocked
+        ? LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: badge.colors,
+          )
+        : LinearGradient(colors: [
+            context.surfaces.surfaceHigh,
+            context.surfaces.surfaceHigh,
+          ]);
+
+    final medallion = SizedBox(
+      width: 78,
+      height: 86,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Positioned(
+            top: 44,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _RibbonFlap(color: ribbonColor, angle: -0.32),
+                const SizedBox(width: 8),
+                _RibbonFlap(color: ribbonColor, angle: 0.32),
+              ],
+            ),
+          ),
+          Container(
+            width: 70,
+            height: 70,
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: rimColors,
+              ),
+              boxShadow: unlocked
+                  ? [
+                      BoxShadow(
+                        color: badge.colors.first.withOpacity(0.55),
+                        blurRadius: 20,
+                        spreadRadius: -4,
+                      ),
+                    ]
+                  : null,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: faceGradient,
+                border: Border.all(
+                  color: unlocked
+                      ? Colors.white.withOpacity(0.35)
+                      : context.surfaces.border,
                 ),
-              ]
-            : null,
-        border: Border.all(
-          color: unlocked
-              ? Colors.white.withOpacity(0.3)
-              : context.surfaces.border,
-          width: 2,
-        ),
-      ),
-      child: Icon(
-        unlocked ? badge.icon : Icons.lock_rounded,
-        color: unlocked ? AppColors.black : context.surfaces.textTertiary,
-        size: 30,
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  if (unlocked)
+                    Positioned(
+                      top: 9,
+                      left: 13,
+                      child: Container(
+                        width: 20,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white.withOpacity(0.30),
+                        ),
+                      ),
+                    ),
+                  Icon(
+                    unlocked ? badge.icon : Icons.lock_rounded,
+                    color:
+                        unlocked ? AppColors.black : context.surfaces.textTertiary,
+                    size: 28,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
 
     return Column(
       children: [
         unlocked
-            ? emblem
+            ? medallion
                 .animate(onPlay: (c) => c.repeat())
                 .shimmer(
                     duration: 2400.ms,
                     color: Colors.white.withOpacity(0.35))
-            : emblem,
-        const SizedBox(height: AppSpacing.sm),
+            : medallion,
+        const SizedBox(height: AppSpacing.xs),
         Text(
           unlocked ? badge.name : context.l10n.badgesLocked,
           textAlign: TextAlign.center,
@@ -131,4 +195,39 @@ class _BadgeTile extends StatelessWidget {
       ],
     );
   }
+}
+
+/// One flag-shaped end of a medal's ribbon: a small rectangle with a
+/// triangular notch cut from its bottom edge.
+class _RibbonFlap extends StatelessWidget {
+  const _RibbonFlap({required this.color, required this.angle});
+  final Color color;
+  final double angle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: angle,
+      child: ClipPath(
+        clipper: _RibbonClipper(),
+        child: Container(width: 15, height: 28, color: color),
+      ),
+    );
+  }
+}
+
+class _RibbonClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    return Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width, 0)
+      ..lineTo(size.width, size.height)
+      ..lineTo(size.width / 2, size.height - 7)
+      ..lineTo(0, size.height)
+      ..close();
+  }
+
+  @override
+  bool shouldReclip(covariant _RibbonClipper oldClipper) => false;
 }

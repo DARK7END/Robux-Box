@@ -22,6 +22,7 @@ Future<void> showCelebration(
   required String message,
   int? coins,
   IconData icon = Icons.check_rounded,
+  String? image,
 }) async {
   HapticFeedback.heavyImpact();
   await showGeneralDialog<void>(
@@ -30,8 +31,8 @@ Future<void> showCelebration(
     barrierLabel: 'celebration',
     barrierColor: Colors.black.withOpacity(0.82),
     transitionDuration: const Duration(milliseconds: 300),
-    pageBuilder: (_, __, ___) =>
-        _CelebrationView(title: title, message: message, coins: coins, icon: icon),
+    pageBuilder: (_, __, ___) => _CelebrationView(
+        title: title, message: message, coins: coins, icon: icon, image: image),
     transitionBuilder: (_, anim, __, child) => FadeTransition(
       opacity: anim,
       child: child,
@@ -45,12 +46,16 @@ class _CelebrationView extends StatefulWidget {
     required this.message,
     required this.coins,
     required this.icon,
+    this.image,
   });
 
   final String title;
   final String message;
   final int? coins;
   final IconData icon;
+
+  /// Real artwork to show instead of [icon], if provided.
+  final String? image;
 
   @override
   State<_CelebrationView> createState() => _CelebrationViewState();
@@ -119,7 +124,7 @@ class _CelebrationViewState extends State<_CelebrationView> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _GlowBadge(icon: widget.icon),
+              _GlowBadge(icon: widget.icon, image: widget.image),
               const SizedBox(height: AppSpacing.xxl),
               Text(widget.title,
                       style: theme.textTheme.headlineMedium,
@@ -162,8 +167,9 @@ class _CelebrationViewState extends State<_CelebrationView> {
 }
 
 class _GlowBadge extends StatelessWidget {
-  const _GlowBadge({required this.icon});
+  const _GlowBadge({required this.icon, this.image});
   final IconData icon;
+  final String? image;
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +187,12 @@ class _GlowBadge extends StatelessWidget {
           ),
         ],
       ),
-      child: Icon(icon, size: 64, color: AppColors.black),
+      child: image != null
+          ? Padding(
+              padding: const EdgeInsets.all(24),
+              child: Image.asset(image!, fit: BoxFit.contain),
+            )
+          : Icon(icon, size: 64, color: AppColors.black),
     )
         .animate()
         .scale(

@@ -186,9 +186,16 @@ class _AchievementTile extends StatelessWidget {
           Container(
             width: 48,
             height: 48,
+            padding: const EdgeInsets.all(2.5),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.16),
-              borderRadius: BorderRadius.circular(AppRadius.sm),
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: unlocked
+                    ? [Colors.white.withOpacity(0.9), AppColors.coin]
+                    : [context.surfaces.border, context.surfaces.border],
+              ),
               boxShadow: unlocked
                   ? [
                       BoxShadow(
@@ -199,8 +206,19 @@ class _AchievementTile extends StatelessWidget {
                     ]
                   : null,
             ),
-            child: Icon(unlocked ? icon : Icons.lock_outline_rounded,
-                color: color),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: color.withOpacity(0.16),
+                border: Border.all(
+                  color: unlocked
+                      ? Colors.white.withOpacity(0.3)
+                      : context.surfaces.border,
+                ),
+              ),
+              child: Icon(unlocked ? icon : Icons.lock_outline_rounded,
+                  color: color, size: 22),
+            ),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(

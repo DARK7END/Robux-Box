@@ -10,6 +10,7 @@ export 'coin_badge.dart';
 export 'connectivity_banner.dart';
 export 'coin_particles.dart';
 export 'game_feature_card.dart';
+export 'gift_glyph.dart';
 export 'glass_card.dart';
 export 'gradient_button.dart';
 export 'premium_loader.dart';
