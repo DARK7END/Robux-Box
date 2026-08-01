@@ -45,9 +45,9 @@ async function main() {
   // gift-card art (assets/images/robux_packages/) — coinCost applies a
   // graduated bulk discount off the flat coinsPerRobux rate (0% -> 15%) as
   // the tier grows. The three USD-value cards are the same product on a
-  // parallel pricing track (coinsPerRobux / usdPerRobux = 8000 coins/$1),
-  // discounted to match the equivalent Robux-amount tier (e.g. $5 ~= 400
-  // Robux) rather than a separate curve.
+  // parallel pricing track, priced relative to the Robux-amount tiers rather
+  // than a separate curve: $5 = the 400-Robux price exactly, $10 = a bit
+  // under the 800-Robux price, $20 = a bit under double the $10 price.
   const rewards = [
     {id: "robux_100", kind: "robux", title: "100 Robux", subtitle: "Global gift card",
       coinCost: 10000, faceValue: 100, currency: "RBX", provider: "manual",
@@ -71,10 +71,10 @@ async function main() {
       coinCost: 38000, faceValue: 5, currency: "USD", provider: "manual",
       isActive: true, sortOrder: 7, badge: ""},
     {id: "robux_usd_10", kind: "robux", title: "$10 Roblox Gift Card", subtitle: "Global gift card",
-      coinCost: 72000, faceValue: 10, currency: "USD", provider: "manual",
+      coinCost: 70000, faceValue: 10, currency: "USD", provider: "manual",
       isActive: true, sortOrder: 8, badge: ""},
     {id: "robux_usd_20", kind: "robux", title: "$20 Roblox Gift Card", subtitle: "Global gift card",
-      coinCost: 139000, faceValue: 20, currency: "USD", provider: "manual",
+      coinCost: 138000, faceValue: 20, currency: "USD", provider: "manual",
       isActive: true, sortOrder: 9, badge: ""},
     {id: "gc_amazon_10", kind: "giftCard", title: "$10 Amazon", subtitle: "Gift card",
       coinCost: 100000, faceValue: 10, currency: "USD", provider: "reloadly",
