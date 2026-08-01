@@ -41,10 +41,10 @@ abstract final class AppConstants {
   /// VIP tiers unlock multipliers and lower withdrawal minimums.
   static const Map<String, double> vipMultipliers = {
     'none': 1.0,
-    'bronze': 1.10,
-    'silver': 1.20,
-    'gold': 1.35,
-    'diamond': 1.50,
+    'bronze': 1.25,
+    'silver': 1.50,
+    'gold': 2.0,
+    'diamond': 3.0,
   };
 
   /// Raised daily rewarded-ad cap per VIP tier (replaces the flat

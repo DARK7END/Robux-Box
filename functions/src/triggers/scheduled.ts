@@ -159,7 +159,7 @@ export const vipReminder = onSchedule(
   {schedule: "0 11 * * 6", timeZone: "Etc/UTC", region},
   async () => {
     await sendTopic("reminder_vip", "VIP boost waiting ⭐",
-      "Upgrade to earn up to 1.5x on everything.", "/vip");
+      "Upgrade to earn up to 3x on everything.", "/vip");
   },
 );
 

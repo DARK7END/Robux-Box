@@ -14,7 +14,7 @@ describe("economy", () => {
 
   test("earnMultiplier combines tier and VIP", () => {
     expect(earnMultiplier(1, "none")).toBeCloseTo(1.0);
-    expect(earnMultiplier(1, "gold")).toBeCloseTo(1.35);
+    expect(earnMultiplier(1, "gold")).toBeCloseTo(2.0);
     expect(earnMultiplier(4, "none")).toBeCloseTo(TIER_MULTIPLIERS[4]);
     // Unknown VIP falls back to 1x.
     expect(earnMultiplier(2, "unknown")).toBeCloseTo(TIER_MULTIPLIERS[2]);
