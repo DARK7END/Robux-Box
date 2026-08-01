@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/providers.dart';
-import '../../../models/app_user.dart';
 import '../../../models/promocode.dart';
 import '../../../models/redemption.dart';
 import '../../../models/reward.dart';
@@ -30,12 +29,31 @@ final adminRewardsProvider = StreamProvider<List<Reward>>((ref) {
   return ref.watch(adminRepositoryProvider).watchAllRewards();
 });
 
-final adminRecentUsersProvider = StreamProvider<List<AppUser>>((ref) {
-  return ref.watch(adminRepositoryProvider).watchRecentUsers();
+final adminVipCoinPurchasesProvider =
+    StreamProvider<List<VipPurchaseRecord>>((ref) {
+  return ref.watch(adminRepositoryProvider).watchVipCoinPurchases();
 });
 
-final adminReportsProvider =
-    StreamProvider<List<Map<String, dynamic>>>((ref) {
+final adminVipMoneyPurchasesProvider =
+    StreamProvider<List<VipPurchaseRecord>>((ref) {
+  return ref.watch(adminRepositoryProvider).watchVipMoneyPurchases();
+});
+
+/// Both purchase paths merged, newest first. Reads the two live streams above
+/// rather than a stream of its own, so a partial load (one side still
+/// fetching) never blanks out the side that already arrived.
+final adminVipPurchasesProvider = Provider<List<VipPurchaseRecord>>((ref) {
+  final coins =
+      ref.watch(adminVipCoinPurchasesProvider).valueOrNull ?? const [];
+  final money =
+      ref.watch(adminVipMoneyPurchasesProvider).valueOrNull ?? const [];
+  final merged = [...coins, ...money];
+  merged.sort((a, b) =>
+      (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)));
+  return merged;
+});
+
+final adminReportsProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
   return ref.watch(adminRepositoryProvider).watchReports();
 });
 

@@ -1,15 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/error/result.dart';
 import '../../../core/extensions/context_extensions.dart';
+import '../../../core/extensions/vip_level_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../models/app_user.dart';
 import '../data/admin_repository.dart';
-import '../domain/admin_providers.dart';
 
 class AdminUsersScreen extends ConsumerStatefulWidget {
   const AdminUsersScreen({super.key});
@@ -23,6 +24,33 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
   bool _searching = false;
   AdminUserBundle? _found;
   String? _notFound;
+
+  // Paged "all users" browser — lets an admin work through the whole user
+  // base rather than a small "recent sign-ups" sample.
+  final _users = <AppUser>[];
+  DocumentSnapshot<Map<String, dynamic>>? _cursor;
+  bool _hasMore = true;
+  bool _loadingPage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMore();
+  }
+
+  Future<void> _loadMore() async {
+    if (_loadingPage || !_hasMore) return;
+    setState(() => _loadingPage = true);
+    final page =
+        await ref.read(adminRepositoryProvider).fetchUsersPage(cursor: _cursor);
+    if (!mounted) return;
+    setState(() {
+      _users.addAll(page.users);
+      _cursor = page.cursor;
+      _hasMore = page.hasMore;
+      _loadingPage = false;
+    });
+  }
 
   @override
   void dispose() {
@@ -39,7 +67,8 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
       _found = null;
       _notFound = null;
     });
-    final result = await ref.read(adminRepositoryProvider).findUserByEmail(email);
+    final result =
+        await ref.read(adminRepositoryProvider).findUserByEmail(email);
     if (!mounted) return;
     setState(() {
       _searching = false;
@@ -50,7 +79,6 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final recent = ref.watch(adminRecentUsersProvider);
     return AppScaffold(
       title: 'Users',
       body: ListView(
@@ -88,74 +116,84 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
             ),
           if (_found != null) ...[
             const SizedBox(height: AppSpacing.lg),
-            _UserResultCard(
-                bundle: _found!, onChanged: () => setState(() {})),
+            _UserResultCard(bundle: _found!, onChanged: () => setState(() {})),
           ],
           const SizedBox(height: AppSpacing.xl),
-          SectionHeader(title: 'Recent sign-ups'),
-          recent.when(
-            loading: () => const PremiumLoadingView(),
-            error: (e, _) => ErrorStateView(message: context.l10n.errorGeneric),
-            data: (users) => Column(
-              children: users
-                  .map((u) => Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                        child: GlassCard(
-                          onTap: () async {
-                            final b = await ref
-                                .read(adminRepositoryProvider)
-                                .getUser(u.uid);
-                            if (b != null && context.mounted) {
-                              showModalBottomSheet<void>(
-                                context: context,
-                                useRootNavigator: true,
-                                isScrollControlled: true,
-                                builder: (_) => _UserActionsSheet(bundle: b),
-                              );
-                            }
-                          },
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: context.colors.primary
-                                    .withOpacity(0.2),
-                                child: Text(
-                                    u.displayName.isNotEmpty
-                                        ? u.displayName[0].toUpperCase()
-                                        : '?',
-                                    style: context.text.labelLarge),
-                              ),
-                              const SizedBox(width: AppSpacing.md),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(u.displayName,
-                                        style: context.text.titleSmall),
-                                    Text(u.email,
-                                        style: context.text.bodySmall,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis),
-                                  ],
-                                ),
-                              ),
-                              StatusPill(
-                                label: u.status.name,
-                                color: u.status == AccountStatus.active
-                                    ? AppColors.success
-                                    : AppColors.danger,
-                                dense: true,
-                              ),
-                            ],
-                          ),
+          SectionHeader(
+              title: 'All users${_users.isEmpty ? '' : ' (${_users.length})'}'),
+          ..._users.map((u) => Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: GlassCard(
+                  onTap: () async {
+                    final b =
+                        await ref.read(adminRepositoryProvider).getUser(u.uid);
+                    if (b != null && context.mounted) {
+                      showModalBottomSheet<void>(
+                        context: context,
+                        useRootNavigator: true,
+                        isScrollControlled: true,
+                        builder: (_) => _UserActionsSheet(bundle: b),
+                      );
+                    }
+                  },
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundColor:
+                            context.colors.primary.withOpacity(0.2),
+                        child: Text(
+                            u.displayName.isNotEmpty
+                                ? u.displayName[0].toUpperCase()
+                                : '?',
+                            style: context.text.labelLarge),
+                      ),
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(u.displayName, style: context.text.titleSmall),
+                            Text(u.email,
+                                style: context.text.bodySmall,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis),
+                          ],
                         ),
-                      ))
-                  .toList(),
+                      ),
+                      if (u.vipLevel != VipLevel.none) ...[
+                        StatusPill(
+                          label: u.vipLevel.label,
+                          color: u.vipLevel.tierColor,
+                          dense: true,
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                      ],
+                      StatusPill(
+                        label: u.status.name,
+                        color: u.status == AccountStatus.active
+                            ? AppColors.success
+                            : AppColors.danger,
+                        dense: true,
+                      ),
+                    ],
+                  ),
+                ),
+              )),
+          if (_hasMore)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+              child: Center(
+                child: _loadingPage
+                    ? const PremiumLoader(size: 32)
+                    : OutlinedButton(
+                        onPressed: _loadMore,
+                        child: const Text('Load more'),
+                      ),
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -176,7 +214,8 @@ class _UserResultCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text(u.displayName, style: context.text.titleMedium)),
+              Expanded(
+                  child: Text(u.displayName, style: context.text.titleMedium)),
               StatusPill(
                 label: u.status.name,
                 color: u.status == AccountStatus.active
@@ -280,7 +319,8 @@ class _UserActionsSheetState extends ConsumerState<_UserActionsSheet> {
               Expanded(
                 child: TextField(
                   controller: _amount,
-                  keyboardType: const TextInputType.numberWithOptions(signed: true),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(signed: true),
                   decoration: const InputDecoration(hintText: '+100 or -50'),
                 ),
               ),
@@ -324,8 +364,7 @@ class _UserActionsSheetState extends ConsumerState<_UserActionsSheet> {
             children: [
               for (final s in AccountStatus.values)
                 Padding(
-                  padding:
-                      const EdgeInsetsDirectional.only(end: AppSpacing.sm),
+                  padding: const EdgeInsetsDirectional.only(end: AppSpacing.sm),
                   child: ActionChip(
                     label: Text(s.name),
                     onPressed: _busy

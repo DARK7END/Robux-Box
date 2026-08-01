@@ -13,6 +13,7 @@ import '../../features/admin/presentation/admin_reports_screen.dart';
 import '../../features/admin/presentation/admin_rewards_screen.dart';
 import '../../features/admin/presentation/admin_tickets_screen.dart';
 import '../../features/admin/presentation/admin_users_screen.dart';
+import '../../features/admin/presentation/admin_vip_purchases_screen.dart';
 import '../../features/admin/presentation/widgets/admin_gate.dart';
 import '../../features/auth/presentation/email_auth_screen.dart';
 import '../../features/auth/presentation/onboarding_screen.dart';
@@ -193,6 +194,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           parentNavigatorKey: _rootKey,
           pageBuilder: (c, s) =>
               _fadePage(s, const AdminGate(child: AdminAnalyticsScreen()))),
+      GoRoute(
+          path: AppRoutes.adminVipPurchases,
+          parentNavigatorKey: _rootKey,
+          pageBuilder: (c, s) =>
+              _fadePage(s, const AdminGate(child: AdminVipPurchasesScreen()))),
 
       // Bottom-nav shell: Home · Earn · Redeem · Tasks · Profile.
       StatefulShellRoute.indexedStack(
@@ -201,10 +207,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             MainShell(navigationShell: navigationShell),
         branches: [
           StatefulShellBranch(navigatorKey: _shellKey, routes: [
-            GoRoute(path: AppRoutes.home, builder: (_, __) => const HomeScreen()),
+            GoRoute(
+                path: AppRoutes.home, builder: (_, __) => const HomeScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: AppRoutes.earn, builder: (_, __) => const EarnScreen()),
+            GoRoute(
+                path: AppRoutes.earn, builder: (_, __) => const EarnScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
@@ -241,7 +249,8 @@ CustomTransitionPage<void> _fadePage(GoRouterState state, Widget child) {
     reverseTransitionDuration: const Duration(milliseconds: 240),
     child: child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      final reduceMotion = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+      final reduceMotion =
+          MediaQuery.maybeOf(context)?.disableAnimations ?? false;
       final curved =
           CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
       final fade = FadeTransition(opacity: curved, child: child);

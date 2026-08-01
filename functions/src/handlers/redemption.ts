@@ -41,12 +41,15 @@ export const requestRedemption = onCall(opts, async (req) => {
   const uSnap = await userDoc(uid).get();
   const user = uSnap.data() ?? {};
   const minVip = (reward.minVipLevel as number) ?? 0;
-  const myRank = vipRank(effectiveVipLevel(user));
+  const myVip = effectiveVipLevel(user);
+  const myRank = vipRank(myVip);
   if (myRank < minVip) {
     throw new HttpsError("permission-denied", "Requires a higher VIP level.");
   }
   // Gold/Diamond get priority fulfilment — a real, paid-for benefit: their
   // requests sort first in the admin queue (see AdminRepository.watchRedemptions).
+  // vipLevel is stored too so admins can tell every tier apart, not just
+  // priority/not (see the badge on _RedemptionCard).
   const priority = myRank >= vipRank("gold");
 
   // Hold the coins.
@@ -71,6 +74,7 @@ export const requestRedemption = onCall(opts, async (req) => {
     provider: reward.provider ?? "manual",
     status: "pending",
     priority,
+    vipLevel: myVip,
     deliveryTarget,
     deliveredCode: "",
     rejectionReason: "",

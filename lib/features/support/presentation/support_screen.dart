@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/extensions/context_extensions.dart';
 import '../../../core/extensions/format_extensions.dart';
+import '../../../core/extensions/vip_level_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/widgets/widgets.dart';
+import '../../../models/app_user.dart';
 import '../../../models/support_ticket.dart';
 import '../domain/support_providers.dart';
 import 'widgets/new_ticket_sheet.dart';
@@ -118,7 +120,18 @@ class TicketListTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis),
                 ),
               ],
-              if (ticket.isPriority) ...[
+              // Admins get the exact tier (so every level is told apart);
+              // the requester themself keeps the friendlier benefit copy.
+              if (showRequester && ticket.vipLevel != VipLevel.none) ...[
+                const SizedBox(width: AppSpacing.sm),
+                StatusPill(
+                  label: ticket.vipLevel.label,
+                  color: ticket.vipLevel.tierColor,
+                  icon: Icons.star_rounded,
+                  filled: ticket.isPriority,
+                  dense: true,
+                ),
+              ] else if (!showRequester && ticket.isPriority) ...[
                 const SizedBox(width: AppSpacing.sm),
                 StatusPill(
                   label: context.l10n.supportPriorityLabel,

@@ -8,6 +8,7 @@ import '../../../core/error/result.dart';
 import '../../../core/network/firebase_error_mapper.dart';
 import '../../../core/utils/logger.dart';
 import '../../../models/app_user.dart';
+import '../../../models/model_utils.dart';
 import '../../../models/promocode.dart';
 import '../../../models/redemption.dart';
 import '../../../models/reward.dart';
@@ -18,6 +19,41 @@ class AdminUserBundle {
   const AdminUserBundle(this.user, this.wallet);
   final AppUser user;
   final Wallet wallet;
+}
+
+/// One page of the all-users browser.
+class AdminUsersPage {
+  const AdminUsersPage(this.users, this.cursor, this.hasMore);
+  final List<AppUser> users;
+  final DocumentSnapshot<Map<String, dynamic>>? cursor;
+  final bool hasMore;
+}
+
+/// One VIP purchase — coins or real money — normalised for the purchases log.
+/// Coins-path rows come from `transactions` (`type == 'vipPurchase'`,
+/// written by `purchaseVipWithCoins`); money-path rows come from
+/// `vip_purchases` (written by `verifyVipPurchase`). Two different documents
+/// shapes, one admin-facing record.
+class VipPurchaseRecord {
+  const VipPurchaseRecord({
+    required this.id,
+    required this.uid,
+    required this.level,
+    required this.isMoneyPurchase,
+    required this.detail,
+    required this.createdAt,
+  });
+
+  final String id;
+  final String uid;
+  final VipLevel level;
+
+  /// false = paid with coins, true = real-money store purchase.
+  final bool isMoneyPurchase;
+
+  /// "12,000 coins" for the coins path, "android · vip_gold_30d" for money.
+  final String detail;
+  final DateTime? createdAt;
 }
 
 /// Admin-only data access. Every mutating call goes through the same
@@ -80,13 +116,25 @@ class AdminRepository {
     return _bundle(uid, AppUser.fromDoc(doc));
   }
 
-  Stream<List<AppUser>> watchRecentUsers() {
-    return _db
+  /// One page of every user, newest sign-up first. Pass the previous page's
+  /// [AdminUsersPage.cursor] to fetch the next one — a plain `.get()` (not a
+  /// live stream) since paging and `snapshots()` don't mix well, and an admin
+  /// browsing the full user base doesn't need each page to update live.
+  Future<AdminUsersPage> fetchUsersPage({
+    DocumentSnapshot<Map<String, dynamic>>? cursor,
+    int pageSize = 30,
+  }) async {
+    Query<Map<String, dynamic>> q = _db
         .collection(FsPaths.users)
         .orderBy('createdAt', descending: true)
-        .limit(50)
-        .snapshots()
-        .map((s) => s.docs.map(AppUser.fromDoc).toList());
+        .limit(pageSize);
+    if (cursor != null) q = q.startAfterDocument(cursor);
+    final snap = await q.get();
+    return AdminUsersPage(
+      snap.docs.map(AppUser.fromDoc).toList(),
+      snap.docs.isEmpty ? cursor : snap.docs.last,
+      snap.docs.length == pageSize,
+    );
   }
 
   Future<AdminUserBundle> _bundle(String uid, AppUser user) async {
@@ -103,6 +151,53 @@ class AdminRepository {
 
   Future<Result<void>> setVipLevel(String uid, String level) =>
       _call('setVipLevel', {'uid': uid, 'level': level});
+
+  // ------------------------------------------------------------ vip purchases
+  /// Coins-path VIP purchases (`purchaseVipWithCoins`, logged as a wallet
+  /// transaction — the level is its `referenceId`, the coins spent its
+  /// `amount`).
+  Stream<List<VipPurchaseRecord>> watchVipCoinPurchases() {
+    return _db
+        .collection(FsPaths.transactions)
+        .where('type', isEqualTo: 'vipPurchase')
+        .limit(200)
+        .snapshots()
+        .map((s) => s.docs.map((d) {
+              final m = d.data();
+              return VipPurchaseRecord(
+                id: d.id,
+                uid: Parse.toStr(m['uid']),
+                level: Parse.enumFromName(
+                    m['referenceId'], VipLevel.values, VipLevel.none),
+                isMoneyPurchase: false,
+                detail: '${Parse.toInt(m['amount'])} coins',
+                createdAt: Parse.toDate(m['createdAt']),
+              );
+            }).toList());
+  }
+
+  /// Real-money VIP purchases, verified store receipts written by
+  /// `verifyVipPurchase`.
+  Stream<List<VipPurchaseRecord>> watchVipMoneyPurchases() {
+    return _db
+        .collection(FsPaths.vipPurchases)
+        .orderBy('verifiedAt', descending: true)
+        .limit(200)
+        .snapshots()
+        .map((s) => s.docs.map((d) {
+              final m = d.data();
+              return VipPurchaseRecord(
+                id: d.id,
+                uid: Parse.toStr(m['uid']),
+                level: Parse.enumFromName(
+                    m['level'], VipLevel.values, VipLevel.none),
+                isMoneyPurchase: true,
+                detail:
+                    '${Parse.toStr(m['platform'])} · ${Parse.toStr(m['productId'])}',
+                createdAt: Parse.toDate(m['verifiedAt']),
+              );
+            }).toList());
+  }
 
   // ----------------------------------------------------------------- promocodes
   Stream<List<Promocode>> watchPromocodes() {

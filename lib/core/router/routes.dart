@@ -45,6 +45,7 @@ abstract final class AppRoutes {
   static const String adminTickets = '/admin/tickets';
   static const String adminManage = '/admin/admins';
   static const String adminAnalytics = '/admin/analytics';
+  static const String adminVipPurchases = '/admin/vip-purchases';
 
   static String redemption(String id) => '/redemptions/$id';
 }

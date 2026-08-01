@@ -70,8 +70,8 @@ class _NewTicketSheetState extends ConsumerState<_NewTicketSheet> {
     }
     setState(() => _busy = true);
     final user = ref.read(currentUserProvider).valueOrNull;
-    final isPriority =
-        (user?.effectiveVipLevel.index ?? 0) >= VipLevel.gold.index;
+    final vipLevel = user?.effectiveVipLevel ?? VipLevel.none;
+    final isPriority = vipLevel.index >= VipLevel.gold.index;
     final result = await ref.read(supportRepositoryProvider).createTicket(
           uid: uid,
           displayName: user?.displayName ?? '',
@@ -79,6 +79,7 @@ class _NewTicketSheetState extends ConsumerState<_NewTicketSheet> {
           subject: subject,
           message: message,
           isPriority: isPriority,
+          vipLevel: vipLevel,
           attachment: _attachment == null ? null : File(_attachment!.path),
         );
     if (!mounted) return;

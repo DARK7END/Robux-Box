@@ -5,9 +5,11 @@ import '../../../core/error/failure.dart';
 import '../../../core/error/result.dart';
 import '../../../core/extensions/context_extensions.dart';
 import '../../../core/extensions/format_extensions.dart';
+import '../../../core/extensions/vip_level_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/widgets/widgets.dart';
+import '../../../models/app_user.dart';
 import '../../../models/redemption.dart';
 import '../../../models/reward.dart';
 import '../data/admin_repository.dart';
@@ -180,12 +182,12 @@ class _RedemptionCardState extends ConsumerState<_RedemptionCard> {
         children: [
           Row(
             children: [
-              if (r.priority) ...[
-                const StatusPill(
-                  label: 'Priority',
-                  color: AppColors.secondary,
+              if (r.vipLevel != VipLevel.none) ...[
+                StatusPill(
+                  label: r.vipLevel.label,
+                  color: r.vipLevel.tierColor,
                   icon: Icons.star_rounded,
-                  filled: true,
+                  filled: r.priority,
                   dense: true,
                 ),
                 const SizedBox(width: AppSpacing.sm),

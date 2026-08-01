@@ -23,11 +23,15 @@ class AdminDashboardScreen extends ConsumerWidget {
 
     final sections = <_AdminSection>[
       _AdminSection('Withdraw Requests', Icons.account_balance_wallet_rounded,
-          AppColors.brand, AppRoutes.adminRedemptions, badge: pending),
+          AppColors.brand, AppRoutes.adminRedemptions,
+          badge: pending),
       _AdminSection('Support', Icons.support_agent_rounded, AppColors.info,
-          AppRoutes.adminTickets, badge: openTickets),
+          AppRoutes.adminTickets,
+          badge: openTickets),
       _AdminSection('Users', Icons.people_alt_rounded, AppColors.secondary,
           AppRoutes.adminUsers),
+      _AdminSection('VIP Purchases', Icons.workspace_premium_rounded,
+          AppColors.vip, AppRoutes.adminVipPurchases),
       _AdminSection('Rewards', Icons.card_giftcard_rounded, AppColors.robux,
           AppRoutes.adminRewards),
       _AdminSection('Promocodes', Icons.confirmation_number_rounded,
@@ -87,7 +91,8 @@ class AdminDashboardScreen extends ConsumerWidget {
                 .map((e) => _SectionCard(section: e.value)
                     .animate()
                     .fadeIn(delay: (50 * e.key).ms)
-                    .scale(begin: const Offset(0.9, 0.9), curve: AppCurves.spring))
+                    .scale(
+                        begin: const Offset(0.9, 0.9), curve: AppCurves.spring))
                 .toList(),
           ),
         ],

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
+import 'app_user.dart';
 import 'model_utils.dart';
 
 /// Lifecycle of a support ticket. Either side can close it; either side
@@ -19,6 +20,7 @@ class SupportTicket extends Equatable {
     required this.subject,
     required this.status,
     required this.isPriority,
+    required this.vipLevel,
     required this.lastMessagePreview,
     required this.lastSenderIsAdmin,
     required this.createdAt,
@@ -38,6 +40,10 @@ class SupportTicket extends Equatable {
   /// Set at creation when the requester was Gold/Diamond VIP — a paid
   /// benefit: these sort first for admins (see AllTicketsProvider).
   final bool isPriority;
+
+  /// The requester's effective VIP tier at creation time (`none` if not
+  /// VIP) — lets admins tell every tier apart, not just priority/not.
+  final VipLevel vipLevel;
   final String lastMessagePreview;
   final bool lastSenderIsAdmin;
   final DateTime? createdAt;
@@ -53,6 +59,8 @@ class SupportTicket extends Equatable {
       status: Parse.enumFromName(
           map['status'], TicketStatus.values, TicketStatus.open),
       isPriority: Parse.toBool(map['isPriority']),
+      vipLevel:
+          Parse.enumFromName(map['vipLevel'], VipLevel.values, VipLevel.none),
       lastMessagePreview: Parse.toStr(map['lastMessagePreview']),
       lastSenderIsAdmin: Parse.toBool(map['lastSenderIsAdmin']),
       createdAt: Parse.toDate(map['createdAt']),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
+import 'app_user.dart';
 import 'model_utils.dart';
 import 'reward.dart';
 
@@ -24,6 +25,7 @@ class Redemption extends Equatable {
     required this.currency,
     required this.status,
     required this.priority,
+    required this.vipLevel,
     required this.deliveryTarget,
     required this.deliveredCode,
     required this.rejectionReason,
@@ -45,6 +47,11 @@ class Redemption extends Equatable {
   /// Set server-side (`requestRedemption`) when the requester was Gold/Diamond
   /// VIP at request time — a paid benefit: these sort first for admins.
   final bool priority;
+
+  /// The requester's effective VIP tier at request time (`none` if not VIP),
+  /// set server-side alongside [priority] — lets admins tell every tier apart,
+  /// not just priority/not.
+  final VipLevel vipLevel;
 
   /// Where to deliver: Roblox username, email or phone depending on [kind].
   final String deliveryTarget;
@@ -76,6 +83,8 @@ class Redemption extends Equatable {
       status: Parse.enumFromName(
           map['status'], RedemptionStatus.values, RedemptionStatus.pending),
       priority: Parse.toBool(map['priority']),
+      vipLevel:
+          Parse.enumFromName(map['vipLevel'], VipLevel.values, VipLevel.none),
       deliveryTarget: Parse.toStr(map['deliveryTarget']),
       deliveredCode: Parse.toStr(map['deliveredCode']),
       rejectionReason: Parse.toStr(map['rejectionReason']),

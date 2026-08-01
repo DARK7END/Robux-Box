@@ -9,6 +9,7 @@ import '../../../core/constants/firestore_paths.dart';
 import '../../../core/error/result.dart';
 import '../../../core/network/firebase_error_mapper.dart';
 import '../../../core/utils/logger.dart';
+import '../../../models/app_user.dart';
 import '../../../models/support_ticket.dart';
 
 /// Support-ticket data access, shared by the user-facing "Contact Support"
@@ -119,6 +120,7 @@ class SupportRepository {
     required String subject,
     required String message,
     bool isPriority = false,
+    VipLevel vipLevel = VipLevel.none,
     File? attachment,
   }) async {
     try {
@@ -136,6 +138,7 @@ class SupportRepository {
           'subject': subject,
           'status': TicketStatus.open.name,
           'isPriority': isPriority,
+          'vipLevel': vipLevel.name,
           'lastMessagePreview': _preview(message),
           'lastSenderIsAdmin': false,
           'createdAt': FieldValue.serverTimestamp(),
