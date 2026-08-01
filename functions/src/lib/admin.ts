@@ -32,6 +32,8 @@ export const cols = {
   auditLogs: db.collection("audit_logs"),
   config: db.collection("config"),
   geoTiers: db.collection("geo_tiers"),
+  // Consumed by the Firestore "Trigger Email" extension — see notifyAdmins().
+  mail: db.collection("mail"),
 };
 
 export const userDoc = (uid: string) => cols.users.doc(uid);

@@ -14,6 +14,7 @@ class ProfileMenuTile extends StatelessWidget {
     required this.onTap,
     this.trailing,
     this.subtitle,
+    this.iconWidget,
   });
 
   final IconData icon;
@@ -22,6 +23,9 @@ class ProfileMenuTile extends StatelessWidget {
   final VoidCallback? onTap;
   final Widget? trailing;
   final String? subtitle;
+
+  /// Overrides [icon] with a real-artwork widget when set.
+  final Widget? iconWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,7 @@ class ProfileMenuTile extends StatelessWidget {
                 color: color.withOpacity(0.14),
                 borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
-              child: Icon(icon, color: color, size: 22),
+              child: iconWidget ?? Icon(icon, color: color, size: 22),
             ),
             const SizedBox(width: AppSpacing.md),
             Expanded(

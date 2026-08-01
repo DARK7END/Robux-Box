@@ -46,6 +46,7 @@ class ProfileScreen extends ConsumerWidget {
           ),
           ProfileMenuTile(
             icon: Icons.card_giftcard_rounded,
+            iconWidget: const GiftIcon(size: 22, color: AppColors.robux),
             label: context.l10n.redemptionTitle,
             color: AppColors.robux,
             onTap: () => context.push(AppRoutes.redemptions),

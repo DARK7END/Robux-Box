@@ -80,8 +80,10 @@ class NotificationsScreen extends ConsumerWidget {
                         color: context.colors.primary.withOpacity(0.14),
                         borderRadius: BorderRadius.circular(AppRadius.sm),
                       ),
-                      child: Icon(_icon(n.type),
-                          color: context.colors.primary, size: 20),
+                      child: n.type == NotificationType.redemption
+                          ? GiftIcon(size: 20, color: context.colors.primary)
+                          : Icon(_icon(n.type),
+                              color: context.colors.primary, size: 20),
                     ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(

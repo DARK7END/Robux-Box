@@ -130,8 +130,11 @@ service cloud.firestore {
 
     // ------------------------------ Config ---------------------------------
     // Read-only remote config (economy, tiers, feature flags, maintenance).
+    // `notifications` is excluded — it holds admin contact emails, which are
+    // server-side-only (read by Cloud Functions via the Admin SDK, which
+    // bypasses these rules entirely) and must never be client-readable.
     match /config/{doc} {
-      allow read: if isSignedIn();
+      allow read: if isSignedIn() && doc != 'notifications';
       allow write: if isAdmin();
     }
     match /geo_tiers/{doc} {

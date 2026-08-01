@@ -311,7 +311,9 @@ class TransactionTile extends StatelessWidget {
               color: color.withOpacity(0.14),
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
-            child: Icon(_icon, color: color, size: 22),
+            child: tx.type == TxType.redemption
+                ? GiftIcon(size: 22, color: color)
+                : Icon(_icon, color: color, size: 22),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(

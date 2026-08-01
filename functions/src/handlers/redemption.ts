@@ -4,7 +4,7 @@ import {
 } from "../lib/admin";
 import {debitWallet, refundPending, clearPending} from "../lib/wallet";
 import {requireAuth, requireAdmin, rateLimit} from "../lib/security";
-import {sendUserNotification} from "../lib/notify";
+import {sendUserNotification, notifyAdmins} from "../lib/notify";
 
 const opts = {enforceAppCheck: true, region: "us-central1"} as const;
 
@@ -85,6 +85,18 @@ export const requestRedemption = onCall(opts, async (req) => {
     body: `Your request for ${reward.title} is under review.`,
     deeplink: "/redemptions",
   });
+
+  await notifyAdmins(
+    `New redemption request: ${reward.title}`,
+    `A new redemption request needs fulfilment.\n\n` +
+    `Reward: ${reward.title}\n` +
+    `Cost: ${coinCost} coins\n` +
+    `Delivery email: ${deliveryTarget}\n` +
+    `Redemption ID: ${redemptionRef.id}\n\n` +
+    `Open the Robux Box app → Admin → Withdraw Requests to approve it and ` +
+    `deliver the gift-card code (in the app, or by replying to the user's ` +
+    `email above).`,
+  );
 
   return {redemptionId: redemptionRef.id};
 });

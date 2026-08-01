@@ -30,6 +30,11 @@ async function main() {
     referralsEnabled: true,
   }, {merge: true});
   batch.set(db.doc("config/maintenance"), {enabled: false, message: ""}, {merge: true});
+  // Empty until an admin sets it — notifyAdmins() (functions/src/lib/notify.ts)
+  // no-ops silently until this has at least one address. Not client-readable
+  // (see firestore.rules); requires the Trigger Email extension to actually
+  // deliver mail — see docs/DEPLOYMENT.md.
+  batch.set(db.doc("config/notifications"), {adminEmails: []}, {merge: true});
 
   // Geo-tier overrides (extend/adjust as needed)
   batch.set(db.doc("geo_tiers/overrides"), {

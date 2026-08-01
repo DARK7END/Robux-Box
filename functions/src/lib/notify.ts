@@ -1,4 +1,4 @@
-import {userDoc, messaging, Timestamp} from "./admin";
+import {userDoc, messaging, Timestamp, cols} from "./admin";
 
 export interface NotifyPayload {
   type: string;
@@ -47,6 +47,28 @@ export async function sendUserNotification(
     });
   } catch {
     // ignore push failures
+  }
+}
+
+/**
+ * Emails the configured admin address(es) — used for events an admin must act
+ * on manually, like a new redemption request awaiting fulfilment.
+ *
+ * Queues the message via the Firestore "Trigger Email" extension (writes to
+ * the `mail` collection; the extension must be installed with an SMTP
+ * connection for delivery to actually happen — see docs/DEPLOYMENT.md).
+ * Recipients come from `config/notifications`'s `adminEmails` array, which is
+ * empty by default: this no-ops silently until an admin sets it, and never
+ * throws, so a notification failure can never block the caller's real work.
+ */
+export async function notifyAdmins(subject: string, text: string): Promise<void> {
+  try {
+    const snap = await cols.config.doc("notifications").get();
+    const to = (snap.data()?.adminEmails as string[] | undefined) ?? [];
+    if (to.length === 0) return;
+    await cols.mail.add({to, message: {subject, text}});
+  } catch {
+    // best-effort — never block the caller.
   }
 }
 

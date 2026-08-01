@@ -95,6 +95,29 @@ branded domain is ever added, point it at Pages and rebuild with
 Create `scripts/seed.js` (Node, Admin SDK) or add docs manually per
 `docs/FIRESTORE_SCHEMA.md` (at minimum: a few `rewards`, `geo_tiers/overrides`).
 
+## 8b. Admin email notifications (redemption alerts)
+Every reward is fulfilled manually (Robux included), so an admin needs to
+know the moment a request comes in. `requestRedemption` queues an email via
+the Firestore **Trigger Email** extension rather than calling an email API
+directly, so setup is one-time infra, not code:
+
+1. Install the extension: `firebase ext:install firestore-send-email` (or via
+   the console → Extensions). Point it at an SMTP connection (Gmail app
+   password, SendGrid, Mailgun, etc.) and leave its Firestore collection as
+   the default `mail` — that's what `cols.mail` (functions/src/lib/admin.ts)
+   writes to.
+2. Set the recipient address(es):
+   ```bash
+   node -e "require('firebase-admin').initializeApp(); \
+     require('firebase-admin').firestore().doc('config/notifications') \
+       .set({adminEmails: ['you@example.com']}, {merge: true})"
+   ```
+   (or edit the doc directly in the console). It's seeded empty by
+   `scripts/seed.js`, and `notifyAdmins()` no-ops silently until it's set —
+   nothing breaks if this step is skipped, admins just won't get emailed.
+   This doc is deliberately excluded from the client-readable `config/*`
+   rule (see `firestore.rules`) since it holds contact emails.
+
 ## 9. Bootstrap the first admin
 1. Sign in once with the email listed in `ADMIN_BOOTSTRAP_EMAIL`.
 2. Call `setAdminClaim({ email })` (via the app's admin area or

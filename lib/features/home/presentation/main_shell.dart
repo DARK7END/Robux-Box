@@ -9,6 +9,7 @@ import '../../../core/extensions/context_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/gift_icon.dart';
 import '../../earn/data/earn_repository.dart';
 
 /// Root scaffold hosting the five primary tabs with a floating, glassmorphic
@@ -26,11 +27,12 @@ class MainShell extends ConsumerStatefulWidget {
 class _MainShellState extends ConsumerState<MainShell> {
   // Home · Earn · Redeem · Tasks · Profile
   static const _items = [
-    _NavItem(Icons.home_rounded, Icons.home_outlined),
-    _NavItem(Icons.bolt_rounded, Icons.bolt_outlined),
-    _NavItem(Icons.card_giftcard_rounded, Icons.card_giftcard_outlined),
-    _NavItem(Icons.checklist_rounded, Icons.checklist_outlined),
-    _NavItem(Icons.person_rounded, Icons.person_outline_rounded),
+    _NavItem(active: Icons.home_rounded, inactive: Icons.home_outlined),
+    _NavItem(active: Icons.bolt_rounded, inactive: Icons.bolt_outlined),
+    _NavItem(asset: 'assets/images/gift_outline_icon.png'),
+    _NavItem(active: Icons.checklist_rounded, inactive: Icons.checklist_outlined),
+    _NavItem(
+        active: Icons.person_rounded, inactive: Icons.person_outline_rounded),
   ];
 
   @override
@@ -137,9 +139,12 @@ class _MainShellState extends ConsumerState<MainShell> {
 }
 
 class _NavItem {
-  const _NavItem(this.active, this.inactive);
-  final IconData active;
-  final IconData inactive;
+  const _NavItem({this.active, this.inactive, this.asset});
+  final IconData? active;
+  final IconData? inactive;
+
+  /// A bundled icon asset, used instead of [active]/[inactive] when set.
+  final String? asset;
 }
 
 class _NavButton extends StatelessWidget {
@@ -174,8 +179,10 @@ class _NavButton extends StatelessWidget {
               scale: active ? 1.16 : 1.0,
               duration: AppDuration.medium,
               curve: AppCurves.spring,
-              child: Icon(active ? item.active : item.inactive,
-                  color: color, size: 24),
+              child: item.asset != null
+                  ? GiftIcon(size: 24, color: color)
+                  : Icon(active ? item.active : item.inactive,
+                      color: color, size: 24),
             ),
           ),
           const SizedBox(height: 3),

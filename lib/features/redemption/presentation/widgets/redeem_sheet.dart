@@ -52,7 +52,7 @@ class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
   void initState() {
     super.initState();
     final user = ref.read(currentUserProvider).valueOrNull;
-    _target = TextEditingController(text: user?.robloxUsername ?? '');
+    _target = TextEditingController(text: user?.email ?? '');
   }
 
   @override
@@ -61,24 +61,16 @@ class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
     super.dispose();
   }
 
+  // Every reward kind is fulfilled manually (Robux included — see
+  // scripts/seed.js's `provider: "manual"`), so delivery is always to an
+  // email an admin can reach, never a Roblox username.
   (String, String?, TextInputType, String? Function(String?)) get _fieldSpec {
-    switch (widget.reward.kind) {
-      case RewardKind.robux:
-        return (
-          context.l10n.rewardsEnterRoblox,
-          'RobloxPlayer123',
-          TextInputType.text,
-          Validators.robloxUsername,
-        );
-      case RewardKind.giftCard:
-      case RewardKind.digitalCode:
-        return (
-          context.l10n.authEmail,
-          'you@example.com',
-          TextInputType.emailAddress,
-          Validators.email,
-        );
-    }
+    return (
+      context.l10n.authEmail,
+      'you@example.com',
+      TextInputType.emailAddress,
+      Validators.email,
+    );
   }
 
   Future<void> _submit() async {
@@ -147,16 +139,17 @@ class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
                 ),
                 // A known Robux tier's real card art takes priority over the
                 // generic glyph, matching the reward card it Hero-animates from.
+                // This banner is much wider (and thus more tightly cropped
+                // vertically) than the reward card's art panel, so it needs a
+                // lower focal point to keep the package number in frame.
                 child: localArt != null
                     ? Image.asset(localArt,
-                        fit: BoxFit.cover, alignment: Alignment.topCenter)
+                        fit: BoxFit.cover, alignment: const Alignment(0, -0.5))
                     : switch (widget.reward.kind) {
                         RewardKind.robux =>
                           const RGlyph(size: 44, color: AppColors.white),
-                        RewardKind.giftCard => const Icon(
-                            Icons.card_giftcard_rounded,
-                            color: AppColors.white,
-                            size: 44),
+                        RewardKind.giftCard =>
+                          const GiftIcon(size: 44, color: AppColors.white),
                         RewardKind.digitalCode => const Icon(
                             Icons.vpn_key_rounded,
                             color: AppColors.white,

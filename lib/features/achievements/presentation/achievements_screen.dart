@@ -216,8 +216,11 @@ class _AchievementTile extends StatelessWidget {
                       : context.surfaces.border,
                 ),
               ),
-              child: Icon(unlocked ? icon : Icons.lock_outline_rounded,
-                  color: color, size: 22),
+              child: !unlocked
+                  ? Icon(Icons.lock_outline_rounded, color: color, size: 22)
+                  : achievement.icon == 'redeem'
+                      ? GiftIcon(size: 22, color: color)
+                      : Icon(icon, color: color, size: 22),
             ),
           ),
           const SizedBox(width: AppSpacing.md),

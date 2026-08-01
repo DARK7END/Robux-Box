@@ -5,6 +5,7 @@ import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/router/routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/widgets/gift_icon.dart';
 import '../../../../core/widgets/glass_card.dart';
 
 /// 2×2 grid of primary earn/redeem/invite actions.
@@ -19,7 +20,8 @@ class QuickActionGrid extends StatelessWidget {
       _Action(Icons.checklist_rounded, context.l10n.homeOffers,
           AppColors.accent, () => context.go(AppRoutes.tasks)),
       _Action(Icons.card_giftcard_rounded, context.l10n.homeRedeem,
-          AppColors.robux, () => context.go(AppRoutes.rewards)),
+          AppColors.robux, () => context.go(AppRoutes.rewards),
+          useGiftIcon: true),
       _Action(Icons.group_add_rounded, context.l10n.homeInvite,
           AppColors.coinDeep, () => context.push(AppRoutes.referrals)),
     ];
@@ -46,7 +48,9 @@ class QuickActionGrid extends StatelessWidget {
                       color: a.color.withOpacity(0.16),
                       borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
-                    child: Icon(a.icon, color: a.color, size: 22),
+                    child: a.useGiftIcon
+                        ? GiftIcon(size: 22, color: a.color)
+                        : Icon(a.icon, color: a.color, size: 22),
                   ),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
@@ -66,9 +70,13 @@ class QuickActionGrid extends StatelessWidget {
 }
 
 class _Action {
-  const _Action(this.icon, this.label, this.color, this.onTap);
+  const _Action(this.icon, this.label, this.color, this.onTap,
+      {this.useGiftIcon = false});
   final IconData icon;
   final String label;
   final Color color;
   final VoidCallback onTap;
+
+  /// Renders the real gift-card icon instead of [icon] when true.
+  final bool useGiftIcon;
 }
