@@ -6,7 +6,6 @@ import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_gradients.dart';
-import '../../../../core/widgets/gift_glyph.dart';
 import '../../../../core/widgets/glass_card.dart';
 import '../../../../core/widgets/r_glyph.dart';
 import '../../../../models/reward.dart';
@@ -39,7 +38,8 @@ class RewardCard extends StatelessWidget {
       RewardKind.giftCard => (
           AppGradients.coin,
           AppColors.coin,
-          (double s, Color c) => GiftGlyph(size: s, color: c),
+          (double s, Color c) =>
+              Icon(Icons.card_giftcard_rounded, size: s, color: c),
         ),
       RewardKind.digitalCode => (
           AppGradients.vip,

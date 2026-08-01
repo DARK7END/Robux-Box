@@ -145,8 +145,10 @@ class _RedeemSheetState extends ConsumerState<_RedeemSheet> {
                 child: switch (widget.reward.kind) {
                   RewardKind.robux =>
                     const RGlyph(size: 44, color: AppColors.white),
-                  RewardKind.giftCard =>
-                    const GiftGlyph(size: 44, color: AppColors.white),
+                  RewardKind.giftCard => const Icon(
+                      Icons.card_giftcard_rounded,
+                      color: AppColors.white,
+                      size: 44),
                   RewardKind.digitalCode => const Icon(Icons.vpn_key_rounded,
                       color: AppColors.white, size: 44),
                 },
