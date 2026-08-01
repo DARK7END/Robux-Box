@@ -207,6 +207,26 @@ class SupportRepository {
       return Result.failure(FirebaseErrorMapper.map(e, s));
     }
   }
+
+  /// Admin-only (enforced by rules): permanently removes a ticket and every
+  /// message in it. Non-economic, so — like the rest of this class — a plain
+  /// batched Firestore delete rather than a Cloud Function.
+  Future<Result<void>> deleteTicket(String ticketId) async {
+    try {
+      final messages =
+          await _db.collection(FsPaths.ticketMessages(ticketId)).get();
+      final batch = _db.batch();
+      for (final doc in messages.docs) {
+        batch.delete(doc.reference);
+      }
+      batch.delete(_db.collection(FsPaths.supportTickets).doc(ticketId));
+      await batch.commit();
+      return const Result.success(null);
+    } catch (e, s) {
+      log.e('deleteTicket failed', e, s);
+      return Result.failure(FirebaseErrorMapper.map(e, s));
+    }
+  }
 }
 
 final supportRepositoryProvider = Provider<SupportRepository>((ref) {

@@ -93,8 +93,7 @@ class _TicketThreadSheetState extends ConsumerState<_TicketThreadSheet> {
           senderUid: uid,
           isAdmin: widget.isAdminView,
           text: text,
-          attachment:
-              _attachment == null ? null : File(_attachment!.path),
+          attachment: _attachment == null ? null : File(_attachment!.path),
         );
     if (!mounted) return;
     setState(() => _sending = false);
@@ -107,11 +106,43 @@ class _TicketThreadSheetState extends ConsumerState<_TicketThreadSheet> {
     }
   }
 
+  Future<void> _delete() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete this ticket?'),
+        content: const Text(
+            'This permanently removes the ticket and every message in it. '
+            'This can\'t be undone.'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Delete')),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    final result = await ref
+        .read(supportRepositoryProvider)
+        .deleteTicket(widget.ticket.id);
+    if (!mounted) return;
+    switch (result) {
+      case Success():
+        Navigator.of(context).pop();
+      case Err(:final Failure failure):
+        AppToast.error(context, failure.message);
+    }
+  }
+
   Future<void> _toggleStatus(TicketStatus current) async {
     final next =
         current == TicketStatus.open ? TicketStatus.closed : TicketStatus.open;
-    final result =
-        await ref.read(supportRepositoryProvider).setStatus(widget.ticket.id, next);
+    final result = await ref
+        .read(supportRepositoryProvider)
+        .setStatus(widget.ticket.id, next);
     if (!mounted) return;
     if (result case Err(:final Failure failure)) {
       AppToast.error(context, failure.message);
@@ -171,6 +202,13 @@ class _TicketThreadSheetState extends ConsumerState<_TicketThreadSheet> {
                       ? Icons.check_circle_outline_rounded
                       : Icons.refresh_rounded),
                 ),
+                if (widget.isAdminView)
+                  IconButton(
+                    tooltip: 'Delete ticket',
+                    onPressed: _delete,
+                    icon: const Icon(Icons.delete_outline_rounded,
+                        color: AppColors.danger),
+                  ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.close_rounded),
@@ -182,13 +220,15 @@ class _TicketThreadSheetState extends ConsumerState<_TicketThreadSheet> {
           Expanded(
             child: messagesAsync.when(
               loading: () => const PremiumLoadingView(),
-              error: (e, _) => ErrorStateView(message: context.l10n.errorGeneric),
+              error: (e, _) =>
+                  ErrorStateView(message: context.l10n.errorGeneric),
               data: (messages) => ListView.builder(
                 controller: widget.scrollController,
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 itemCount: messages.length,
-                itemBuilder: (context, i) =>
-                    _MessageBubble(message: messages[i], isMine: messages[i].senderUid == myUid),
+                itemBuilder: (context, i) => _MessageBubble(
+                    message: messages[i],
+                    isMine: messages[i].senderUid == myUid),
               ),
             ),
           ),
@@ -232,8 +272,8 @@ class _TicketThreadSheetState extends ConsumerState<_TicketThreadSheet> {
                     maxLines: 4,
                     textInputAction: TextInputAction.send,
                     onSubmitted: (_) => _send(),
-                    decoration:
-                        InputDecoration(hintText: context.l10n.supportReplyHint),
+                    decoration: InputDecoration(
+                        hintText: context.l10n.supportReplyHint),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
@@ -335,9 +375,8 @@ class _MessageBubble extends StatelessWidget {
                                 .round(),
                         placeholder: (_, __) =>
                             const ShimmerBox(width: 200, height: 140),
-                        errorWidget: (_, __, ___) => Icon(
-                            Icons.broken_image_outlined,
-                            color: textColor),
+                        errorWidget: (_, __, ___) =>
+                            Icon(Icons.broken_image_outlined, color: textColor),
                       ),
                     ),
                   ),

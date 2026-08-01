@@ -207,7 +207,11 @@ service cloud.firestore {
                       && request.resource.data.senderUid == request.auth.uid
                       && request.resource.data.isAdmin == isAdmin();
         allow read: if isUser(ticketOwnerUid()) || isAdmin();
-        allow update, delete: if false;
+        // Immutable — a message is never edited after the fact — but an
+        // admin deleting the whole ticket (SupportRepository.deleteTicket)
+        // needs to clear its messages too.
+        allow update: if false;
+        allow delete: if isAdmin();
       }
     }
 

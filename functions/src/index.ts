@@ -38,6 +38,7 @@ export {
   requestRedemption,
   cancelRedemption,
   processRedemption,
+  deleteRedemption,
 } from "./handlers/redemption";
 
 // Callable + HTTP: offerwall & ads verification

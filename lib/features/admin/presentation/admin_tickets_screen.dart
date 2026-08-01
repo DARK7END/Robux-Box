@@ -7,11 +7,13 @@ import '../../../core/error/result.dart';
 import '../../../core/extensions/context_extensions.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/widgets/widgets.dart';
+import '../../../models/app_user.dart';
 import '../../../models/support_ticket.dart';
 import '../../support/data/support_repository.dart';
 import '../../support/domain/support_providers.dart';
 import '../../support/presentation/support_screen.dart';
 import '../../support/presentation/widgets/ticket_thread_sheet.dart';
+import 'widgets/tier_filter_row.dart';
 
 /// Admin support desk: every user's tickets, filterable, with the category
 /// list editable in place.
@@ -26,13 +28,16 @@ enum _Filter { awaiting, open, all }
 
 class _AdminTicketsScreenState extends ConsumerState<AdminTicketsScreen> {
   _Filter _filter = _Filter.awaiting;
+  VipLevel? _tierFilter;
 
-  bool _matches(SupportTicket t) => switch (_filter) {
-        _Filter.awaiting =>
-          t.status == TicketStatus.open && !t.lastSenderIsAdmin,
-        _Filter.open => t.status == TicketStatus.open,
-        _Filter.all => true,
-      };
+  bool _matches(SupportTicket t) {
+    final statusOk = switch (_filter) {
+      _Filter.awaiting => t.status == TicketStatus.open && !t.lastSenderIsAdmin,
+      _Filter.open => t.status == TicketStatus.open,
+      _Filter.all => true,
+    };
+    return statusOk && (_tierFilter == null || t.vipLevel == _tierFilter);
+  }
 
   String _label(_Filter f) => switch (f) {
         _Filter.awaiting => context.l10n.supportFilterAwaiting,
@@ -63,6 +68,10 @@ class _AdminTicketsScreenState extends ConsumerState<AdminTicketsScreen> {
             selected: {_filter},
             showSelectedIcon: false,
             onSelectionChanged: (s) => setState(() => _filter = s.first),
+          ),
+          TierFilterRow(
+            selected: _tierFilter,
+            onSelect: (v) => setState(() => _tierFilter = v),
           ),
           const SizedBox(height: AppSpacing.md),
           Expanded(

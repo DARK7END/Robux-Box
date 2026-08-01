@@ -99,6 +99,11 @@ class AdminRepository {
         'reason': reason,
       });
 
+  /// Permanently removes a redemption record, any status — refunds a
+  /// still-held hold first (server-side) so this can never strand coins.
+  Future<Result<void>> deleteRedemption(String id) =>
+      _call('deleteRedemption', {'redemptionId': id});
+
   // ---------------------------------------------------------------------- users
   Future<AdminUserBundle?> findUserByEmail(String email) async {
     final snap = await _db

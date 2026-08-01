@@ -194,3 +194,40 @@ export const processRedemption = onCall(opts, async (req) => {
   });
   return {ok: true};
 });
+
+/**
+ * Admin-only: permanently removes a redemption record, any status. If it was
+ * still unresolved (pending/approved — coins still held in `pendingCoins`),
+ * refunds the hold first so deleting a request can never silently strand a
+ * user's coins in limbo.
+ */
+export const deleteRedemption = onCall(opts, async (req) => {
+  const adminUid = requireAdmin(req);
+  const id = String(req.data?.redemptionId ?? "");
+  if (!id) throw new HttpsError("invalid-argument", "Missing redemption id.");
+
+  const ref = cols.redemptions.doc(id);
+  const snap = await ref.get();
+  if (!snap.exists) throw new HttpsError("not-found", "Redemption not found.");
+  const r = snap.data()!;
+  const uid = r.uid as string;
+  const cost = (r.coinCost as number) ?? 0;
+  const status = String(r.status ?? "");
+
+  if (status === "pending" || status === "approved") {
+    await refundPending(uid, cost, id);
+    await sendUserNotification(uid, {
+      type: "redemption", title: "Redemption removed",
+      body: `Your request for ${r.title} was removed by an admin and your ` +
+        `coins were refunded.`,
+      deeplink: "/redemptions",
+    });
+  }
+
+  await ref.delete();
+  await cols.auditLogs.add({
+    actor: adminUid, action: "redemption_delete", target: id,
+    details: {previousStatus: status}, createdAt: Timestamp.now(),
+  });
+  return {ok: true};
+});

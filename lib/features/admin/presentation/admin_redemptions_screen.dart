@@ -14,15 +14,27 @@ import '../../../models/redemption.dart';
 import '../../../models/reward.dart';
 import '../data/admin_repository.dart';
 import '../domain/admin_providers.dart';
+import 'widgets/tier_filter_row.dart';
 
-/// The payout queue: pending / approved / paid / rejected, with approve, reject
-/// and mark-paid actions. Every action calls `processRedemption` (which moves
-/// held coins and notifies the user).
-class AdminRedemptionsScreen extends ConsumerWidget {
+/// The payout queue: pending / approved / paid / rejected, with approve, reject,
+/// mark-paid and delete actions, plus a VIP-tier filter shared across every
+/// tab. Every processing action calls `processRedemption` (which moves held
+/// coins and notifies the user); delete calls `deleteRedemption` (which
+/// refunds first if the request was still unresolved).
+class AdminRedemptionsScreen extends ConsumerStatefulWidget {
   const AdminRedemptionsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AdminRedemptionsScreen> createState() =>
+      _AdminRedemptionsScreenState();
+}
+
+class _AdminRedemptionsScreenState
+    extends ConsumerState<AdminRedemptionsScreen> {
+  VipLevel? _tierFilter;
+
+  @override
+  Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
       child: AppScaffold(
@@ -41,13 +53,24 @@ class AdminRedemptionsScreen extends ConsumerWidget {
                 Tab(text: 'Rejected'),
               ],
             ),
-            const Expanded(
+            TierFilterRow(
+              selected: _tierFilter,
+              onSelect: (v) => setState(() => _tierFilter = v),
+            ),
+            Expanded(
               child: TabBarView(
                 children: [
-                  _Queue(status: RedemptionStatus.pending),
-                  _Queue(status: RedemptionStatus.approved),
-                  _Queue(status: RedemptionStatus.paid),
-                  _Queue(status: RedemptionStatus.rejected),
+                  _Queue(
+                      status: RedemptionStatus.pending,
+                      tierFilter: _tierFilter),
+                  _Queue(
+                      status: RedemptionStatus.approved,
+                      tierFilter: _tierFilter),
+                  _Queue(
+                      status: RedemptionStatus.paid, tierFilter: _tierFilter),
+                  _Queue(
+                      status: RedemptionStatus.rejected,
+                      tierFilter: _tierFilter),
                 ],
               ),
             ),
@@ -59,8 +82,9 @@ class AdminRedemptionsScreen extends ConsumerWidget {
 }
 
 class _Queue extends ConsumerWidget {
-  const _Queue({required this.status});
+  const _Queue({required this.status, this.tierFilter});
   final RedemptionStatus status;
+  final VipLevel? tierFilter;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,7 +92,10 @@ class _Queue extends ConsumerWidget {
     return async.when(
       loading: () => const PremiumLoadingView(),
       error: (e, _) => ErrorStateView(message: context.l10n.errorGeneric),
-      data: (items) {
+      data: (all) {
+        final items = tierFilter == null
+            ? all
+            : all.where((r) => r.vipLevel == tierFilter).toList();
         if (items.isEmpty) {
           return EmptyStateView(
             icon: Icons.inbox_rounded,
@@ -173,6 +200,41 @@ class _RedemptionCardState extends ConsumerState<_RedemptionCard> {
     await _act('reject', reason: reason);
   }
 
+  Future<void> _delete() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete this request?'),
+        content: Text(widget.redemption.status == RedemptionStatus.pending ||
+                widget.redemption.status == RedemptionStatus.approved
+            ? 'This request is still unresolved — its held coins will be '
+                'refunded to the user before it\'s deleted.'
+            : 'This permanently removes the record. This can\'t be undone.'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Delete')),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    setState(() => _busy = true);
+    final result = await ref
+        .read(adminRepositoryProvider)
+        .deleteRedemption(widget.redemption.id);
+    if (!mounted) return;
+    setState(() => _busy = false);
+    switch (result) {
+      case Success():
+        AppToast.success(context, 'Deleted');
+      case Err(:final Failure failure):
+        AppToast.error(context, failure.message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final r = widget.redemption;
@@ -200,6 +262,13 @@ class _RedemptionCardState extends ConsumerState<_RedemptionCard> {
                   const SizedBox(width: 3),
                   Text('${r.coinCost}', style: context.text.labelMedium),
                 ],
+              ),
+              IconButton(
+                tooltip: 'Delete',
+                visualDensity: VisualDensity.compact,
+                onPressed: _busy ? null : _delete,
+                icon: const Icon(Icons.delete_outline_rounded,
+                    color: AppColors.danger, size: 18),
               ),
             ],
           ),
