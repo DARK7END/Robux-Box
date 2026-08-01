@@ -36,6 +36,12 @@ android/app/*.jks
 # overlay from ios_config/), so it is not committed. The canonical config lives
 # in ios_config/.
 /ios/
+
+# Web — this app is Android/iOS only (several plugins, e.g. google_mobile_ads,
+# have no real web implementation). `flutter create --platforms=web .`
+# regenerates this on demand purely for local UI verification in a browser;
+# it is never a shipped target, same reasoning as /ios/ above.
+/web/
 **/GoogleService-Info.plist
 !ios_config/GoogleService-Info.plist
 

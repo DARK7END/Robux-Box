@@ -186,7 +186,7 @@
   "rewardsConfirmBody": "Redeem {name} for {coins} coins?",
   "@rewardsConfirmBody": { "placeholders": { "name": { "type": "String" }, "coins": { "type": "int" } } },
   "rewardsEnterRoblox": "Your Roblox username",
-  "rewardsRequestSubmitted": "Redemption submitted — you'll hear back within a few minutes to a few hours",
+  "rewardsRequestSubmitted": "Redemption submitted — you''ll hear back within a few minutes to a few hours",
   "rewardsMinWithdraw": "Minimum {coins} coins to redeem",
   "@rewardsMinWithdraw": { "placeholders": { "coins": { "type": "int" } } },
   "rewardsRedeemForTitle": "Redeem for",
