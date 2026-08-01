@@ -60,9 +60,29 @@ jobs:
         run: flutter pub get
       - name: Generate localisations
         run: flutter gen-l10n
-      # No key.properties in CI, so android/app/build.gradle falls back to
-      # debug signing — the APK is installable for sideload testing but not
-      # for Play Store upload. Release mode still exercises R8/proguard.
+      # Release signing is optional: if the four ANDROID_* secrets below are
+      # configured on this repo, we reconstruct key.properties + the upload
+      # keystore from them and android/app/build.gradle picks up real release
+      # signing automatically. Without them, it falls back to debug signing —
+      # installable for sideload testing but not for Play Store upload.
+      - name: Check for release signing secrets
+        id: keystore_check
+        run: |
+          if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Restore release keystore
+        if: steps.keystore_check.outputs.present == 'true'
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/upload-keystore.jks
+          cat > android/key.properties <<EOF
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=upload-keystore.jks
+          EOF
       - name: Build release APK
         run: flutter build apk --release
       - name: Rename APK
@@ -77,11 +97,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete android-latest --yes --cleanup-tag || true
-          gh release create android-latest dist/robux-box-latest.apk \
-            --target "${{ github.sha }}" \
-            --title "Robux Box (Android) — latest" \
-            --notes "Automated build from ${{ github.sha }} on ${{ github.ref_name }}. Debug-signed APK for sideload testing only — not signed for Play Store upload." \
-            --prerelease
+          if [ "${{ steps.keystore_check.outputs.present }}" = "true" ]; then
+            gh release create android-latest dist/robux-box-latest.apk \
+              --target "${{ github.sha }}" \
+              --title "Robux Box (Android) — latest" \
+              --notes "Automated build from ${{ github.sha }} on ${{ github.ref_name }}. Release-signed with the upload key — ready for Play Store upload or production sideload."
+          else
+            gh release create android-latest dist/robux-box-latest.apk \
+              --target "${{ github.sha }}" \
+              --title "Robux Box (Android) — latest" \
+              --notes "Automated build from ${{ github.sha }} on ${{ github.ref_name }}. Debug-signed APK for sideload testing only — not signed for Play Store upload." \
+              --prerelease
+          fi
 
   functions:
     name: Cloud Functions build & test
