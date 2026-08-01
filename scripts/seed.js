@@ -41,9 +41,13 @@ async function main() {
     map: {US: 1, GB: 1, CA: 1, DE: 1, FR: 2, BR: 3, IN: 4, EG: 4},
   }, {merge: true});
 
-  // Reward catalogue. The six Robux tiers mirror the bundled global gift-card
-  // art (assets/images/robux_packages/) — coinCost applies a graduated bulk
-  // discount off the flat coinsPerRobux rate (0% -> 15%) as the tier grows.
+  // Reward catalogue. The six Robux-amount tiers mirror the bundled global
+  // gift-card art (assets/images/robux_packages/) — coinCost applies a
+  // graduated bulk discount off the flat coinsPerRobux rate (0% -> 15%) as
+  // the tier grows. The three USD-value cards are the same product on a
+  // parallel pricing track (coinsPerRobux / usdPerRobux = 8000 coins/$1),
+  // discounted to match the equivalent Robux-amount tier (e.g. $5 ~= 400
+  // Robux) rather than a separate curve.
   const rewards = [
     {id: "robux_100", kind: "robux", title: "100 Robux", subtitle: "Global gift card",
       coinCost: 10000, faceValue: 100, currency: "RBX", provider: "manual",
@@ -63,6 +67,15 @@ async function main() {
     {id: "robux_2500", kind: "robux", title: "2500 Robux", subtitle: "Global gift card",
       coinCost: 212500, faceValue: 2500, currency: "RBX", provider: "manual",
       isActive: true, sortOrder: 6, badge: "Best value"},
+    {id: "robux_usd_5", kind: "robux", title: "$5 Roblox Gift Card", subtitle: "Global gift card",
+      coinCost: 38000, faceValue: 5, currency: "USD", provider: "manual",
+      isActive: true, sortOrder: 7, badge: ""},
+    {id: "robux_usd_10", kind: "robux", title: "$10 Roblox Gift Card", subtitle: "Global gift card",
+      coinCost: 72000, faceValue: 10, currency: "USD", provider: "manual",
+      isActive: true, sortOrder: 8, badge: ""},
+    {id: "robux_usd_20", kind: "robux", title: "$20 Roblox Gift Card", subtitle: "Global gift card",
+      coinCost: 139000, faceValue: 20, currency: "USD", provider: "manual",
+      isActive: true, sortOrder: 9, badge: ""},
     {id: "gc_amazon_10", kind: "giftCard", title: "$10 Amazon", subtitle: "Gift card",
       coinCost: 100000, faceValue: 10, currency: "USD", provider: "reloadly",
       isActive: true, sortOrder: 10, badge: ""},
