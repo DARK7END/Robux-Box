@@ -1,6 +1,6 @@
 import {onCall, HttpsError} from "firebase-functions/v2/https";
 import {cols, userDoc, walletDoc, Timestamp, FieldValue} from "../lib/admin";
-import {ECONOMY, rewardedAdCoins} from "../lib/economy";
+import {ECONOMY, rewardedAdCoins, effectiveVipLevel, maxAdsPerDay} from "../lib/economy";
 import {tierForCountry} from "../lib/tiers";
 import {creditWallet} from "../lib/wallet";
 import {
@@ -20,10 +20,11 @@ export const beginRewardedAd = onCall(opts, async (req) => {
   assertIntegrity(device);
   await recordDevice(uid, device);
 
-  const wSnap = await walletDoc(uid).get();
+  const [wSnap, uSnap] = await Promise.all([walletDoc(uid).get(), userDoc(uid).get()]);
   const wallet = wSnap.data() ?? {};
+  const vip = effectiveVipLevel(uSnap.data() ?? {});
   const adsToday = (wallet.adsWatchedToday as number) ?? 0;
-  if (adsToday >= ECONOMY.maxRewardedAdsPerDay) {
+  if (adsToday >= maxAdsPerDay(vip)) {
     throw new HttpsError("resource-exhausted", "Daily ad limit reached.");
   }
   const lastEarn = wallet.lastAdAt as Timestamp | undefined;
@@ -50,7 +51,11 @@ export const confirmRewardedAd = onCall(opts, async (req) => {
   const payload = (req.data?.payload ?? {}) as Record<string, any>;
   const nonce = String(payload.nonce ?? req.data?.nonce ?? "");
 
-  await rateLimit(uid, "confirm_ad", ECONOMY.maxRewardedAdsPerDay, 86_400);
+  const uSnap = await userDoc(uid).get();
+  const user = uSnap.data() ?? {};
+  const vip = effectiveVipLevel(user);
+
+  await rateLimit(uid, "confirm_ad", maxAdsPerDay(vip), 86_400);
   await consumeNonce(uid, nonce, "rewarded_ad");
 
   // Optional strict mode: require the AdMob SSV record to be present.
@@ -59,12 +64,9 @@ export const confirmRewardedAd = onCall(opts, async (req) => {
     throw new HttpsError("failed-precondition", "Ad could not be verified.");
   }
 
-  const uSnap = await userDoc(uid).get();
-  const user = uSnap.data() ?? {};
   const geo = (payload.geo ?? {}) as Record<string, any>;
   const country = String(geo.countryCode ?? user.countryCode ?? "US");
   const tierLevel = await tierForCountry(country);
-  const vip = String(user.vipLevel ?? "none");
 
   const coins = rewardedAdCoins(tierLevel, vip);
   await checkVelocity(uid, coins);

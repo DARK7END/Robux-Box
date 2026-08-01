@@ -7,15 +7,29 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/glass_card.dart';
 import '../../../../core/widgets/r_glyph.dart';
 import '../../../../core/widgets/status_pill.dart';
+import '../../../../models/app_user.dart';
 import '../../../../models/offer.dart';
 
 /// Premium offer/task card: brand icon, title, difficulty, ETA, reward and a
-/// progress bar for multi-step offers.
+/// progress bar for multi-step offers. [locked] dims it and swaps in a
+/// "{tier}+ exclusive" badge when the offer needs a higher VIP rank than the
+/// viewer currently has — still visible (an upgrade incentive), never hidden.
 class OfferCard extends StatelessWidget {
-  const OfferCard({super.key, required this.offer, required this.onTap});
+  const OfferCard({
+    super.key,
+    required this.offer,
+    required this.onTap,
+    this.locked = false,
+  });
 
   final Offer offer;
   final VoidCallback onTap;
+  final bool locked;
+
+  static String _tierLabel(int rank) {
+    final level = VipLevel.values[rank.clamp(0, VipLevel.values.length - 1)];
+    return level.name[0].toUpperCase() + level.name.substring(1);
+  }
 
   (String, Color) _difficulty(BuildContext context) {
     if (offer.rewardCoins >= 15000) {
@@ -53,82 +67,100 @@ class OfferCard extends StatelessWidget {
     return GlassCard(
       onTap: onTap,
       padding: const EdgeInsets.all(AppSpacing.md),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _Icon(offer: offer, fallbackIcon: _icon),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(offer.title,
-                    style: context.text.titleSmall,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis),
-                if (offer.provider.isNotEmpty)
-                  Text(offer.provider,
-                      style: context.text.bodySmall,
+      child: Opacity(
+        opacity: locked ? 0.55 : 1,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _Icon(offer: offer, fallbackIcon: _icon),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(offer.title,
+                      style: context.text.titleSmall,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
-                const SizedBox(height: AppSpacing.sm),
-                Row(
-                  children: [
-                    StatusPill(label: diffLabel, color: diffColor, dense: true),
-                    const SizedBox(width: AppSpacing.sm),
-                    Icon(Icons.schedule_rounded,
-                        size: 13, color: context.surfaces.textTertiary),
-                    const SizedBox(width: 3),
-                    Text(context.l10n.tasksEta(_etaMinutes),
-                        style: context.text.labelSmall),
-                  ],
-                ),
-                if (offer.isMultiStep) ...[
+                  if (offer.provider.isNotEmpty)
+                    Text(offer.provider,
+                        style: context.text.bodySmall,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis),
                   const SizedBox(height: AppSpacing.sm),
-                  ClipRRect(
-                    borderRadius: AppRadius.pillRadius,
-                    child: LinearProgressIndicator(
-                      value: 0.0,
-                      minHeight: 5,
-                      backgroundColor: context.surfaces.surfaceHigh,
-                      valueColor:
-                          const AlwaysStoppedAnimation(AppColors.brand),
-                    ),
+                  Row(
+                    children: [
+                      StatusPill(
+                          label: diffLabel, color: diffColor, dense: true),
+                      const SizedBox(width: AppSpacing.sm),
+                      Icon(Icons.schedule_rounded,
+                          size: 13, color: context.surfaces.textTertiary),
+                      const SizedBox(width: 3),
+                      Text(context.l10n.tasksEta(_etaMinutes),
+                          style: context.text.labelSmall),
+                    ],
                   ),
+                  if (locked) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    StatusPill(
+                      label: context.l10n
+                          .vipLockedOfferBadge(_tierLabel(offer.minVipLevel)),
+                      color: AppColors.secondary,
+                      icon: Icons.lock_rounded,
+                      dense: true,
+                    ),
+                  ],
+                  if (offer.isMultiStep) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    ClipRRect(
+                      borderRadius: AppRadius.pillRadius,
+                      child: LinearProgressIndicator(
+                        value: 0.0,
+                        minHeight: 5,
+                        backgroundColor: context.surfaces.surfaceHigh,
+                        valueColor:
+                            const AlwaysStoppedAnimation(AppColors.brand),
+                      ),
+                    ),
+                  ],
                 ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.coin.withOpacity(0.14),
+                    borderRadius: AppRadius.pillRadius,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const RGlyph(size: 14, color: AppColors.coin),
+                      const SizedBox(width: 3),
+                      Text('${offer.rewardCoins}',
+                          style: context.text.labelMedium?.copyWith(
+                            color: AppColors.coin,
+                            fontWeight: FontWeight.w700,
+                          )),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Icon(
+                    locked
+                        ? Icons.lock_rounded
+                        : Icons.arrow_forward_ios_rounded,
+                    size: 13,
+                    color: context.surfaces.textTertiary),
               ],
             ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.coin.withOpacity(0.14),
-                  borderRadius: AppRadius.pillRadius,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const RGlyph(size: 14, color: AppColors.coin),
-                    const SizedBox(width: 3),
-                    Text('${offer.rewardCoins}',
-                        style: context.text.labelMedium?.copyWith(
-                          color: AppColors.coin,
-                          fontWeight: FontWeight.w700,
-                        )),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Icon(Icons.arrow_forward_ios_rounded,
-                  size: 13, color: context.surfaces.textTertiary),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -188,6 +188,7 @@
   "redemptionStatusPaid": "Livré",
   "redemptionEmpty": "Tu n''as encore aucun échange",
   "redemptionEmptyDesc": "Échange une récompense et suis sa progression ici.",
+  "redemptionPriorityLabel": "Traitement prioritaire",
 
   "leaderboardTitle": "Classement",
   "leaderboardDaily": "Quotidien",
@@ -210,6 +211,37 @@
   "vipCurrentTier": "Actuel : {tier}",
   "vipMultiplier": "x{multiplier} sur tous les gains",
   "vipActiveLabel": "Actif",
+  "vipExpiresInDays": "Expire dans {days} j",
+  "@vipExpiresInDays": { "placeholders": { "days": { "type": "int" } } },
+  "vipAdsPerDay": "{count} pubs/jour",
+  "@vipAdsPerDay": { "placeholders": { "count": { "type": "int" } } },
+  "vipOfferAccessDesc": "Débloque des offres exclusives",
+  "vipMoneyOnlyBadge": "Argent réel uniquement",
+  "vipBuyCoinsButton": "{price} pièces",
+  "@vipBuyCoinsButton": { "placeholders": { "price": { "type": "int" } } },
+  "vipBuyMoneyButton": "{price}",
+  "@vipBuyMoneyButton": { "placeholders": { "price": { "type": "String" } } },
+  "vipConfirmCoinsTitle": "Confirmer l''achat",
+  "vipConfirmCoinsBody": "Dépenser {price} pièces pour débloquer le VIP {tier} pendant {days} jours ?",
+  "@vipConfirmCoinsBody": {
+    "placeholders": {
+      "price": { "type": "int" },
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipPurchaseSuccessBody": "Tu es maintenant VIP {tier} pour {days} jours.",
+  "@vipPurchaseSuccessBody": {
+    "placeholders": {
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipLockedOfferBadge": "Exclusif {tier}+",
+  "@vipLockedOfferBadge": { "placeholders": { "tier": { "type": "String" } } },
+  "vipUnlockOfferToast": "Débloque le VIP {tier} pour accéder à cette offre",
+  "@vipUnlockOfferToast": { "placeholders": { "tier": { "type": "String" } } },
+  "vipPrioritySupportDesc": "Support prioritaire et demandes accélérées",
 
   "achievementsTitle": "Succès",
   "achievementsUnlocked": "{count} débloqués",
@@ -277,6 +309,7 @@
   "supportYouLabel": "Toi",
   "supportFilterAwaiting": "En attente",
   "supportFilterAll": "Tous",
+  "supportPriorityLabel": "Support prioritaire",
   "supportManageCategories": "Gérer les catégories",
   "supportCategoriesDesc": "Ce sont les catégories que les utilisateurs choisissent à l''ouverture d''un ticket.",
   "supportNewCategoryHint": "Ajouter une catégorie…",

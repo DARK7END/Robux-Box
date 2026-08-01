@@ -10,9 +10,12 @@
  *   • redemption  — request/cancel + admin processing
  *   • offerwall   — signed URL (callable) + provider postback / AdMob SSV (HTTP)
  *   • admin       — claims, coin adjustments, status, VIP, promocodes, broadcast
+ *   • vip         — self-service VIP purchase (coins for Bronze/Silver, real
+ *                   money via store receipt for all four tiers)
  *   • triggers    — account provisioning/cleanup, referral rewards,
  *                   achievement progress + coin payout on wallet changes
- *   • scheduled   — daily reset, leaderboard aggregation, reminder campaigns
+ *   • scheduled   — daily reset, leaderboard aggregation, VIP expiry sweep,
+ *                   reminder campaigns
  */
 
 // Callable: earning
@@ -26,6 +29,9 @@ export {
 
 // Callable: daily games (spin wheel / lucky chest)
 export {playDailyGame} from "./handlers/games";
+
+// Callable: VIP subscription purchase
+export {purchaseVipWithCoins, verifyVipPurchase} from "./handlers/vip";
 
 // Callable: redemption
 export {
@@ -67,6 +73,7 @@ export {
   resetDailyCounters,
   aggregateLeaderboards,
   analyticsAggregate,
+  vipExpiryDowngrade,
   dailyReminder,
   rewardReminder,
   vipReminder,

@@ -39,7 +39,15 @@ class AdminRepository {
         .orderBy('createdAt', descending: true)
         .limit(200)
         .snapshots()
-        .map((s) => s.docs.map(Redemption.fromDoc).toList());
+        .map((s) {
+      final items = s.docs.map(Redemption.fromDoc).toList();
+      // Gold/Diamond's paid-for priority benefit: their requests float to the
+      // top of the queue, newest-first within each priority tier.
+      items.sort((a, b) => a.priority != b.priority
+          ? (a.priority ? -1 : 1)
+          : (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)));
+      return items;
+    });
   }
 
   Future<Result<void>> processRedemption(
@@ -200,9 +208,7 @@ class AdminRepository {
         .orderBy('createdAt', descending: true)
         .limit(100)
         .snapshots()
-        .map((s) => s.docs
-            .map((d) => {'id': d.id, ...d.data()})
-            .toList());
+        .map((s) => s.docs.map((d) => {'id': d.id, ...d.data()}).toList());
   }
 
   // -------------------------------------------------------------------- helpers

@@ -113,10 +113,7 @@ class _RedemptionTile extends StatelessWidget {
           AppColors.danger,
           context.l10n.redemptionStatusRejected
         ),
-      RedemptionStatus.cancelled => (
-          AppColors.darkTextTertiary,
-          'Cancelled'
-        ),
+      RedemptionStatus.cancelled => (AppColors.darkTextTertiary, 'Cancelled'),
     };
   }
 
@@ -135,6 +132,15 @@ class _RedemptionTile extends StatelessWidget {
               StatusPill(label: label, color: color, dense: true),
             ],
           ),
+          if (redemption.priority) ...[
+            const SizedBox(height: 4),
+            StatusPill(
+              label: context.l10n.redemptionPriorityLabel,
+              color: AppColors.secondary,
+              icon: Icons.star_rounded,
+              dense: true,
+            ),
+          ],
           const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
@@ -159,8 +165,8 @@ class _RedemptionTile extends StatelessWidget {
               ),
               child: SelectableText(
                 redemption.deliveredCode,
-                style: context.text.titleSmall
-                    ?.copyWith(color: AppColors.success),
+                style:
+                    context.text.titleSmall?.copyWith(color: AppColors.success),
               ),
             ),
           ],

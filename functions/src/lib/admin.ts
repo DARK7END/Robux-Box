@@ -34,6 +34,9 @@ export const cols = {
   geoTiers: db.collection("geo_tiers"),
   // Consumed by the Firestore "Trigger Email" extension — see notifyAdmins().
   mail: db.collection("mail"),
+  // Processed real-money VIP purchase receipts, keyed by store purchase
+  // token — see verifyVipPurchase()'s idempotency check.
+  vipPurchases: db.collection("vip_purchases"),
 };
 
 export const userDoc = (uid: string) => cols.users.doc(uid);

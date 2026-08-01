@@ -18,6 +18,7 @@ class SupportTicket extends Equatable {
     required this.category,
     required this.subject,
     required this.status,
+    required this.isPriority,
     required this.lastMessagePreview,
     required this.lastSenderIsAdmin,
     required this.createdAt,
@@ -33,6 +34,10 @@ class SupportTicket extends Equatable {
   final String category;
   final String subject;
   final TicketStatus status;
+
+  /// Set at creation when the requester was Gold/Diamond VIP — a paid
+  /// benefit: these sort first for admins (see AllTicketsProvider).
+  final bool isPriority;
   final String lastMessagePreview;
   final bool lastSenderIsAdmin;
   final DateTime? createdAt;
@@ -45,7 +50,9 @@ class SupportTicket extends Equatable {
       displayName: Parse.toStr(map['displayName']),
       category: Parse.toStr(map['category'], 'other'),
       subject: Parse.toStr(map['subject']),
-      status: Parse.enumFromName(map['status'], TicketStatus.values, TicketStatus.open),
+      status: Parse.enumFromName(
+          map['status'], TicketStatus.values, TicketStatus.open),
+      isPriority: Parse.toBool(map['isPriority']),
       lastMessagePreview: Parse.toStr(map['lastMessagePreview']),
       lastSenderIsAdmin: Parse.toBool(map['lastSenderIsAdmin']),
       createdAt: Parse.toDate(map['createdAt']),

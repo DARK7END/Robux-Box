@@ -25,6 +25,7 @@ class Offer extends Equatable {
     required this.featured,
     required this.expiresAt,
     required this.payoutUsd,
+    required this.minVipLevel,
   });
 
   final String id;
@@ -50,6 +51,11 @@ class Offer extends Equatable {
   /// exposed to the client only for admin views.
   final double payoutUsd;
 
+  /// Minimum VIP rank required to open this offer (0 == everyone). Mirrors
+  /// [Reward.minVipLevel]: the offer stays visible below that rank (shown
+  /// locked, as an upgrade incentive) rather than being hidden.
+  final int minVipLevel;
+
   factory Offer.fromMap(String id, Map<String, dynamic> map) {
     return Offer(
       id: id,
@@ -67,6 +73,7 @@ class Offer extends Equatable {
       featured: Parse.toBool(map['featured']),
       expiresAt: Parse.toDate(map['expiresAt']),
       payoutUsd: Parse.toDouble(map['payoutUsd']),
+      minVipLevel: Parse.toInt(map['minVipLevel']),
     );
   }
 

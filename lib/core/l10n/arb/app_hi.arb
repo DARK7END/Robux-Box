@@ -188,6 +188,7 @@
   "redemptionStatusPaid": "डिलीवर हो गया",
   "redemptionEmpty": "आपके पास अभी तक कोई रिडेम्पशन नहीं है",
   "redemptionEmptyDesc": "एक रिवॉर्ड रिडीम करें और उसकी प्रगति यहां ट्रैक करें।",
+  "redemptionPriorityLabel": "प्राथमिकता प्रोसेसिंग",
 
   "leaderboardTitle": "लीडरबोर्ड",
   "leaderboardDaily": "डेली",
@@ -210,6 +211,37 @@
   "vipCurrentTier": "मौजूदा: {tier}",
   "vipMultiplier": "सभी कमाई पर {multiplier}x",
   "vipActiveLabel": "सक्रिय",
+  "vipExpiresInDays": "{days} दिन में समाप्त",
+  "@vipExpiresInDays": { "placeholders": { "days": { "type": "int" } } },
+  "vipAdsPerDay": "{count} विज्ञापन/दिन",
+  "@vipAdsPerDay": { "placeholders": { "count": { "type": "int" } } },
+  "vipOfferAccessDesc": "एक्सक्लूसिव ऑफर अनलॉक करता है",
+  "vipMoneyOnlyBadge": "केवल असली पैसे से",
+  "vipBuyCoinsButton": "{price} कॉइन",
+  "@vipBuyCoinsButton": { "placeholders": { "price": { "type": "int" } } },
+  "vipBuyMoneyButton": "{price}",
+  "@vipBuyMoneyButton": { "placeholders": { "price": { "type": "String" } } },
+  "vipConfirmCoinsTitle": "खरीद की पुष्टि करें",
+  "vipConfirmCoinsBody": "{days} दिनों के लिए {tier} VIP अनलॉक करने हेतु {price} कॉइन खर्च करें?",
+  "@vipConfirmCoinsBody": {
+    "placeholders": {
+      "price": { "type": "int" },
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipPurchaseSuccessBody": "अब आप {days} दिनों के लिए {tier} VIP हैं।",
+  "@vipPurchaseSuccessBody": {
+    "placeholders": {
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipLockedOfferBadge": "{tier}+ के लिए एक्सक्लूसिव",
+  "@vipLockedOfferBadge": { "placeholders": { "tier": { "type": "String" } } },
+  "vipUnlockOfferToast": "इस ऑफर तक पहुंचने के लिए {tier} VIP अनलॉक करें",
+  "@vipUnlockOfferToast": { "placeholders": { "tier": { "type": "String" } } },
+  "vipPrioritySupportDesc": "प्राथमिकता सहायता और तेज़ प्रोसेसिंग",
 
   "achievementsTitle": "अचीवमेंट्स",
   "achievementsUnlocked": "{count} अनलॉक हुए",
@@ -277,6 +309,7 @@
   "supportYouLabel": "आप",
   "supportFilterAwaiting": "प्रतीक्षारत",
   "supportFilterAll": "सभी",
+  "supportPriorityLabel": "प्राथमिकता सहायता",
   "supportManageCategories": "श्रेणियाँ प्रबंधित करें",
   "supportCategoriesDesc": "टिकट खोलते समय उपयोगकर्ता इन्हीं श्रेणियों में से चुनते हैं।",
   "supportNewCategoryHint": "श्रेणी जोड़ें…",

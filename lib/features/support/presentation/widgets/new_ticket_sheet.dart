@@ -11,6 +11,7 @@ import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/widgets.dart';
+import '../../../../models/app_user.dart';
 import '../../../profile/data/user_repository.dart';
 import '../../data/support_repository.dart';
 import '../../domain/support_providers.dart';
@@ -69,14 +70,16 @@ class _NewTicketSheetState extends ConsumerState<_NewTicketSheet> {
     }
     setState(() => _busy = true);
     final user = ref.read(currentUserProvider).valueOrNull;
+    final isPriority =
+        (user?.effectiveVipLevel.index ?? 0) >= VipLevel.gold.index;
     final result = await ref.read(supportRepositoryProvider).createTicket(
           uid: uid,
           displayName: user?.displayName ?? '',
           category: _category ?? categories.first,
           subject: subject,
           message: message,
-          attachment:
-              _attachment == null ? null : File(_attachment!.path),
+          isPriority: isPriority,
+          attachment: _attachment == null ? null : File(_attachment!.path),
         );
     if (!mounted) return;
     setState(() => _busy = false);

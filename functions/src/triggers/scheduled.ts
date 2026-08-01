@@ -37,6 +37,34 @@ export const resetDailyCounters = onSchedule(
 );
 
 /**
+ * Sweeps lapsed VIP subscriptions back to `none`. `AppUser.effectiveVipLevel`
+ * / `effectiveVipLevel()` already treat a past `vipExpiresAt` as expired
+ * everywhere earnings/gating are decided, so this job isn't load-bearing for
+ * correctness — it just keeps the stored field (and anything that reads it
+ * naively, like the leaderboard snapshot below) honest within a day.
+ * Admin-granted VIP (`setVipLevel`) has no `vipExpiresAt` and is untouched.
+ */
+export const vipExpiryDowngrade = onSchedule(
+  {schedule: "30 0 * * *", timeZone: "Etc/UTC", region},
+  async () => {
+    const snap = await cols.users.where("vipExpiresAt", "<=", Timestamp.now()).get();
+    let batch = db.batch();
+    let n = 0;
+    for (const doc of snap.docs) {
+      const level = doc.data().vipLevel as string | undefined;
+      if (!level || level === "none") continue;
+      batch.set(doc.ref, {vipLevel: "none", vipExpiresAt: null}, {merge: true});
+      if (++n % 400 === 0) {
+        await batch.commit();
+        batch = db.batch();
+      }
+    }
+    if (n % 400 !== 0) await batch.commit();
+    console.log(`Downgraded ${n} lapsed VIP subscriptions`);
+  },
+);
+
+/**
  * Rebuilds the daily/weekly/all-time leaderboards from the wallet lifetime and
  * period aggregates. Runs hourly so ranks stay fresh without expensive live
  * queries on the client.

@@ -5,6 +5,7 @@ import {
 import {debitWallet, refundPending, clearPending} from "../lib/wallet";
 import {requireAuth, requireAdmin, rateLimit} from "../lib/security";
 import {sendUserNotification, notifyAdmins} from "../lib/notify";
+import {effectiveVipLevel, vipRank} from "../lib/economy";
 
 const opts = {enforceAppCheck: true, region: "us-central1"} as const;
 
@@ -40,11 +41,13 @@ export const requestRedemption = onCall(opts, async (req) => {
   const uSnap = await userDoc(uid).get();
   const user = uSnap.data() ?? {};
   const minVip = (reward.minVipLevel as number) ?? 0;
-  const vipRank = ["none", "bronze", "silver", "gold", "diamond"]
-    .indexOf(String(user.vipLevel ?? "none"));
-  if (vipRank < minVip) {
+  const myRank = vipRank(effectiveVipLevel(user));
+  if (myRank < minVip) {
     throw new HttpsError("permission-denied", "Requires a higher VIP level.");
   }
+  // Gold/Diamond get priority fulfilment — a real, paid-for benefit: their
+  // requests sort first in the admin queue (see AdminRepository.watchRedemptions).
+  const priority = myRank >= vipRank("gold");
 
   // Hold the coins.
   await debitWallet({
@@ -67,6 +70,7 @@ export const requestRedemption = onCall(opts, async (req) => {
     currency: reward.currency ?? "USD",
     provider: reward.provider ?? "manual",
     status: "pending",
+    priority,
     deliveryTarget,
     deliveredCode: "",
     rejectionReason: "",
@@ -87,8 +91,13 @@ export const requestRedemption = onCall(opts, async (req) => {
   });
 
   await notifyAdmins(
-    `New redemption request: ${reward.title}`,
+    `${priority ? "⭐ PRIORITY — " : ""}New redemption request: ${reward.title}`,
     `A new redemption request needs fulfilment.\n\n` +
+    (priority ?
+      `This is a PRIORITY request — the user is Gold/Diamond VIP and is owed ` +
+      `fast fulfilment as a paid benefit. Please handle it ahead of the ` +
+      `regular queue.\n\n` :
+      "") +
     `Reward: ${reward.title}\n` +
     `Cost: ${coinCost} coins\n` +
     `Delivery email: ${deliveryTarget}\n` +

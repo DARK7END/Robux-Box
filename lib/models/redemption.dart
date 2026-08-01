@@ -23,6 +23,7 @@ class Redemption extends Equatable {
     required this.faceValue,
     required this.currency,
     required this.status,
+    required this.priority,
     required this.deliveryTarget,
     required this.deliveredCode,
     required this.rejectionReason,
@@ -40,6 +41,10 @@ class Redemption extends Equatable {
   final double faceValue;
   final String currency;
   final RedemptionStatus status;
+
+  /// Set server-side (`requestRedemption`) when the requester was Gold/Diamond
+  /// VIP at request time — a paid benefit: these sort first for admins.
+  final bool priority;
 
   /// Where to deliver: Roblox username, email or phone depending on [kind].
   final String deliveryTarget;
@@ -62,13 +67,15 @@ class Redemption extends Equatable {
       id: id,
       uid: Parse.toStr(map['uid']),
       rewardId: Parse.toStr(map['rewardId']),
-      kind: Parse.enumFromName(map['kind'], RewardKind.values, RewardKind.robux),
+      kind:
+          Parse.enumFromName(map['kind'], RewardKind.values, RewardKind.robux),
       title: Parse.toStr(map['title']),
       coinCost: Parse.toInt(map['coinCost']),
       faceValue: Parse.toDouble(map['faceValue']),
       currency: Parse.toStr(map['currency'], 'USD'),
       status: Parse.enumFromName(
           map['status'], RedemptionStatus.values, RedemptionStatus.pending),
+      priority: Parse.toBool(map['priority']),
       deliveryTarget: Parse.toStr(map['deliveryTarget']),
       deliveredCode: Parse.toStr(map['deliveredCode']),
       rejectionReason: Parse.toStr(map['rejectionReason']),

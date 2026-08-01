@@ -40,6 +40,32 @@ export const ECONOMY = {
     diamond: 1.5,
   } as Record<string, number>,
 
+  // Raised daily rewarded-ad cap per VIP tier — see AppConstants.vipMaxAdsPerDay.
+  vipMaxAdsPerDay: {
+    none: 40,
+    bronze: 55,
+    silver: 70,
+    gold: 90,
+    diamond: 120,
+  } as Record<string, number>,
+
+  // Numeric rank per tier — mirrors AppConstants.vipRank / Reward.minVipLevel.
+  vipRankOf: {
+    none: 0,
+    bronze: 1,
+    silver: 2,
+    gold: 3,
+    diamond: 4,
+  } as Record<string, number>,
+
+  // A purchased VIP subscription lasts this many days. Admin-granted VIP
+  // (setVipLevel) sets no expiry and stays permanent.
+  vipDurationDays: 30,
+
+  // Coin price for a vipDurationDays-long subscription. Gold/Diamond are
+  // absent — real-money-only, enforced in purchaseVipWithCoins.
+  vipCoinPrices: {bronze: 12000, silver: 30000} as Record<string, number>,
+
   // Anti-fraud
   nonceTtlSeconds: 600,
   minIntegrityScore: 0.35,
@@ -99,4 +125,33 @@ export function rewardedAdCoins(tierLevel: number, vipLevel: string): number {
     1,
     Math.round(ECONOMY.baseRewardedAdCoins * earnMultiplier(tierLevel, vipLevel)),
   );
+}
+
+/**
+ * A user's VIP level as stored can be stale for up to a day (the downgrade to
+ * `none` runs on the `vipExpiryDowngrade` schedule, not the instant a
+ * subscription lapses). Every economic decision must use this instead of the
+ * raw `user.vipLevel` field so an expired-but-not-yet-swept subscription never
+ * grants a benefit. A null/undefined `vipExpiresAt` means permanent (either
+ * `none`, or an admin grant via `setVipLevel`).
+ */
+export function effectiveVipLevel(user: {
+  vipLevel?: string;
+  vipExpiresAt?: FirebaseFirestore.Timestamp | null;
+}): string {
+  const level = user.vipLevel ?? "none";
+  if (level === "none") return "none";
+  const exp = user.vipExpiresAt;
+  if (exp && exp.toMillis() < Date.now()) return "none";
+  return level;
+}
+
+/** Numeric rank of a VIP level name (`none` = 0 .. `diamond` = 4). */
+export function vipRank(vipLevel: string): number {
+  return ECONOMY.vipRankOf[vipLevel] ?? 0;
+}
+
+/** The daily rewarded-ad cap for a (already-effective) VIP level. */
+export function maxAdsPerDay(vipLevel: string): number {
+  return ECONOMY.vipMaxAdsPerDay[vipLevel] ?? ECONOMY.maxRewardedAdsPerDay;
 }

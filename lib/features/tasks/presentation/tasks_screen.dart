@@ -10,7 +10,9 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../core/widgets/widgets.dart';
+import '../../../models/app_user.dart';
 import '../../../models/offer.dart';
+import '../../profile/data/user_repository.dart';
 import '../data/offers_repository.dart';
 import 'widgets/offer_card.dart';
 
@@ -34,7 +36,22 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
     super.dispose();
   }
 
-  Future<void> _openOffer(Offer offer) async {
+  String _tierLabel(int rank) {
+    final level = VipLevel.values[rank.clamp(0, VipLevel.values.length - 1)];
+    return level.name[0].toUpperCase() + level.name.substring(1);
+  }
+
+  Future<void> _openOffer(Offer offer, bool locked) async {
+    if (locked) {
+      AppToast.show(
+        context,
+        message: context.l10n.vipUnlockOfferToast(
+          _tierLabel(offer.minVipLevel),
+        ),
+        type: ToastType.warning,
+      );
+      return;
+    }
     final uri = Uri.tryParse(offer.trackingUrl);
     if (uri != null && offer.trackingUrl.isNotEmpty) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -46,6 +63,9 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     final offersAsync = ref.watch(offersProvider(_category));
+    final myRank =
+        ref.watch(currentUserProvider).valueOrNull?.effectiveVipLevel.index ??
+            0;
 
     return AppScaffold(
       showAppBar: false,
@@ -100,17 +120,20 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                         ),
                       )
                     else
-                      ...filtered.asMap().entries.map((e) => Padding(
-                            padding:
-                                const EdgeInsets.only(bottom: AppSpacing.md),
-                            child: OfferCard(
-                              offer: e.value,
-                              onTap: () => _openOffer(e.value),
-                            )
-                                .animate()
-                                .fadeIn(delay: (40 * e.key).ms)
-                                .slideX(begin: 0.08),
-                          )),
+                      ...filtered.asMap().entries.map((e) {
+                        final locked = e.value.minVipLevel > myRank;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                          child: OfferCard(
+                            offer: e.value,
+                            locked: locked,
+                            onTap: () => _openOffer(e.value, locked),
+                          )
+                              .animate()
+                              .fadeIn(delay: (40 * e.key).ms)
+                              .slideX(begin: 0.08),
+                        );
+                      }),
                   ],
                 );
               },
@@ -229,17 +252,15 @@ class _CategoryChips extends StatelessWidget {
             onTap: () => onSelect(cat),
             child: AnimatedContainer(
               duration: AppDuration.fast,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 gradient: active ? AppGradients.brand : null,
                 color: active ? null : context.surfaces.surfaceHigh,
                 borderRadius: AppRadius.pillRadius,
                 border: Border.all(
-                    color: active
-                        ? Colors.transparent
-                        : context.surfaces.border),
+                    color:
+                        active ? Colors.transparent : context.surfaces.border),
               ),
               child: Text(
                 label,

@@ -47,6 +47,58 @@ abstract final class AppConstants {
     'diamond': 1.50,
   };
 
+  /// Raised daily rewarded-ad cap per VIP tier (replaces the flat
+  /// [maxRewardedAdsPerDay] once a tier is active).
+  static const Map<String, int> vipMaxAdsPerDay = {
+    'none': 40,
+    'bronze': 55,
+    'silver': 70,
+    'gold': 90,
+    'diamond': 120,
+  };
+
+  /// Numeric rank of each VIP tier, matching [Offer.minVipLevel] /
+  /// [Reward.minVipLevel] gating and the server's `vipRank()`.
+  static const Map<String, int> vipRank = {
+    'none': 0,
+    'bronze': 1,
+    'silver': 2,
+    'gold': 3,
+    'diamond': 4,
+  };
+
+  /// A purchased VIP subscription lasts this many days before it lapses back
+  /// to `none` (see the server's `vipExpiryDowngrade` scheduled job). Admin-
+  /// granted VIP (via the dashboard) has no expiry and stays permanent.
+  static const int vipDurationDays = 30;
+
+  /// Coin price for a [vipDurationDays]-day subscription. Gold and Diamond are
+  /// intentionally absent — they're real-money-only (see [vipMoneyPrices]).
+  static const Map<String, int> vipCoinPrices = {
+    'bronze': 12000,
+    'silver': 30000,
+  };
+
+  /// Real-money price shown before the store connects (e.g. web preview /
+  /// no billing on this platform); the actual charged price always comes from
+  /// the store via [vipIapProductIds] once `in_app_purchase` loads the product.
+  static const Map<String, String> vipMoneyPrices = {
+    'bronze': '\$1.99',
+    'silver': '\$4.99',
+    'gold': '\$9.99',
+    'diamond': '\$19.99',
+  };
+
+  /// Play Store / App Store product ids for the real-money VIP subscriptions.
+  /// These must be created in the Play Console / App Store Connect with
+  /// matching ids — see docs/DEPLOYMENT.md.
+  static const Map<String, String> vipIapProductIds = {
+    'bronze': 'vip_bronze_30d',
+    'silver': 'vip_silver_30d',
+    'gold': 'vip_gold_30d',
+    'diamond': 'vip_diamond_30d',
+  };
+
   /// Anti-fraud thresholds (client-side pre-checks; authoritative checks run in
   /// Cloud Functions).
   static const int maxDevicesPerAccount = 3;

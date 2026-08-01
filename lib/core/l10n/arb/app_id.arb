@@ -188,6 +188,7 @@
   "redemptionStatusPaid": "Terkirim",
   "redemptionEmpty": "Kamu belum memiliki penukaran",
   "redemptionEmptyDesc": "Tukarkan hadiah dan pantau progresnya di sini.",
+  "redemptionPriorityLabel": "Proses prioritas",
 
   "leaderboardTitle": "Papan peringkat",
   "leaderboardDaily": "Harian",
@@ -210,6 +211,37 @@
   "vipCurrentTier": "Saat ini: {tier}",
   "vipMultiplier": "{multiplier}x untuk semua penghasilan",
   "vipActiveLabel": "Aktif",
+  "vipExpiresInDays": "Berakhir dalam {days}h",
+  "@vipExpiresInDays": { "placeholders": { "days": { "type": "int" } } },
+  "vipAdsPerDay": "{count} iklan/hari",
+  "@vipAdsPerDay": { "placeholders": { "count": { "type": "int" } } },
+  "vipOfferAccessDesc": "Membuka penawaran eksklusif",
+  "vipMoneyOnlyBadge": "Hanya uang asli",
+  "vipBuyCoinsButton": "{price} koin",
+  "@vipBuyCoinsButton": { "placeholders": { "price": { "type": "int" } } },
+  "vipBuyMoneyButton": "{price}",
+  "@vipBuyMoneyButton": { "placeholders": { "price": { "type": "String" } } },
+  "vipConfirmCoinsTitle": "Konfirmasi pembelian",
+  "vipConfirmCoinsBody": "Gunakan {price} koin untuk membuka VIP {tier} selama {days} hari?",
+  "@vipConfirmCoinsBody": {
+    "placeholders": {
+      "price": { "type": "int" },
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipPurchaseSuccessBody": "Kamu sekarang VIP {tier} selama {days} hari.",
+  "@vipPurchaseSuccessBody": {
+    "placeholders": {
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipLockedOfferBadge": "Eksklusif {tier}+",
+  "@vipLockedOfferBadge": { "placeholders": { "tier": { "type": "String" } } },
+  "vipUnlockOfferToast": "Buka VIP {tier} untuk mengakses penawaran ini",
+  "@vipUnlockOfferToast": { "placeholders": { "tier": { "type": "String" } } },
+  "vipPrioritySupportDesc": "Dukungan prioritas & permintaan lebih cepat",
 
   "achievementsTitle": "Pencapaian",
   "achievementsUnlocked": "{count} terbuka",
@@ -277,6 +309,7 @@
   "supportYouLabel": "Kamu",
   "supportFilterAwaiting": "Menunggu",
   "supportFilterAll": "Semua",
+  "supportPriorityLabel": "Dukungan prioritas",
   "supportManageCategories": "Kelola kategori",
   "supportCategoriesDesc": "Ini kategori yang dipilih pengguna saat membuat tiket.",
   "supportNewCategoryHint": "Tambah kategori…",

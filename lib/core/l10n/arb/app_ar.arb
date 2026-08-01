@@ -201,6 +201,7 @@
   "redemptionStatusPaid": "تم التسليم",
   "redemptionEmpty": "لا توجد عمليات استبدال بعد",
   "redemptionEmptyDesc": "استبدل مكافأة وتابع تقدمها هنا.",
+  "redemptionPriorityLabel": "معالجة ذات أولوية",
 
   "leaderboardTitle": "المتصدرون",
   "leaderboardDaily": "يومي",
@@ -227,6 +228,37 @@
   "@vipCurrentTier": { "placeholders": { "tier": { "type": "String" } } },
   "vipMultiplier": "{multiplier}x على كل الأرباح",
   "vipActiveLabel": "نشط",
+  "vipExpiresInDays": "تنتهي خلال {days} يوم",
+  "@vipExpiresInDays": { "placeholders": { "days": { "type": "int" } } },
+  "vipAdsPerDay": "{count} إعلان/يوم",
+  "@vipAdsPerDay": { "placeholders": { "count": { "type": "int" } } },
+  "vipOfferAccessDesc": "يفتح عروضًا حصرية",
+  "vipMoneyOnlyBadge": "بفلوس حقيقية فقط",
+  "vipBuyCoinsButton": "{price} نقطة",
+  "@vipBuyCoinsButton": { "placeholders": { "price": { "type": "int" } } },
+  "vipBuyMoneyButton": "{price}",
+  "@vipBuyMoneyButton": { "placeholders": { "price": { "type": "String" } } },
+  "vipConfirmCoinsTitle": "تأكيد الشراء",
+  "vipConfirmCoinsBody": "ادفع {price} نقطة لفتح عضوية {tier} VIP لمدة {days} يوم؟",
+  "@vipConfirmCoinsBody": {
+    "placeholders": {
+      "price": { "type": "int" },
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipPurchaseSuccessBody": "أنت الآن عضو {tier} VIP لمدة {days} يوم.",
+  "@vipPurchaseSuccessBody": {
+    "placeholders": {
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipLockedOfferBadge": "حصري لأعضاء {tier}+",
+  "@vipLockedOfferBadge": { "placeholders": { "tier": { "type": "String" } } },
+  "vipUnlockOfferToast": "افتح عضوية {tier} VIP للوصول إلى هذا العرض",
+  "@vipUnlockOfferToast": { "placeholders": { "tier": { "type": "String" } } },
+  "vipPrioritySupportDesc": "دعم فني بأولوية وطلبات أسرع",
   "@vipMultiplier": { "placeholders": { "multiplier": { "type": "String" } } },
 
   "achievementsTitle": "الإنجازات",
@@ -296,6 +328,7 @@
   "supportYouLabel": "أنت",
   "supportFilterAwaiting": "بانتظار الرد",
   "supportFilterAll": "الكل",
+  "supportPriorityLabel": "دعم بأولوية",
   "supportManageCategories": "إدارة التصنيفات",
   "supportCategoriesDesc": "هذه التصنيفات التي يختار منها المستخدمون عند فتح تذكرة.",
   "supportNewCategoryHint": "أضف تصنيفًا…",

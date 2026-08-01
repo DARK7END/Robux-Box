@@ -1,5 +1,7 @@
+import {Timestamp} from "firebase-admin/firestore";
 import {
   ECONOMY, TIER_MULTIPLIERS, earnMultiplier, rewardedAdCoins, levelForXp,
+  effectiveVipLevel, vipRank, maxAdsPerDay,
 } from "../lib/economy";
 
 describe("economy", () => {
@@ -38,5 +40,24 @@ describe("economy", () => {
       expect(lvl).toBeGreaterThanOrEqual(prev);
       prev = lvl;
     }
+  });
+
+  test("effectiveVipLevel treats a lapsed subscription as none", () => {
+    const past = Timestamp.fromMillis(Date.now() - 1000);
+    const future = Timestamp.fromMillis(Date.now() + 1000);
+    expect(effectiveVipLevel({vipLevel: "gold", vipExpiresAt: past})).toBe("none");
+    expect(effectiveVipLevel({vipLevel: "gold", vipExpiresAt: future})).toBe("gold");
+    // No expiry at all means permanent (never-VIP, or an admin grant).
+    expect(effectiveVipLevel({vipLevel: "diamond", vipExpiresAt: null})).toBe("diamond");
+    expect(effectiveVipLevel({vipLevel: "none"})).toBe("none");
+  });
+
+  test("vipRank orders tiers and maxAdsPerDay scales with them", () => {
+    expect(vipRank("none")).toBe(0);
+    expect(vipRank("diamond")).toBeGreaterThan(vipRank("gold"));
+    expect(vipRank("gold")).toBeGreaterThan(vipRank("silver"));
+    expect(vipRank("silver")).toBeGreaterThan(vipRank("bronze"));
+    expect(maxAdsPerDay("diamond")).toBeGreaterThan(maxAdsPerDay("none"));
+    expect(maxAdsPerDay("none")).toBe(ECONOMY.maxRewardedAdsPerDay);
   });
 });

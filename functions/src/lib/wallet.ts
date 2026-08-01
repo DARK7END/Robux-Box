@@ -5,7 +5,7 @@ import {ECONOMY, levelForXp} from "./economy";
 export type TxType =
   | "rewardedAd" | "offerwall" | "dailyBonus" | "streakBonus"
   | "referralBonus" | "referralShare" | "promocode" | "achievement"
-  | "levelUp" | "redemption" | "adjustment" | "refund";
+  | "levelUp" | "redemption" | "adjustment" | "refund" | "vipPurchase";
 
 export interface CreditParams {
   uid: string;

@@ -44,10 +44,7 @@ class SupportRepository {
   /// The admin-managed ticket categories from `config/support`. Falls back to
   /// [defaultCategories] when unset so the ticket form always works.
   Stream<List<String>> watchCategories() {
-    return _db
-        .doc(FsPaths.configDoc('support'))
-        .snapshots()
-        .map((d) {
+    return _db.doc(FsPaths.configDoc('support')).snapshots().map((d) {
       final raw = d.data()?['ticketCategories'];
       if (raw is! List || raw.isEmpty) return defaultCategories;
       return raw.map((e) => e.toString()).toList();
@@ -78,14 +75,22 @@ class SupportRepository {
         .map((s) => s.docs.map(SupportTicket.fromDoc).toList());
   }
 
-  /// All tickets across every user — admin only (enforced by rules).
+  /// All tickets across every user — admin only (enforced by rules). Gold/
+  /// Diamond's paid-for priority-support benefit: their tickets float to the
+  /// top, most-recently-active first within each priority tier.
   Stream<List<SupportTicket>> watchAllTickets() {
     return _db
         .collection(FsPaths.supportTickets)
         .orderBy('updatedAt', descending: true)
         .limit(200)
         .snapshots()
-        .map((s) => s.docs.map(SupportTicket.fromDoc).toList());
+        .map((s) {
+      final tickets = s.docs.map(SupportTicket.fromDoc).toList();
+      tickets.sort((a, b) => a.isPriority != b.isPriority
+          ? (a.isPriority ? -1 : 1)
+          : (b.updatedAt ?? DateTime(0)).compareTo(a.updatedAt ?? DateTime(0)));
+      return tickets;
+    });
   }
 
   Stream<List<TicketMessage>> watchMessages(String ticketId) {
@@ -113,6 +118,7 @@ class SupportRepository {
     required String category,
     required String subject,
     required String message,
+    bool isPriority = false,
     File? attachment,
   }) async {
     try {
@@ -129,6 +135,7 @@ class SupportRepository {
           'category': category,
           'subject': subject,
           'status': TicketStatus.open.name,
+          'isPriority': isPriority,
           'lastMessagePreview': _preview(message),
           'lastSenderIsAdmin': false,
           'createdAt': FieldValue.serverTimestamp(),
@@ -159,8 +166,7 @@ class SupportRepository {
     File? attachment,
   }) async {
     try {
-      final messageRef =
-          _db.collection(FsPaths.ticketMessages(ticketId)).doc();
+      final messageRef = _db.collection(FsPaths.ticketMessages(ticketId)).doc();
       final imageUrl = attachment == null
           ? ''
           : await _uploadAttachment(ticketId, messageRef.id, attachment);
@@ -174,8 +180,7 @@ class SupportRepository {
         })
         ..update(_db.collection(FsPaths.supportTickets).doc(ticketId), {
           'status': TicketStatus.open.name,
-          'lastMessagePreview':
-              text.isEmpty ? '📎' : _preview(text),
+          'lastMessagePreview': text.isEmpty ? '📎' : _preview(text),
           'lastSenderIsAdmin': isAdmin,
           'updatedAt': FieldValue.serverTimestamp(),
         });

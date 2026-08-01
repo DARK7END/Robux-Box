@@ -188,6 +188,7 @@
   "redemptionStatusPaid": "Teslim edildi",
   "redemptionEmpty": "Henüz hiç kullanımın yok",
   "redemptionEmptyDesc": "Bir ödül kullan ve ilerlemesini burada takip et.",
+  "redemptionPriorityLabel": "Öncelikli işlem",
 
   "leaderboardTitle": "Sıralama",
   "leaderboardDaily": "Günlük",
@@ -210,6 +211,37 @@
   "vipCurrentTier": "Mevcut: {tier}",
   "vipMultiplier": "Tüm kazançlarda {multiplier}x",
   "vipActiveLabel": "Aktif",
+  "vipExpiresInDays": "{days} gün içinde sona erer",
+  "@vipExpiresInDays": { "placeholders": { "days": { "type": "int" } } },
+  "vipAdsPerDay": "{count} reklam/gün",
+  "@vipAdsPerDay": { "placeholders": { "count": { "type": "int" } } },
+  "vipOfferAccessDesc": "Özel teklifleri açar",
+  "vipMoneyOnlyBadge": "Yalnızca gerçek para",
+  "vipBuyCoinsButton": "{price} coin",
+  "@vipBuyCoinsButton": { "placeholders": { "price": { "type": "int" } } },
+  "vipBuyMoneyButton": "{price}",
+  "@vipBuyMoneyButton": { "placeholders": { "price": { "type": "String" } } },
+  "vipConfirmCoinsTitle": "Satın almayı onayla",
+  "vipConfirmCoinsBody": "{days} gün boyunca {tier} VIP açmak için {price} coin harcansın mı?",
+  "@vipConfirmCoinsBody": {
+    "placeholders": {
+      "price": { "type": "int" },
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipPurchaseSuccessBody": "Artık {days} gün boyunca {tier} VIP''sin.",
+  "@vipPurchaseSuccessBody": {
+    "placeholders": {
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipLockedOfferBadge": "{tier}+ üyelerine özel",
+  "@vipLockedOfferBadge": { "placeholders": { "tier": { "type": "String" } } },
+  "vipUnlockOfferToast": "Bu teklife erişmek için {tier} VIP aç",
+  "@vipUnlockOfferToast": { "placeholders": { "tier": { "type": "String" } } },
+  "vipPrioritySupportDesc": "Öncelikli destek ve hızlandırılmış talepler",
 
   "achievementsTitle": "Başarılar",
   "achievementsUnlocked": "{count} açıldı",
@@ -277,6 +309,7 @@
   "supportYouLabel": "Sen",
   "supportFilterAwaiting": "Bekleyen",
   "supportFilterAll": "Tümü",
+  "supportPriorityLabel": "Öncelikli destek",
   "supportManageCategories": "Kategorileri yönet",
   "supportCategoriesDesc": "Kullanıcılar talep açarken bu kategorilerden seçer.",
   "supportNewCategoryHint": "Kategori ekle…",

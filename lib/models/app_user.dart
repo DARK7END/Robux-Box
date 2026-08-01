@@ -25,6 +25,7 @@ class AppUser extends Equatable {
     required this.countryCode,
     required this.tierLevel,
     required this.vipLevel,
+    this.vipExpiresAt,
     required this.status,
     required this.xp,
     required this.level,
@@ -53,6 +54,10 @@ class AppUser extends Equatable {
   final String countryCode;
   final int tierLevel;
   final VipLevel vipLevel;
+
+  /// When the current [vipLevel] subscription lapses back to `none`. Null
+  /// means either no VIP, or a permanent admin grant (no expiry to sweep).
+  final DateTime? vipExpiresAt;
   final AccountStatus status;
 
   final int xp;
@@ -75,10 +80,24 @@ class AppUser extends Equatable {
 
   GeoTier get tier => GeoTier.fromLevel(tierLevel);
 
+  /// [vipLevel] can be stale for up to a day after a subscription lapses (the
+  /// downgrade sweep runs on a schedule, not the instant it expires) — every
+  /// UI/earning decision should read this instead of the raw field.
+  VipLevel get effectiveVipLevel {
+    if (vipLevel == VipLevel.none) return VipLevel.none;
+    final exp = vipExpiresAt;
+    if (exp != null && exp.isBefore(DateTime.now())) return VipLevel.none;
+    return vipLevel;
+  }
+
   double get earningMultiplier {
-    final vip = AppConstants.vipMultipliers[vipLevel.name] ?? 1.0;
+    final vip = AppConstants.vipMultipliers[effectiveVipLevel.name] ?? 1.0;
     return tier.multiplier * vip;
   }
+
+  int get maxAdsPerDay =>
+      AppConstants.vipMaxAdsPerDay[effectiveVipLevel.name] ??
+      AppConstants.maxRewardedAdsPerDay;
 
   int get xpForNextLevel => (level + 1) * AppConstants.levelXpStep;
   double get levelProgress {
@@ -107,9 +126,11 @@ class AppUser extends Equatable {
       phoneNumber: Parse.toStr(map['phoneNumber']),
       countryCode: Parse.toStr(map['countryCode'], 'US'),
       tierLevel: Parse.toInt(map['tierLevel'], 4),
-      vipLevel: Parse.enumFromName(map['vipLevel'], VipLevel.values, VipLevel.none),
-      status:
-          Parse.enumFromName(map['status'], AccountStatus.values, AccountStatus.active),
+      vipLevel:
+          Parse.enumFromName(map['vipLevel'], VipLevel.values, VipLevel.none),
+      vipExpiresAt: Parse.toDate(map['vipExpiresAt']),
+      status: Parse.enumFromName(
+          map['status'], AccountStatus.values, AccountStatus.active),
       xp: Parse.toInt(map['xp']),
       level: Parse.toInt(map['level']),
       streakCount: Parse.toInt(map['streakCount']),
@@ -146,6 +167,7 @@ class AppUser extends Equatable {
     String? robloxUsername,
     int? tierLevel,
     VipLevel? vipLevel,
+    DateTime? vipExpiresAt,
     int? xp,
     int? level,
     int? streakCount,
@@ -162,6 +184,7 @@ class AppUser extends Equatable {
       countryCode: countryCode,
       tierLevel: tierLevel ?? this.tierLevel,
       vipLevel: vipLevel ?? this.vipLevel,
+      vipExpiresAt: vipExpiresAt ?? this.vipExpiresAt,
       status: status ?? this.status,
       xp: xp ?? this.xp,
       level: level ?? this.level,
@@ -189,6 +212,7 @@ class AppUser extends Equatable {
         countryCode: 'US',
         tierLevel: 4,
         vipLevel: VipLevel.none,
+        vipExpiresAt: null,
         status: AccountStatus.active,
         xp: 0,
         level: 0,
@@ -205,6 +229,15 @@ class AppUser extends Equatable {
       );
 
   @override
-  List<Object?> get props =>
-      [uid, displayName, tierLevel, vipLevel, status, xp, level, streakCount];
+  List<Object?> get props => [
+        uid,
+        displayName,
+        tierLevel,
+        vipLevel,
+        vipExpiresAt,
+        status,
+        xp,
+        level,
+        streakCount,
+      ];
 }

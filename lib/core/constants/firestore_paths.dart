@@ -24,6 +24,7 @@ abstract final class FsPaths {
   static const String referrals = 'referrals';
   static const String devices = 'devices';
   static const String adImpressions = 'ad_impressions';
+  static const String vipPurchases = 'vip_purchases';
   static const String config = 'config';
   static const String tiers = 'geo_tiers';
   static const String fraudFlags = 'fraud_flags';

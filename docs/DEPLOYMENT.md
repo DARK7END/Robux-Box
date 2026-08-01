@@ -48,6 +48,53 @@ flutterfire configure --project=<project-id>   # writes lib/firebase_options.dar
 - Put the shared secret + base URL + app id in `functions/.env` and the app's
   `--dart-define`s.
 
+## 5b. In-app purchases (VIP subscriptions)
+Bronze/Silver/Gold/Diamond VIP boost the earn multiplier, raise the daily ad
+cap and unlock exclusive offers (see `AppConstants.vip*` /
+`functions/src/lib/economy.ts`'s `ECONOMY.vip*`, which must stay in sync).
+Bronze and Silver can be bought with coins (`purchaseVipWithCoins` — works
+out of the box, no external setup) **or** real money; Gold and Diamond are
+real-money-only. All four are 30-day subscriptions
+(`AppConstants.vipDurationDays`); a scheduled job (`vipExpiryDowngrade`,
+deployed with the rest of Cloud Functions — no extra setup) sweeps lapsed
+ones back to `none` daily.
+
+**The real-money path needs store setup this repo can't do for you:**
+
+1. Create four **auto-renewing subscription** products — one per tier, each
+   with a 30-day billing period — in both stores, using these exact product
+   ids (they're read from `AppConstants.vipIapProductIds` and must match
+   character-for-character; the same id works on both stores):
+   `vip_bronze_30d`, `vip_silver_30d`, `vip_gold_30d`, `vip_diamond_30d`.
+   - **Google Play Console** → your app → Monetize → Products → Subscriptions.
+   - **App Store Connect** → your app → Monetization → Subscriptions.
+2. Set prices to roughly match `AppConstants.vipMoneyPrices` (shown in the
+   app before the store connects); the store's own localized price is what
+   actually charges once a product loads.
+3. The client (`lib/features/vip/data/vip_iap_service.dart`, via the
+   `in_app_purchase` package) is fully wired to query these products and
+   start a purchase — nothing else to do there.
+4. The purchase then reaches `verifyVipPurchase`
+   (`functions/src/handlers/vip.ts`), which is **intentionally a stub**: it
+   refuses to credit VIP (`unimplemented`) until real server-side receipt
+   verification is implemented, because trusting an unverified
+   client-supplied receipt would let anyone grant themselves free VIP. Before
+   relying on real-money VIP in production, implement
+   `verifyStorePurchase()` in that file:
+   - **Android**: create a Play Console service-account key with access to
+     this app, enable the *Android Publisher API* in Google Cloud, add the
+     `googleapis` package to `functions/`, and call
+     `androidpublisher.purchases.subscriptions.get` to confirm the
+     subscription is active and the product id matches, then
+     `.acknowledge` it.
+   - **iOS**: generate an App Store Server API key (`.p8`) in App Store
+     Connect (Users and Access → Integrations), and call the App Store
+     Server API to verify the transaction's product id and expiry.
+5. Real-money purchases only work on a real Android/iOS build — the
+   `in_app_purchase` package has no web backend, so the store buttons are
+   inert in the `flutter build web` preview used for UI verification (the
+   coins path works everywhere).
+
 ## 6. Cloud Functions
 ```bash
 cd functions

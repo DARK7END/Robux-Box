@@ -208,6 +208,7 @@
   "redemptionStatusPaid": "Delivered",
   "redemptionEmpty": "You have no redemptions yet",
   "redemptionEmptyDesc": "Redeem a reward and track its progress here.",
+  "redemptionPriorityLabel": "Priority processing",
 
   "leaderboardTitle": "Leaderboard",
   "leaderboardDaily": "Daily",
@@ -235,6 +236,37 @@
   "vipMultiplier": "{multiplier}x on all earnings",
   "@vipMultiplier": { "placeholders": { "multiplier": { "type": "String" } } },
   "vipActiveLabel": "Active",
+  "vipExpiresInDays": "Expires in {days}d",
+  "@vipExpiresInDays": { "placeholders": { "days": { "type": "int" } } },
+  "vipAdsPerDay": "{count} ads/day",
+  "@vipAdsPerDay": { "placeholders": { "count": { "type": "int" } } },
+  "vipOfferAccessDesc": "Unlocks exclusive offers",
+  "vipMoneyOnlyBadge": "Real money only",
+  "vipBuyCoinsButton": "{price} coins",
+  "@vipBuyCoinsButton": { "placeholders": { "price": { "type": "int" } } },
+  "vipBuyMoneyButton": "{price}",
+  "@vipBuyMoneyButton": { "placeholders": { "price": { "type": "String" } } },
+  "vipConfirmCoinsTitle": "Confirm purchase",
+  "vipConfirmCoinsBody": "Spend {price} coins to unlock {tier} VIP for {days} days?",
+  "@vipConfirmCoinsBody": {
+    "placeholders": {
+      "price": { "type": "int" },
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipPurchaseSuccessBody": "You''re now {tier} VIP for {days} days.",
+  "@vipPurchaseSuccessBody": {
+    "placeholders": {
+      "tier": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "vipLockedOfferBadge": "{tier}+ exclusive",
+  "@vipLockedOfferBadge": { "placeholders": { "tier": { "type": "String" } } },
+  "vipUnlockOfferToast": "Unlock {tier} VIP to access this offer",
+  "@vipUnlockOfferToast": { "placeholders": { "tier": { "type": "String" } } },
+  "vipPrioritySupportDesc": "Priority support & fast-tracked requests",
 
   "achievementsTitle": "Achievements",
   "achievementsUnlocked": "{count} unlocked",
@@ -303,6 +335,7 @@
   "supportYouLabel": "You",
   "supportFilterAwaiting": "Awaiting",
   "supportFilterAll": "All",
+  "supportPriorityLabel": "Priority support",
   "supportManageCategories": "Manage categories",
   "supportCategoriesDesc": "These are the categories users pick from when opening a ticket.",
   "supportNewCategoryHint": "Add a category…",

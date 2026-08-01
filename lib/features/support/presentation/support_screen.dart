@@ -118,6 +118,15 @@ class TicketListTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis),
                 ),
               ],
+              if (ticket.isPriority) ...[
+                const SizedBox(width: AppSpacing.sm),
+                StatusPill(
+                  label: context.l10n.supportPriorityLabel,
+                  color: AppColors.secondary,
+                  icon: Icons.star_rounded,
+                  dense: true,
+                ),
+              ],
               if (awaitingReply) ...[
                 const SizedBox(width: AppSpacing.sm),
                 const Icon(Icons.mark_email_unread_rounded,

@@ -96,7 +96,8 @@ class _RedemptionCard extends ConsumerStatefulWidget {
 class _RedemptionCardState extends ConsumerState<_RedemptionCard> {
   bool _busy = false;
 
-  Future<void> _act(String action, {String code = '', String reason = ''}) async {
+  Future<void> _act(String action,
+      {String code = '', String reason = ''}) async {
     setState(() => _busy = true);
     final result = await ref.read(adminRepositoryProvider).processRedemption(
           widget.redemption.id,
@@ -125,7 +126,8 @@ class _RedemptionCardState extends ConsumerState<_RedemptionCard> {
           controller: controller,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: isCode ? 'Gift card / digital code' : 'Reference (optional)',
+            hintText:
+                isCode ? 'Gift card / digital code' : 'Reference (optional)',
           ),
         ),
         actions: [
@@ -178,6 +180,16 @@ class _RedemptionCardState extends ConsumerState<_RedemptionCard> {
         children: [
           Row(
             children: [
+              if (r.priority) ...[
+                const StatusPill(
+                  label: 'Priority',
+                  color: AppColors.secondary,
+                  icon: Icons.star_rounded,
+                  filled: true,
+                  dense: true,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+              ],
               Expanded(child: Text(r.title, style: context.text.titleSmall)),
               Row(
                 children: [
@@ -240,8 +252,7 @@ class _RedemptionCardState extends ConsumerState<_RedemptionCard> {
                     icon: const Icon(Icons.close_rounded,
                         color: AppColors.danger),
                     style: IconButton.styleFrom(
-                        backgroundColor:
-                            AppColors.danger.withOpacity(0.12)),
+                        backgroundColor: AppColors.danger.withOpacity(0.12)),
                   ),
                 ],
               ),
