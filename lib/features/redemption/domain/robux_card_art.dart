@@ -9,6 +9,7 @@ const _robuxCardArt = <int, String>{
   400: 'assets/images/robux_packages/robux_400.png',
   800: 'assets/images/robux_packages/robux_800.png',
   1000: 'assets/images/robux_packages/robux_1000.png',
+  2500: 'assets/images/robux_packages/robux_2500.png',
 };
 
 /// The bundled card art asset path for [reward], or null if it isn't one of

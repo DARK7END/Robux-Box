@@ -36,9 +36,9 @@ async function main() {
     map: {US: 1, GB: 1, CA: 1, DE: 1, FR: 2, BR: 3, IN: 4, EG: 4},
   }, {merge: true});
 
-  // Reward catalogue. The five Robux tiers mirror the bundled global gift-card
+  // Reward catalogue. The six Robux tiers mirror the bundled global gift-card
   // art (assets/images/robux_packages/) — coinCost applies a graduated bulk
-  // discount off the flat coinsPerRobux rate (0% -> 12%) as the tier grows.
+  // discount off the flat coinsPerRobux rate (0% -> 15%) as the tier grows.
   const rewards = [
     {id: "robux_100", kind: "robux", title: "100 Robux", subtitle: "Global gift card",
       coinCost: 10000, faceValue: 100, currency: "RBX", provider: "manual",
@@ -54,7 +54,10 @@ async function main() {
       isActive: true, sortOrder: 4, badge: ""},
     {id: "robux_1000", kind: "robux", title: "1000 Robux", subtitle: "Global gift card",
       coinCost: 88000, faceValue: 1000, currency: "RBX", provider: "manual",
-      isActive: true, sortOrder: 5, badge: "Best value"},
+      isActive: true, sortOrder: 5, badge: ""},
+    {id: "robux_2500", kind: "robux", title: "2500 Robux", subtitle: "Global gift card",
+      coinCost: 212500, faceValue: 2500, currency: "RBX", provider: "manual",
+      isActive: true, sortOrder: 6, badge: "Best value"},
     {id: "gc_amazon_10", kind: "giftCard", title: "$10 Amazon", subtitle: "Gift card",
       coinCost: 100000, faceValue: 10, currency: "USD", provider: "reloadly",
       isActive: true, sortOrder: 10, badge: ""},
