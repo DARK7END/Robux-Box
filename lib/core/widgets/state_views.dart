@@ -18,7 +18,6 @@ class EmptyStateView extends StatelessWidget {
     this.icon = Icons.inbox_rounded,
     this.actionLabel,
     this.onAction,
-    this.iconWidget,
   });
 
   final String title;
@@ -26,9 +25,6 @@ class EmptyStateView extends StatelessWidget {
   final IconData icon;
   final String? actionLabel;
   final VoidCallback? onAction;
-
-  /// Overrides [icon] with a real-artwork widget when set.
-  final Widget? iconWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +61,7 @@ class EmptyStateView extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(color: primary.withOpacity(0.22)),
                   ),
-                  child: iconWidget ?? Icon(icon, size: 38, color: primary),
+                  child: Icon(icon, size: 38, color: primary),
                 )
                     .animate(onPlay: (c) => c.repeat(reverse: true))
                     .moveY(

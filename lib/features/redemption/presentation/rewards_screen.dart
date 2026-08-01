@@ -92,8 +92,6 @@ class RewardsScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                   child: EmptyStateView(
                     icon: Icons.card_giftcard_rounded,
-                    iconWidget:
-                        const GiftIcon(size: 38, color: AppColors.robux),
                     title: context.l10n.commonComingSoon,
                     message: context.l10n.rewardsComingSoonDesc,
                   ),
