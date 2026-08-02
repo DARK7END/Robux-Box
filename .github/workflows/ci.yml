@@ -85,28 +85,35 @@ jobs:
           EOF
       - name: Build release APK
         run: flutter build apk --release
-      - name: Rename APK
+      # Play Console requires an App Bundle for new app submissions — a raw
+      # APK alone can't be uploaded as the initial release. Same signing
+      # config as the APK above, just a different packaging format.
+      - name: Build release App Bundle
+        run: flutter build appbundle --release
+      - name: Rename artifacts
         run: |
           mkdir -p dist
           cp build/app/outputs/flutter-apk/app-release.apk dist/robux-box-latest.apk
+          cp build/app/outputs/bundle/release/app-release.aab dist/robux-box-latest.aab
       # A single rolling "android-latest" release: delete it first (ignoring
       # "not found" on the very first run) and recreate it fresh, so exactly one
-      # APK ever exists instead of accumulating a new asset on every run.
+      # set of artifacts ever exists instead of accumulating new assets on
+      # every run.
       - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete android-latest --yes --cleanup-tag || true
           if [ "${{ steps.keystore_check.outputs.present }}" = "true" ]; then
-            gh release create android-latest dist/robux-box-latest.apk \
+            gh release create android-latest dist/robux-box-latest.apk dist/robux-box-latest.aab \
               --target "${{ github.sha }}" \
               --title "Robux Box (Android) — latest" \
-              --notes "Automated build from ${{ github.sha }} on ${{ github.ref_name }}. Release-signed with the upload key — ready for Play Store upload or production sideload."
+              --notes "Automated build from ${{ github.sha }} on ${{ github.ref_name }}. Release-signed with the upload key. Upload the .aab to Play Console for store submission — the .apk is for direct/sideload installs."
           else
-            gh release create android-latest dist/robux-box-latest.apk \
+            gh release create android-latest dist/robux-box-latest.apk dist/robux-box-latest.aab \
               --target "${{ github.sha }}" \
               --title "Robux Box (Android) — latest" \
-              --notes "Automated build from ${{ github.sha }} on ${{ github.ref_name }}. Debug-signed APK for sideload testing only — not signed for Play Store upload." \
+              --notes "Automated build from ${{ github.sha }} on ${{ github.ref_name }}. Debug-signed for sideload testing only — not signed for Play Store upload." \
               --prerelease
           fi
 
