@@ -28,7 +28,14 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
       - name: Write deploy service account key
-        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > "${{ runner.temp }}/gcp-key.json"
+        # The key JSON is passed through `env` (not spliced straight into the
+        # script via ${{ }}) because its double quotes would otherwise break
+        # out of the echo string and mangle the file — GOOGLE_APPLICATION_
+        # CREDENTIALS would then point at invalid JSON and every gcloud call
+        # would fail auth with a generic "have you run firebase login?".
+        env:
+          SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: echo "$SERVICE_ACCOUNT_JSON" > "${{ runner.temp }}/gcp-key.json"
       - name: Deploy to Firebase
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
