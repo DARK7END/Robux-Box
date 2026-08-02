@@ -231,24 +231,20 @@ class _Stat extends StatelessWidget {
     required this.ink,
     required this.inkSoft,
     this.value,
-    this.valueText,
   });
   final String label;
   final Color ink;
   final Color inkSoft;
   final int? value;
-  final String? valueText;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        valueText != null
-            ? Text(valueText!, style: AppTypography.counter(16, ink))
-            : AnimatedCounter(
-                value: value ?? 0,
-                style: AppTypography.counter(16, ink),
-              ),
+        AnimatedCounter(
+          value: value ?? 0,
+          style: AppTypography.counter(16, ink),
+        ),
         const SizedBox(height: 1),
         Text(label,
             style: context.text.labelSmall?.copyWith(
