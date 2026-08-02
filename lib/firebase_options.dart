@@ -1,13 +1,16 @@
-// Firebase client configuration for the `robux-box` project.
+// Firebase client configuration for the `robux-box1` project.
 //
 // The Android values below are the REAL client identifiers for this project
 // (package `com.robuxbox.app`), taken from google-services.json. Firebase
 // client API keys are safe to embed in the app — access is controlled by
 // Firebase App Check and Firestore security rules, not by hiding these keys.
 //
-// iOS / Web are NOT registered yet: run `flutterfire configure` (or add those
-// apps in the Firebase console) to fill their appId/apiKey before building for
-// those platforms.
+// iOS / Web are STALE: they're still registered against the old `robux-box`
+// project (never migrated to `robux-box1`). Do not build for those platforms
+// until they're re-registered — run `flutterfire configure` (or add those
+// apps in the Firebase console) against `robux-box1` to get fresh appId/
+// apiKey values; a projectId/storageBucket edited by hand without matching
+// apiKey/appId will just fail to authenticate.
 //
 // ignore_for_file: type=lint
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
@@ -32,11 +35,11 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDldo6qSLZI-JS-2Mmx8O_Tw43EJaJ1jm4',
-    appId: '1:218872107846:android:2098c1145b2fe12b0fcb47',
-    messagingSenderId: '218872107846',
-    projectId: 'robux-box',
-    storageBucket: 'robux-box.firebasestorage.app',
+    apiKey: 'AIzaSyDOuRGpgYkQ3-N7eKPfu_zsgi3n2zuVyGI',
+    appId: '1:878768707356:android:9fad7a36fb0c6a30d5ccd9',
+    messagingSenderId: '878768707356',
+    projectId: 'robux-box1',
+    storageBucket: 'robux-box1.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

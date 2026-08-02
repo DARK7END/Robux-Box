@@ -10,7 +10,7 @@ dart pub global activate flutterfire_cli
 firebase login
 
 # .firebaserc is gitignored, so select the project once per clone:
-firebase use robux-box
+firebase use robux-box1
 ```
 (The legal pages in step 7b are on GitHub Pages, not Firebase — the CLI is
 only needed for Functions, rules and indexes.)
