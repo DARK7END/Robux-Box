@@ -3,14 +3,73 @@
 ## Google Play
 
 ### Listing
-- **Title:** Robux Box — Rewards & Gift Cards (≤ 30 chars for the short title)
-- **Short description (≤ 80):** Watch ads & complete offers to earn coins for
-  Robux, gift cards & rewards.
-- **Full description:** cover earning (ads/offers), redeeming (Robux/gift cards),
-  daily rewards, referrals, VIP, and a clear "not affiliated with Roblox
-  Corporation" disclaimer.
-- **Graphics:** 512×512 icon, 1024×500 feature graphic, ≥ 4 phone screenshots
-  (1080×1920), optional 30s promo video.
+
+**Title** (24/30 chars):
+```
+Robux Box: Earn & Redeem
+```
+
+**Short description** (73/80 chars):
+```
+Watch ads & complete offers to earn coins — redeem for Robux & gift cards
+```
+
+**Full description** (paste as-is into Play Console; ~1,830/4000 chars):
+```
+Turn your spare time into real rewards. Robux Box pays you in coins for
+simple everyday actions — watching short videos and completing offers —
+and lets you redeem those coins for Robux, gift cards, and more.
+
+🎮 EARN COINS
+• Watch short rewarded ads for a quick coin boost, with a fresh batch of
+  ad slots every day
+• Complete offers from our partner network — app installs, surveys,
+  sign-ups, and more — for bigger payouts
+• Spin the daily reward chest for a free bonus, and grow a login streak
+  for extra perks
+• Unlock achievements and badges as you play — each one pays out a coin
+  bonus the moment you earn it
+• Invite friends with your referral link and earn coins when they join
+
+🎁 REDEEM YOUR COINS
+• Robux top-ups and Roblox gift cards
+• Popular digital and retail gift cards
+• Track every redemption in one place, from request to delivery
+
+⭐ GO VIP
+Subscribe to Bronze, Silver, Gold, or Diamond and earn coins faster on
+everything you do — up to 3x — with a bigger daily ad allowance and
+access to VIP-only offers. Gold and Diamond members also get priority
+support and faster-processed redemption requests.
+
+🏆 MORE REASONS TO PLAY
+• Climb the leaderboard and see how you stack up
+• Track your full earning and redemption history in your wallet
+• Get help fast from in-app support, with real replies from our team
+• Available in Arabic, English, and more languages, with full right-
+  to-left support
+
+🔒 BUILT ON TRUST
+Every coin you earn and every redemption you request is processed and
+verified on our secure servers — balances can never be edited from your
+device. Sign in with Google, email, or phone, and your data stays
+protected.
+
+Robux Box is an independent rewards platform. It is not affiliated with,
+endorsed by, or sponsored by Roblox Corporation. "Roblox" and "Robux"
+are trademarks of Roblox Corporation.
+```
+
+**Graphics:** 512×512 icon, 1024×500 feature graphic, ≥ 4 phone screenshots
+  (1080×1920), optional 30s promo video. See "Screenshots" below.
+
+### Screenshots
+Real screenshots of the running app (Home, Earn, Redeem, VIP, Wallet are
+the strongest picks) work well as-is for the Play Store gallery — Play
+doesn't want marketing renders, just the actual product. A separate
+1024×500 feature graphic / any promotional banner artwork is a design
+task outside what gets built here; bring your own asset (or a designer)
+for that one.
 
 ### Data safety form (declare truthfully)
 - Collected: account (email/phone), approximate & precise **location** (for
