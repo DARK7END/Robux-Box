@@ -63,7 +63,7 @@ device Keystore/Keychain. Access to balances is server-controlled.
 
 ## 8. Your rights
 Depending on your region (GDPR/CCPA), you may access, correct, delete or export
-your data, and object to certain processing. Contact **[SUPPORT EMAIL]**.
+your data, and object to certain processing. Contact **robuxbox10@gmail.com**.
 
 ## 9. International transfers
 Data may be processed in countries where Google/our providers operate, with
@@ -73,4 +73,4 @@ appropriate safeguards.
 We may update this policy; material changes will be notified in-app.
 
 ## 11. Contact
-**[COMPANY NAME]**, **[ADDRESS]**, **[SUPPORT EMAIL]**.
+**[COMPANY NAME]**, **[ADDRESS]**, **robuxbox10@gmail.com**.
