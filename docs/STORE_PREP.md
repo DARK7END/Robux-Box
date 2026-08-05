@@ -4,56 +4,67 @@
 
 ### Listing
 
-**Title** (24/30 chars):
+**Title** (28/30 chars — keeps "Robux" + adds "Cash" as a second
+high-volume search term the app can legitimately back, since PayPal cash
+is a real redemption option):
 ```
-Robux Box: Earn & Redeem
-```
-
-**Short description** (73/80 chars):
-```
-Watch ads & complete offers to earn coins — redeem for Robux & gift cards
+Robux Box: Earn Robux & Cash
 ```
 
-**Full description** (paste as-is into Play Console; ~1,830/4000 chars):
+**Short description** (79/80 chars):
 ```
-Turn your spare time into real rewards. Robux Box pays you in coins for
-simple everyday actions — watching short videos and completing offers —
-and lets you redeem those coins for Robux, gift cards, and more.
+Watch ads & complete offers to earn coins — redeem for Robux, cash & gift cards
+```
+
+**Full description** (paste as-is into Play Console; ~2,190/4000 chars —
+keyword coverage for search: rewards app, earn coins, Robux, gift cards,
+PayPal cash, watch ads, complete offers/surveys, VIP, leaderboard, each
+named gift-card brand):
+```
+Robux Box is a free rewards app that pays you in coins for simple
+everyday actions — watching short videos and completing offers — and
+lets you redeem those coins for Robux, gift cards, and PayPal cash.
+
+No skill, no purchase required. Just complete simple tasks and cash out.
 
 🎮 EARN COINS
 • Watch short rewarded ads for a quick coin boost, with a fresh batch of
   ad slots every day
 • Complete offers from our partner network — app installs, surveys,
   sign-ups, and more — for bigger payouts
-• Spin the daily reward chest for a free bonus, and grow a login streak
-  for extra perks
+• Spin the daily reward wheel or open the lucky chest for a free bonus,
+  and grow a login streak for extra perks
 • Unlock achievements and badges as you play — each one pays out a coin
   bonus the moment you earn it
 • Invite friends with your referral link and earn coins when they join
 
-🎁 REDEEM YOUR COINS
+🎁 REDEEM FOR REAL REWARDS
 • Robux top-ups and Roblox gift cards
-• Popular digital and retail gift cards
+• Steam, PlayStation, Xbox, Nintendo eShop and Google Play gift cards
+• Apple, Amazon and PayPal cash rewards
 • Track every redemption in one place, from request to delivery
 
-⭐ GO VIP
+⭐ GO VIP FOR FASTER EARNINGS
 Subscribe to Bronze, Silver, Gold, or Diamond and earn coins faster on
 everything you do — up to 3x — with a bigger daily ad allowance and
 access to VIP-only offers. Gold and Diamond members also get priority
 support and faster-processed redemption requests.
 
 🏆 MORE REASONS TO PLAY
-• Climb the leaderboard and see how you stack up
+• Climb the leaderboard and see how you stack up against other players
 • Track your full earning and redemption history in your wallet
-• Get help fast from in-app support, with real replies from our team
+• Get help fast from real, in-app customer support
 • Available in Arabic, English, and more languages, with full right-
   to-left support
 
-🔒 BUILT ON TRUST
+🔒 BUILT ON TRUST AND SECURITY
 Every coin you earn and every redemption you request is processed and
 verified on our secure servers — balances can never be edited from your
-device. Sign in with Google, email, or phone, and your data stays
+device. Sign in safely with Google, email, or phone, and your data stays
 protected.
+
+Whether you're saving up for Robux, gift cards, or cash, Robux Box turns
+your spare time into real, redeemable rewards — download free today.
 
 Robux Box is an independent rewards platform. It is not affiliated with,
 endorsed by, or sponsored by Roblox Corporation. "Roblox" and "Robux"
