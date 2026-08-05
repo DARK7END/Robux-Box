@@ -12,8 +12,16 @@ abstract final class AppGradients {
   static const LinearGradient brand = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [AppColors.brandBright, AppColors.brand, AppColors.brandDeep],
-    stops: [0.0, 0.55, 1.0],
+    // A wider tonal range than a plain brand-color fill — the bottom-right
+    // settles into a deep forest green so a large panel (e.g. the home
+    // balance card) reads as one dimensional surface, not a flat swatch.
+    colors: [
+      AppColors.brandBright,
+      AppColors.brand,
+      AppColors.brandDeep,
+      Color(0xFF00722F),
+    ],
+    stops: [0.0, 0.4, 0.72, 1.0],
   );
 
   // Gold → green premium sweep (used on secondary CTAs / offerwall).

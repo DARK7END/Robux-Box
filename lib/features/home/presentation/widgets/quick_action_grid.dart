@@ -30,7 +30,7 @@ class QuickActionGrid extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       mainAxisSpacing: AppSpacing.md,
       crossAxisSpacing: AppSpacing.md,
-      childAspectRatio: 2.4,
+      childAspectRatio: 6.2,
       children: actions
           .map(
             (a) => GlassCard(
