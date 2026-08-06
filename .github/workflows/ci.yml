@@ -91,13 +91,25 @@ jobs:
           keyAlias=$KEY_ALIAS
           storeFile=upload-keystore.jks
           EOF
+      # FLAVOR=prod matters beyond labelling: AppConfig.isProd also switches
+      # Firebase App Check to the real Play Integrity provider (debug tokens
+      # otherwise reject every Firestore/Functions call from real users) and
+      # lifts the AdMob test-device restriction so the rewarded ad unit below
+      # actually serves. Without it this is a "release build" in name only.
       - name: Build release APK
-        run: flutter build apk --release
+        run: |
+          flutter build apk --release \
+            --dart-define=FLAVOR=prod \
+            --dart-define=ADMOB_REWARDED_ANDROID=ca-app-pub-8332453421164106/7111015431
       # Play Console requires an App Bundle for new app submissions — a raw
       # APK alone can't be uploaded as the initial release. Same signing
-      # config as the APK above, just a different packaging format.
+      # config and dart-defines as the APK above, just a different packaging
+      # format.
       - name: Build release App Bundle
-        run: flutter build appbundle --release
+        run: |
+          flutter build appbundle --release \
+            --dart-define=FLAVOR=prod \
+            --dart-define=ADMOB_REWARDED_ANDROID=ca-app-pub-8332453421164106/7111015431
       - name: Rename artifacts
         run: |
           mkdir -p dist
